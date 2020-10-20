@@ -8,21 +8,27 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import entities.Person;
+import entities.Member;
 
-@RequestMapping("/")
+@RequestMapping("/clients")
 public interface ClientsControl {
 
-	@GetMapping(value = "/clients")
+	@GetMapping(value = "/all")
 	public ResponseEntity<Object> getAll();
 
-	@GetMapping(value = "/clients/get/{id}")
+	@GetMapping(value = "/staff")
+	public ResponseEntity<Object> getStaff();
+
+	@GetMapping(value = "/members")
+	public ResponseEntity<Object> getMembers();
+
+	@GetMapping(value = "/get/{id}")
 	public ResponseEntity<Object> getClientById(@PathVariable(value = "id") Long id);
 
-	@PostMapping(value = "/clients/add", consumes = "application/json", produces = "application/json")
-	public ResponseEntity<Object> createClient(@RequestBody Person p);
+	@PostMapping(value = "/add", consumes = "application/json", produces = "application/json")
+	public ResponseEntity<Object> createClient(@RequestBody Member p);
 
-	@PutMapping(value = "/clients/update/{id}")
-	public ResponseEntity<Object> updateClient(@PathVariable("id") Long id, @RequestBody Person p);
+	@PutMapping(value = "/update/{id}")
+	public ResponseEntity<Object> updateClient(@PathVariable("id") Long id, @RequestBody Member p);
 
 }

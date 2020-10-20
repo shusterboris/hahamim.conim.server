@@ -5,29 +5,29 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import entities.Item;
-
 @RequestMapping("/catalogs")
 public interface CatalogsControl {
 
-	@GetMapping("/items/{key}")
-	public ResponseEntity<Item> getItemsByKey(@PathVariable("key") String key);
+	@GetMapping({ "/items/{key}/{language}", "/items/{key}" })
+	public ResponseEntity<Object> getItemsByKey(@PathVariable("key") String key,
+			@PathVariable(name = "language", required = false) String language);
 
-	@GetMapping("/items/{parentKey}")
-	public ResponseEntity<Item> getItemsByParentKey(@PathVariable("parentKey") String parentKey);
+	@GetMapping("/items/child/{parentKey}")
+	public ResponseEntity<Object> getItemsByParentKey(@PathVariable("parentKey") String parentKey,
+			@PathVariable(name = "language", required = false) String language);
 
-	@GetMapping("/regions/{language}")
-	public ResponseEntity<Item> getRegionsList(@PathVariable("language") String language);
+	@GetMapping({ "/regions/{language}", "/regions" })
+	public ResponseEntity<Object> getRegionsList(@PathVariable(name = "language", required = false) String language);
 
-	@GetMapping("/regionsstrings")
-	public ResponseEntity<Item> getRegionsStrings(@PathVariable("language") String language);
+	@GetMapping({ "/regionsstrings/{language}", "/regionsstrings" })
+	public ResponseEntity<Object> getRegionsStrings(@PathVariable(name = "language", required = false) String language);
 
-	@GetMapping("/settlments/{region}{language}")
-	public ResponseEntity<Item> getSetllmetsList(@PathVariable("region") String region,
-			@PathVariable("language") String language);
+	@GetMapping({ "/settlments/{region}/{language}", "/settlments/{region}" })
+	public ResponseEntity<Object> getSetllmetsList(@PathVariable("region") String region,
+			@PathVariable(name = "language", required = false) String language);
 
-	@GetMapping("/settlmentsstrings/{region}{language}")
-	public ResponseEntity<Item> getSetllmetsStrings(@PathVariable("region") String region,
-			@PathVariable("language") String language);
+	@GetMapping({ "/settlmentsstrings/{region}/{language}", "/settlmentsstrings/{region}" })
+	public ResponseEntity<Object> getSetllmetsStrings(@PathVariable("region") String region,
+			@PathVariable(name = "language", required = false) String language);
 
 }
