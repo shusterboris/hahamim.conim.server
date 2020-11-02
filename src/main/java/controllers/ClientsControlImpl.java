@@ -76,4 +76,9 @@ public class ClientsControlImpl implements ClientsControl {
 		}
 	}
 
+	@Override
+	public ResponseEntity<Object> getNotifications()
+	{
+		return new ResponseEntity<Object>(mService.getNotifications(),HttpStatus.OK);
+	}
 }
