@@ -8,7 +8,8 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import entities.Member;
+import proxies.Member;
+import proxies.User;
 
 @RequestMapping("/clients")
 public interface ClientsControl {
@@ -22,6 +23,9 @@ public interface ClientsControl {
 	@GetMapping(value = "/members")
 	public ResponseEntity<Object> getMembers();
 
+	@PostMapping(value = "/login")
+	public ResponseEntity<Object> userLogin(@RequestBody User user);
+	
 	@GetMapping(value = "/get/{id}")
 	public ResponseEntity<Object> getClientById(@PathVariable(value = "id") Long id);
 
