@@ -6,8 +6,9 @@ import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-import entities.Member;
-import entities.Person;
+import proxies.Member;
+import proxies.Person;
+import proxies.User;
 import services.MockService;
 
 public class ClientsControlImpl implements ClientsControl {
@@ -75,5 +76,20 @@ public class ClientsControlImpl implements ClientsControl {
 			return new ResponseEntity<Object>("Server error:".concat(e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
+
+	@Override
+	public ResponseEntity<Object> userLogin(User user) {
+		try {
+			Member member = mService.getUser(user.getLogin(), user.getPassword());
+			if (member == null)
+				throw new Exception();
+			return new ResponseEntity<Object>(member, HttpStatus.OK);
+		}catch (Exception e) {
+			return new ResponseEntity<>("Invalid user", HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+	
+
+
 
 }
