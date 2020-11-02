@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import entities.Member;
+import proxies.Member;
 
 @RequestMapping("/clients")
 public interface ClientsControl {

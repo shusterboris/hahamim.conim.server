@@ -9,4 +9,6 @@ public interface ActionsControl {
 
 	@GetMapping("/proposals/all")
 	public ResponseEntity<Object> getAllProposals();
+	@GetMapping("/actions/all")
+	public ResponseEntity<Object> getAllActions();
 }

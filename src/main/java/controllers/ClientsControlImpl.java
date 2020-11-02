@@ -6,8 +6,8 @@ import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-import entities.Member;
-import entities.Person;
+import proxies.Member;
+import proxies.Person;
 import services.MockService;
 
 public class ClientsControlImpl implements ClientsControl {
