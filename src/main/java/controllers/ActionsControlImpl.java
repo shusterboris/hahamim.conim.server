@@ -10,6 +10,8 @@ import proxies.Proposal;
 import services.MockService;
 
 
+
+
 @RestController
 public class ActionsControlImpl implements ActionsControl {
 	private MockService mService = new MockService();

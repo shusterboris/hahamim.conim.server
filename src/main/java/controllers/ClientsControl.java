@@ -23,7 +23,7 @@ public interface ClientsControl {
 	@GetMapping(value = "/members")
 	public ResponseEntity<Object> getMembers();
 
-	@PostMapping(value = "/login")
+	@PostMapping(value = "/login", consumes = "application/json", produces = "application/json")
 	public ResponseEntity<Object> userLogin(@RequestBody User user);
 	
 	@GetMapping(value = "/get/{id}")

@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
+import application.EntityNotFound;
 import proxies.Member;
 import proxies.Person;
 import proxies.User;
@@ -82,7 +83,7 @@ public class ClientsControlImpl implements ClientsControl {
 		try {
 			Member member = mService.getUser(user.getLogin(), user.getPassword());
 			if (member == null)
-				throw new Exception();
+				return new ResponseEntity<Object>(new EntityNotFound(),HttpStatus.OK);
 			return new ResponseEntity<Object>(member, HttpStatus.OK);
 		}catch (Exception e) {
 			return new ResponseEntity<>("Invalid user", HttpStatus.INTERNAL_SERVER_ERROR);
