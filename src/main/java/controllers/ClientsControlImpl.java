@@ -6,7 +6,7 @@ import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-import application.EntityNotFound;
+import exceptions.EntityNotFound;
 import proxies.Member;
 import proxies.Person;
 import proxies.User;
