@@ -54,7 +54,9 @@ public class ImageController {
 		String extention = fileName.substring(fileName.lastIndexOf("."));
 		if (!(".png".equalsIgnoreCase(extention) || ".jpg".equalsIgnoreCase(extention) || ".jpeg".equalsIgnoreCase(extention)))
 			throw new Exception("ErrMsg.invalidFileExtention");
-		ImageIO.write(bImage, "jpg", baOut);
+		else
+			extention = extention.substring(1);
+		ImageIO.write(bImage, extention, baOut);
 		return baOut.toByteArray();
 	}
 }
