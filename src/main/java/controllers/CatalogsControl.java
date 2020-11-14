@@ -12,8 +12,20 @@ public interface CatalogsControl {
 	public ResponseEntity<Object> getItemsByKey(@PathVariable("key") String key,
 			@PathVariable(name = "language", required = false) String language);
 
-	@GetMapping("/items/child/{parentKey}")
+	@GetMapping({ "/items/all/{key}/{language}", "/items/{key}" })
+	public ResponseEntity<Object> getAllItemsByKey(@PathVariable("key") String key,
+			@PathVariable(name = "language", required = false) String language);
+
+	@GetMapping({"/items/child/{parentKey}/{language}", "/items/child/{parentKey}"})
 	public ResponseEntity<Object> getItemsByParentKey(@PathVariable("parentKey") String parentKey,
+			@PathVariable(name = "language", required = false) String language);
+
+	@GetMapping({ "/itemsstring/{key}/{language}", "/items/{key}" })
+	public ResponseEntity<Object> getItemStringByKey(@PathVariable("key") String key,
+			@PathVariable(name = "language", required = false) String language);
+
+	@GetMapping({"/itemsstring/child/{parentKey}/{language}", "/itemsstring/child/{parentKey}"})
+	public ResponseEntity<Object> getItemStringByParentKey(@PathVariable("parentKey") String parentKey,
 			@PathVariable(name = "language", required = false) String language);
 
 	@GetMapping({ "/regions/{language}", "/regions" })
