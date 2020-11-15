@@ -12,9 +12,12 @@ public interface CatalogsControl {
 	public ResponseEntity<Object> getItemsByKey(@PathVariable("key") String key,
 			@PathVariable(name = "language", required = false) String language);
 
-	@GetMapping({ "/items/all/{key}/{language}", "/items/{key}" })
+	@GetMapping({ "/items/allcats/{key}/{language}", "/items/allcats/{key}" })
 	public ResponseEntity<Object> getAllItemsByKey(@PathVariable("key") String key,
 			@PathVariable(name = "language", required = false) String language);
+
+	@GetMapping({ "/items/all/{language}", "/items/all" })
+	public ResponseEntity<Object> getAllItems(@PathVariable(name = "language", required = false) String language);
 
 	@GetMapping({"/items/child/{parentKey}/{language}", "/items/child/{parentKey}"})
 	public ResponseEntity<Object> getItemsByParentKey(@PathVariable("parentKey") String parentKey,

@@ -34,6 +34,12 @@ public class CatalogsControlImpl implements CatalogsControl {
 			return new ResponseEntity<Object>("Server error:".concat(e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
+
+	@Override
+	public ResponseEntity<Object> getAllItems(String language) {
+		return new ResponseEntity<Object>(mService.getAllCategories(language),HttpStatus.OK);
+	}
+
 	
 	@Override
 	public ResponseEntity<Object> getItemStringByKey(String key, String language) {
