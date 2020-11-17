@@ -36,4 +36,30 @@ public class ActionsControlImpl implements ActionsControl {
 		}
 	}
 
+	@Override
+	public ResponseEntity<Object> getAction(Long id) {
+		try {
+			Proposal res = mService.getAction(id);
+			if (res != null)
+				return new ResponseEntity<Object>(res, HttpStatus.OK);
+			else
+				return new ResponseEntity<Object>("Record not found: ".concat(String.valueOf(id)), HttpStatus.INTERNAL_SERVER_ERROR);
+		} catch (Exception e) {
+			return new ResponseEntity<Object>("Server error:".concat(e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+
+	@Override
+	public ResponseEntity<Object> addAction() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public ResponseEntity<Object> saveAction() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
 }
