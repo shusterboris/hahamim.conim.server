@@ -24,7 +24,7 @@ public class BPcontrolImpl implements BPcontrol {
 	@Override
 	public ResponseEntity<Object> getPartnerById(Long id) {
 		try {
-			BusinessPartner res = mService.getPartnerById(id);
+			BusinessPartner res = mService.getBusinessPartnerById(id);
 			return new ResponseEntity<Object>(res, HttpStatus.OK);
 		} catch (Exception e) {
 			return new ResponseEntity<Object>("Server error:".concat(e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
