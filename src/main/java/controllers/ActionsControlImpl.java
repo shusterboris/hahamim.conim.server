@@ -1,11 +1,14 @@
 package controllers;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
+import proxies.PriceProposal;
 import proxies.Proposal;
 import services.MockService;
 
@@ -48,6 +51,12 @@ public class ActionsControlImpl implements ActionsControl {
 			return new ResponseEntity<Object>("Server error:".concat(e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
+	
+	public ResponseEntity<Object> getActionByMember(Long memberId){
+		//для получения своих акций берем те, по которым у меня есть заявленное количество
+		//на покупку и соответствующий статус
+		return new ResponseEntity<>(HttpStatus.OK);
+	}
 
 	@Override
 	public ResponseEntity<Object> addAction() {
@@ -59,6 +68,26 @@ public class ActionsControlImpl implements ActionsControl {
 	public ResponseEntity<Object> saveAction() {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public ResponseEntity<Object> getMemberPriceIntents(Long proposalId, Long memberId) {
+		try {
+			List<PriceProposal> res = mService.getMembersPriceIntents(proposalId, memberId);
+			return new ResponseEntity<Object>(res, HttpStatus.OK);
+		}catch (Exception e) {
+			return new ResponseEntity<Object>("Server error:".concat(e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+
+	@Override
+	public ResponseEntity<Object> saveMemberPriceIntents(List<PriceProposal> prices) {
+		try {
+			String res = mService.saveMemberPriceIntents(prices);
+			return new ResponseEntity<Object>(res, HttpStatus.OK);
+		}catch (Exception e) {
+			return new ResponseEntity<Object>("Server error:".concat(e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
+		}		
 	}
 
 

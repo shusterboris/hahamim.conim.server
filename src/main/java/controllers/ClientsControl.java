@@ -23,6 +23,9 @@ public interface ClientsControl {
 	@GetMapping(value = "/members")
 	public ResponseEntity<Object> getMembers();
 
+	@GetMapping(value = "/partner/{id}")
+	public ResponseEntity<Object> getPartnerById(@PathVariable(value = "id") Long id);
+
 	@PostMapping(value = "/login", consumes = "application/json", produces = "application/json")
 	public ResponseEntity<Object> userLogin(@RequestBody User user);
 	

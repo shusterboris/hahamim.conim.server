@@ -7,8 +7,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 @RequestMapping("/partners")
 public interface BPcontrol {
+
 	@GetMapping("/all")
 	public ResponseEntity<Object> getAllPartners();
+	
 	@GetMapping(value = "/get/{id}")
 	public ResponseEntity<Object> getPartnerById(@PathVariable(value = "id") Long id);
 }

@@ -55,7 +55,7 @@ public class ClientsControlImpl implements ClientsControl {
 	}
 
 	public ClientsControlImpl() {
-		// clients = mService.createStaff();
+		
 	}
 
 	@Override
@@ -95,4 +95,17 @@ public class ClientsControlImpl implements ClientsControl {
 	{
 		return new ResponseEntity<Object>(mService.getNotifications(),HttpStatus.OK);
 	}
+
+	@Override
+	public ResponseEntity<Object> getPartnerById(Long id) {
+		try {
+			Member member = mService.getPartnerStaffById(id);
+			if (member == null)
+				return new ResponseEntity<Object>(new EntityNotFound(),HttpStatus.OK);
+			return new ResponseEntity<Object>(member, HttpStatus.OK);
+		}catch (Exception e) {
+			return new ResponseEntity<>("Invalid partner staff, id "+String.valueOf(id), HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+
 }
