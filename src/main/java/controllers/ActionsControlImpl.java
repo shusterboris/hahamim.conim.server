@@ -8,6 +8,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.google.gson.Gson;
+
+import net.minidev.json.JSONObject;
 import proxies.PriceProposal;
 import proxies.Proposal;
 import services.MockService;
@@ -55,13 +58,28 @@ public class ActionsControlImpl implements ActionsControl {
 	public ResponseEntity<Object> getActionByMember(Long memberId){
 		//для получения своих акций берем те, по которым у меня есть заявленное количество
 		//на покупку и соответствующий статус
-		return new ResponseEntity<>(HttpStatus.OK);
+		try {
+			List<Proposal> res = mService.getAllMemberActions(memberId);
+			return new ResponseEntity<Object>(res, HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<Object>("Server error:".concat(e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
+		}
 	}
 
 	@Override
-	public ResponseEntity<Object> addAction() {
-		// TODO Auto-generated method stub
-		return null;
+	public ResponseEntity<Object> addAction(String json) {
+		try {
+			Gson gson = new Gson();
+			Proposal proposal = gson.fromJson(json, Proposal.class);
+			Long id = mService.addAction(proposal);
+			proposal.setId(id);
+			JSONObject ret = new JSONObject();
+			ret.put("id", String.valueOf(id));
+			return new ResponseEntity<>(ret, HttpStatus.OK);
+		}catch (Exception e) {
+			return new ResponseEntity<Object>("action not saved", HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		
 	}
 
 	@Override

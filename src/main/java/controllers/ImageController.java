@@ -2,7 +2,16 @@ package controllers;
 
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.net.URISyntaxException;
 import java.net.URL;
+import java.net.URLDecoder;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Base64;
+import java.util.UUID;
 
 import javax.imageio.ImageIO;
 
@@ -11,10 +20,11 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import application.ApplicationSettings;
 
 @RestController
 public class ImageController {
@@ -47,7 +57,36 @@ public class ImageController {
 		}
 	}
 
-	private static byte[] readImage(String fileName) throws Exception {
+	@PostMapping(value = "/image/product/put")
+	public ResponseEntity<String> saveImage(@RequestBody String encodedMap){
+		String result = writeImage(encodedMap);
+		if (!"".equals(result)) {
+			return new ResponseEntity<String>(result, HttpStatus.OK);
+		}else
+			return new ResponseEntity<String>("File did not save", HttpStatus.INTERNAL_SERVER_ERROR);
+	}
+	
+	public String writeImage(String fileData) {
+		String fileName = "";
+		
+		String encodedImage = fileData.substring(4);
+		String encodedStringImage = URLDecoder.decode(encodedImage);
+		byte[] data = Base64.getMimeDecoder().decode(encodedStringImage);
+		try {
+			fileName = UUID.randomUUID().toString()+".png";
+			URL fileURL = ImageController.class.getClassLoader().getResource("imgStore");
+			Path filePath = Paths.get(fileURL.toURI());
+			FileOutputStream fos = new FileOutputStream(filePath.toString().concat(File.separator).concat(fileName));
+			fos.write(data); 
+			fos.close();
+			return fileName;
+		} catch (Exception e) {
+			System.out.println("Не могу записать файл "+fileName);
+		}
+		return "";
+	}
+	
+	private byte[] readImage(String fileName) throws Exception {
 		URL fileURL = ImageController.class.getClassLoader().getResource(fileName);
 		BufferedImage bImage = ImageIO.read(fileURL); 
 		ByteArrayOutputStream baOut = new ByteArrayOutputStream();
@@ -58,5 +97,5 @@ public class ImageController {
 			extention = extention.substring(1);
 		ImageIO.write(bImage, extention, baOut);
 		return baOut.toByteArray();
-	}
+	}	
 }

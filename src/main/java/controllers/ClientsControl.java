@@ -38,7 +38,5 @@ public interface ClientsControl {
 	@PutMapping(value = "/update/{id}")
 	public ResponseEntity<Object> updateClient(@PathVariable("id") Long id, @RequestBody Member p);
 	
-	@GetMapping(value = "/notifications")
-	public ResponseEntity<Object> getNotifications();
 
 }
