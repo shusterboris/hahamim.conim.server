@@ -1,14 +1,10 @@
-package controllers;
+package application.controllers;
 
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.io.FileOutputStream;
-import java.io.IOException;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLDecoder;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Base64;
 import java.util.UUID;
@@ -24,6 +20,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+
+import application.ApplicationSettings;
 
 
 @RestController
@@ -44,11 +42,8 @@ public class ImageController {
 	@GetMapping(value = "image/file/{fileName}", produces = {MediaType.IMAGE_PNG_VALUE, MediaType.IMAGE_JPEG_VALUE, MediaType.APPLICATION_JSON_VALUE})
 	public @ResponseBody ResponseEntity<Object> getImage(@PathVariable(value = "fileName") String fileName) {
 		try {
-			//String fullPath = ApplicationSettings.getProperty("imgStore");
-			String fullPath = "imgStore";
-			fullPath = ("".equals(fullPath)) ? fileName : fullPath.concat("/").concat(fileName);
 			return ResponseEntity.status(HttpStatus.OK)
-	        .body(readImage(fullPath));
+	        .body(readImage(fileName));
 		}catch (Exception e) {
 			if (e.getClass().getSimpleName().endsWith("IOException"))
 				return new ResponseEntity<>("ErrMsg.fileNotFound", HttpStatus.NOT_FOUND);
@@ -68,26 +63,28 @@ public class ImageController {
 	
 	public String writeImage(String fileData) {
 		String fileName = "";
-		
-		String encodedImage = fileData.substring(4);
+		String fullName="";
+		String fileExt = fileData.substring(0, fileData.indexOf("="));
+		String encodedImage = fileData.substring(fileExt.length()+1);
 		String encodedStringImage = URLDecoder.decode(encodedImage);
 		byte[] data = Base64.getMimeDecoder().decode(encodedStringImage);
 		try {
-			fileName = UUID.randomUUID().toString()+".png";
-			URL fileURL = ImageController.class.getClassLoader().getResource("imgStore");
-			Path filePath = Paths.get(fileURL.toURI());
-			FileOutputStream fos = new FileOutputStream(filePath.toString().concat(File.separator).concat(fileName));
+			fileName = UUID.randomUUID().toString().concat(".").concat(fileExt);
+			fullName = ApplicationSettings.imgStorePath.concat(fileName);
+			FileOutputStream fos = new FileOutputStream(fullName);
 			fos.write(data); 
 			fos.close();
 			return fileName;
 		} catch (Exception e) {
-			System.out.println("Не могу записать файл "+fileName);
+			System.out.println("Не могу записать файл "+fullName);
 		}
 		return "";
 	}
 	
 	private byte[] readImage(String fileName) throws Exception {
-		URL fileURL = ImageController.class.getClassLoader().getResource(fileName);
+		String fullPath = ApplicationSettings.imgStorePath.concat(fileName);
+		URL fileURL = Paths.get(fullPath).toUri().toURL();
+		//System.out.println(fullPath);
 		BufferedImage bImage = ImageIO.read(fileURL); 
 		ByteArrayOutputStream baOut = new ByteArrayOutputStream();
 		String extention = fileName.substring(fileName.lastIndexOf("."));

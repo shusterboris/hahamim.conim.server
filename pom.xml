@@ -12,6 +12,7 @@
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<java.version>11</java.version>
 		<maven-jar-plugin.version>3.1.1</maven-jar-plugin.version>
+		<maven.test.skip>true</maven.test.skip>
 	</properties>
 
 	<parent>
@@ -36,6 +37,15 @@
 			<optional>true</optional>
 		</dependency>
 		<dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-jpa</artifactId>
+        </dependency>	
+		<dependency>
+		    <groupId>mysql</groupId>
+		    <artifactId>mysql-connector-java</artifactId>
+		    <scope>runtime</scope>
+		</dependency>        
+		<dependency>
 		    <groupId>org.json</groupId>
 		    <artifactId>json</artifactId>
 		    <version>20201115</version>
@@ -47,9 +57,7 @@
 		<dependency>
 		    <groupId>commons-codec</groupId>
 		    <artifactId>commons-codec</artifactId>
-		    <version>1.15</version>
 		</dependency>
-		
 	</dependencies>
 
 	<build>
@@ -63,6 +71,7 @@
 							<goal>repackage</goal>
 						</goals>
 						<configuration>
+
 							<classifier>spring-boot</classifier>
 							<mainClass>
 								starter.Starter

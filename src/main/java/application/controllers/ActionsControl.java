@@ -1,4 +1,4 @@
-package controllers;
+package application.controllers;
 
 import java.util.List;
 
@@ -9,8 +9,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-
-import net.minidev.json.JSONObject;
 import proxies.PriceProposal;
 
 @RequestMapping("/")
@@ -33,7 +31,10 @@ public interface ActionsControl {
 
 	@PostMapping("/actions/add")
 	public ResponseEntity<Object> addAction(@RequestBody String json);
-	
+
+	@PostMapping("/action/add")
+	public ResponseEntity<Object> addNewAction(@RequestBody String json);
+
 	@GetMapping("/actions/intents/get/{proposalId}/{memberId}")
 	public ResponseEntity<Object> getMemberPriceIntents(@PathVariable("proposalId") Long proposalId, 
 			@PathVariable("memberId") Long  memberId);

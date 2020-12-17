@@ -1,4 +1,4 @@
-package controllers;
+package application.controllers;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -6,11 +6,11 @@ import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
+import application.services.MockService;
 import exceptions.EntityNotFound;
 import proxies.Member;
 import proxies.Person;
 import proxies.User;
-import services.MockService;
 
 public class ClientsControlImpl implements ClientsControl {
 	private MockService mService = new MockService();

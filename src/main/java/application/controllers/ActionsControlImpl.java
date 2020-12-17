@@ -1,19 +1,24 @@
-package controllers;
+package application.controllers;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
+import Utils.LocalDateJsonAdapter;
+import application.services.ActionService;
+import application.services.MockService;
 import net.minidev.json.JSONObject;
 import proxies.PriceProposal;
 import proxies.Proposal;
-import services.MockService;
 
 
 
@@ -21,6 +26,8 @@ import services.MockService;
 @RestController
 public class ActionsControlImpl implements ActionsControl {
 	private MockService mService = new MockService();
+	@Autowired
+	private ActionService actionService;
 
 	@Override
 	public ResponseEntity<Object> getAllProposals() {
@@ -69,7 +76,9 @@ public class ActionsControlImpl implements ActionsControl {
 	@Override
 	public ResponseEntity<Object> addAction(String json) {
 		try {
-			Gson gson = new Gson();
+			Gson gson = new GsonBuilder()
+					.registerTypeAdapter(LocalDate.class, new LocalDateJsonAdapter().nullSafe())
+					.create();
 			Proposal proposal = gson.fromJson(json, Proposal.class);
 			Long id = mService.addAction(proposal);
 			proposal.setId(id);
@@ -106,6 +115,12 @@ public class ActionsControlImpl implements ActionsControl {
 		}catch (Exception e) {
 			return new ResponseEntity<Object>("Server error:".concat(e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
 		}		
+	}
+
+	@Override
+	public ResponseEntity<Object> addNewAction(String json) {
+		actionService.findActionsAll();
+		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
 
