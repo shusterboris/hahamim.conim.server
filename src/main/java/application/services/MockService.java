@@ -21,6 +21,7 @@ import proxies.BusinessPartner;
 import proxies.CatItem;
 import proxies.Contacts;
 import proxies.Member;
+import proxies.Person;
 import proxies.PriceProposal;
 import proxies.Proposal;
 import proxies.Store;
@@ -158,7 +159,7 @@ public class MockService {
 	}
 
 	private CatItem addToParent(CatItem parent, String itemKey, String itemValue, String itemLanguage) {
-		CatItem item = new CatItem(id++, itemKey, itemLanguage, parent.getId(), itemValue, 0);
+		CatItem item = new CatItem(id++, itemKey, itemLanguage, itemValue, 1000, (long) 0);
 		catByName.put(itemKey + "-" + itemValue, item);
 		catById.put(item.getId(), item);
 		return item;
@@ -195,54 +196,42 @@ public class MockService {
 		return member.isPresent() ? member.get() : null;
 	}
 
-	public Member getUser(String login, String pasword) {
+	public Person getUser(String login) {
 		return clients.stream()
-				.filter(mbr -> mbr.getLogin().equals(login) && 
-						mbr.getPassword().equals(pasword))
+				.filter(mbr -> mbr.getLogin().equals(login))
 				.findAny()
 				.orElse(null);		
 	}
 	
-//	public List<ClientNotification> getNotifications()
-//	{
-///		ArrayList<ClientNotification> notifList = new ArrayList<ClientNotification>();
-//		
-//		notifList.add(new ClientNotification("First title", "First text"));
-//		notifList.add(new ClientNotification("Second title", "Second text"));
-//		
-//		return notifList;
-//	}
 
-	private Member createMember(String name, String lastName, Gender gender, UserType user, String login,
+	private Member createMember(Integer id, String name, String lastName, Gender gender, UserType user, String login,
 			String... others) {
 		Member p = new Member();
+		p.setId((long) ++id);
 		p.setFirstName(name);
 		p.setLastName(lastName);
 		p.setGender(gender.ordinal());
 		p.setUserType(user);
-		p.setLogin(login);
 		p.setStatus(ClientStatus.ACTIVE);
-		p.setPassword("123");
-		p.setId(++id);
 		return p;
 	}
 
 	public void createRegions() {
 		List<CatItem> result = new ArrayList<CatItem>();
-		result.add(new CatItem(id++, "Country.Regions", "Северный", "RU"));
-		result.add(new CatItem(id++, "Country.Regions", "Южный", "RU"));
-		result.add(new CatItem(id++, "Country.Regions", "Хайфа", "RU"));
-		result.add(new CatItem(id++, "Country.Regions", "Центральный", "RU"));
-		result.add(new CatItem(id++, "Country.Regions", "Иудея и Самария", "RU"));
-		result.add(new CatItem(id++, "Country.Regions", "Тель-Авив", "RU"));
-		result.add(new CatItem(id++, "Country.Regions", "Иерусалим", "RU"));
-		result.add(new CatItem(id++, "Country.Regions", "North", "EN"));
-		result.add(new CatItem(id++, "Country.Regions", "South", "EN"));
-		result.add(new CatItem(id++, "Country.Regions", "Haifa", "EN"));
-		result.add(new CatItem(id++, "Country.Regions", "Center", "EN"));
-		result.add(new CatItem(id++, "Country.Regions", "Judea and Samaria", "EN"));
-		result.add(new CatItem(id++, "Country.Regions", "Tel-Aviv", "EN"));
-		result.add(new CatItem(id++, "Country.Regions", "Jerusalem", "EN"));
+		result.add(new CatItem(id++, "Country.Regions", "RU", "Северный", 1000, (long) 0));
+		result.add(new CatItem(id++, "Country.Regions", "RU", "Южный", 1000, (long) 0));
+		result.add(new CatItem(id++, "Country.Regions", "RU", "Хайфа",  1000, (long) 0));
+		result.add(new CatItem(id++, "Country.Regions", "RU", "Центральный",  1000, (long) 0));
+		result.add(new CatItem(id++, "Country.Regions", "RU", "Иудея и Самария",  1000, (long) 0));
+		result.add(new CatItem(id++, "Country.Regions", "RU", "Тель-Авив",  1000, (long) 0));
+		result.add(new CatItem(id++, "Country.Regions", "RU", "Иерусалим",  1000, (long) 0));
+		result.add(new CatItem(id++, "Country.Regions", "EN", "North",  1000, (long) 0));
+		result.add(new CatItem(id++, "Country.Regions", "EN", "South",  1000, (long) 0));
+		result.add(new CatItem(id++, "Country.Regions", "EN", "Haifa",  1000, (long) 0));
+		result.add(new CatItem(id++, "Country.Regions", "EN", "Center",  1000, (long) 0));
+		result.add(new CatItem(id++, "Country.Regions", "EN", "Judea and Samaria",  1000, (long) 0));
+		result.add(new CatItem(id++, "Country.Regions", "EN", "Tel-Aviv",  1000, (long) 0));
+		result.add(new CatItem(id++, "Country.Regions", "EN", "Jerusalem",  1000, (long) 0));
 		for (CatItem item : result) {
 			catByName.put("Country.Regions" + "-" + item.getValue(), item);
 			catById.put(item.getId(), item);
@@ -250,12 +239,12 @@ public class MockService {
 	}
 	
 	private void createMeasures() {
-		measures.add(new CatItem(id++, "Measures", "кг", "RU"));
-		measures.add(new CatItem(id++, "Measures", "шт", "RU"));
-		measures.add(new CatItem(id++, "Measures", "л", "RU"));
-		measures.add(new CatItem(id++, "Measures", "kg", "EN"));
-		measures.add(new CatItem(id++, "Measures", "piece", "EN"));
-		measures.add(new CatItem(id++, "Measures", "liter", "EN"));
+		measures.add(new CatItem(id++, "Measures", "RU", "кг", 1000, (long) 0));
+		measures.add(new CatItem(id++, "Measures", "RU", "шт", 1000, (long) 0));
+		measures.add(new CatItem(id++, "Measures", "RU", "л",  1000, (long) 0));
+		measures.add(new CatItem(id++, "Measures", "EN", "kg",  1000, (long) 0));
+		measures.add(new CatItem(id++, "Measures", "EN", "piece",  1000, (long) 0));
+		measures.add(new CatItem(id++, "Measures", "EN", "liter",  1000, (long) 0));
 
 		for (CatItem item : measures) {
 			catByName.put("Measures" + "-" + item.getValue(), item);
@@ -326,7 +315,7 @@ public class MockService {
 	}
 
 	private void createGoodsCategory() {
-		CatItem item = new CatItem(id++, "Goods.Category", "Продукты питания", "RU");
+		CatItem item = new CatItem(id++, "Goods.Category", "RU", "Продукты питания", 1000, (long) 0);
 		catByName.put("Goods.Category" + "-" + item.getValue(), item);
 		addToParentwithImage(item, "Goods.Category", "Мясные продукты", "RU","salami.png");
 		addToParentwithImage(item, "Goods.Category", "Овощи и фрукты", "RU","fruits.png");
@@ -335,25 +324,19 @@ public class MockService {
 		addToParentwithImage(item, "Goods.Category", "Сладости", "RU","sw.png");
 		addToParentwithImage(item, "Goods.Category", "Сыр", "RU","cheese.png");
 
-//		item = new CatItem(id++, "Goods.Category", "Услуги", "RU");
-//		catByName.put("Goods.Category" + "-" + item.getValue(), item);
-//		addToParent(item, "Goods.Category", "Обучение языкам", "RU");
-//		addToParent(item, "Goods.Category", "Ремонт бытовой техники", "RU");
-//		addToParent(item, "Goods.Category", "Стрижка", "RU");
-
-		item = new CatItem(id++, "Goods.Category", "Электроника", "RU");
+		item = new CatItem(id++, "Goods.Category", "RU", "Электроника", 1000, (long) 0);
 		catByName.put("Goods.Category" + "-" + item.getValue(), item);
 		addToParent(item, "Goods.Category", "Музыка и звук", "RU");
 		addToParent(item, "Goods.Category", "Телевидение и компьютеры", "RU");
 		addToParent(item, "Goods.Category", "Мобильные устройства", "RU");
 
-		item = new CatItem(id++, "Goods.Category", "Товары для дома", "RU");
+		item = new CatItem(id++, "Goods.Category", "RU", "Товары для дома", 1000, (long) 0);
 		catByName.put("Goods.Category" + "-" + item.getValue(), item);
 		addToParent(item, "Goods.Category", "Кухни", "RU");
 		addToParent(item, "Goods.Category", "Спальни", "RU");
 		addToParent(item, "Goods.Category", "Службы", "RU");
 		// ********************************************************
-		item = new CatItem(id++, "Goods.Category", "Food", "EN");
+		item = new CatItem(id++, "Goods.Category", "EN", "Food", 1000, (long) 0);
 		catByName.put("Goods.Category" + "-" + item.getValue(), item);
 		addToParentwithImage(item, "Goods.Category", "Meat", "EN","Salami.png");
 		addToParentwithImage(item, "Goods.Category", "Vegetables and fruits", "EN","fruits.png");
@@ -362,19 +345,14 @@ public class MockService {
 		addToParentwithImage(item, "Goods.Category", "Sweets", "EN","sw.png");
 		addToParentwithImage(item, "Goods.Category", "Cheese", "EN","cheese.png");
 
-//		item = new CatItem(id++, "Goods.Category", "Services", "EN");
-//		catByName.put("Goods.Category" + "-" + item.getValue(), item);
-//		addToParent(item, "Goods.Category", "Learning of languages", "EN");
-//		addToParent(item, "Goods.Category", "Household appliances repair", "EN");
-//		addToParent(item, "Goods.Category", "Styling", "EN");
-
-		item = new CatItem(id++, "Goods.Category", "Electronic devices", "EN");
+		item = new CatItem(id++, "Goods.Category", "EN", "Electronic devices", 1000, (long) 0);
 		catByName.put("Goods.Category" + "-" + item.getValue(), item);
 		addToParent(item, "Goods.Category", "Music and audio", "EN");
 		addToParent(item, "Goods.Category", "TV and computers", "EN");
 		addToParent(item, "Goods.Category", "Mobile devices", "EN");
 
-		item = new CatItem(id++, "Goods.Category", "Goods for home", "EN");
+		
+		item = new CatItem(id++, "Goods.Category", "EN", "Goods for home", 1000, (long) 0);
 		catByName.put("Goods.Category" + "-" + item.getValue(), item);
 		addToParent(item, "Goods.Category", "Kitchens", "EN");
 		addToParent(item, "Goods.Category", "Bedrooms", "EN");
@@ -383,37 +361,31 @@ public class MockService {
 	}
 
 	public List<Member> createStaff() {
-		clients.add(createMember("Борис", "Шустер", Gender.MALE, UserType.SUPERVISOR, "boris", "123"));
-		clients.add(createMember("Инна", "Шустер", Gender.FEMALE, UserType.SUPERVISOR, "inna", "123"));
-		clients.add(createMember("Владимир", "Олевский", Gender.MALE, UserType.MODERATOR, "vlad", "123"));
-		clients.add(createMember("Хаим", "Шапошник", Gender.MALE, UserType.STACKHOLDER, "haim", "123"));
+		clients.add(createMember(1,"Борис", "Шустер", Gender.MALE, UserType.SUPERVISOR, "boris", "123"));
+		clients.add(createMember(2,"Инна", "Шустер", Gender.FEMALE, UserType.SUPERVISOR, "inna", "123"));
+		clients.add(createMember(3,"Владимир", "Олевский", Gender.MALE, UserType.MODERATOR, "vlad", "123"));
+		clients.add(createMember(4,"Хаим", "Шапошник", Gender.MALE, UserType.STACKHOLDER, "haim", "123"));
 		return clients;
 	}
 
 	public void createMembers() {
-		Member member = createMember("Арон", "Беседер", Gender.MALE, UserType.PARTNER, "aron", "123");
-		member.setId(20000);
+		Member member = createMember(2000, "Арон", "Беседер", Gender.MALE, UserType.PARTNER, "aron", "123");
 		member.setPartnerId((long) 11111);
 		clients.add(member);
-		member = createMember("Мэй", "Ле-гун", Gender.FEMALE, UserType.MEMBER, "may", "123");
-		member.setId(20001);
+		member = createMember(2001, "Мэй", "Ле-гун", Gender.FEMALE, UserType.MEMBER, "may", "123");
 		member.setLevel(MemberStatus.SIMPLE.ordinal());
 		clients.add(member);
-		member = createMember("Зион", "Розенблюм", Gender.MALE, UserType.MEMBER, "zion", "123");
-		member.setId(20002);
+		member = createMember(2002, "Зион", "Розенблюм", Gender.MALE, UserType.MEMBER, "zion", "123");
 		member.setLevel(MemberStatus.GOLD.ordinal());
 		clients.add(member);
-		member = createMember("Лена", "Коган", Gender.FEMALE, UserType.MEMBER, "lena", "123");
-		member.setId(20003);
+		member = createMember(2003, "Лена", "Коган", Gender.FEMALE, UserType.MEMBER, "lena", "123");
 		member.setLevel(MemberStatus.SIMPLE.ordinal());
 		clients.add(member);
-		member = createMember("Света", "Левинская", Gender.FEMALE, UserType.MEMBER, "Svetlana", "123");
-		member.setId(20004);
+		member = createMember(2004, "Света", "Левинская", Gender.FEMALE, UserType.MEMBER, "Svetlana", "123");
 		member.setLevel(MemberStatus.PLATINUM.ordinal());
 		member.setLevel(MemberStatus.GOLD.ordinal());
 		clients.add(member);
-		member = createMember("Моше", "Цибулински", Gender.MALE, UserType.PARTNER, "moshe", "123");
-		member.setId(20004);
+		member = createMember(2005, "Моше", "Цибулински", Gender.MALE, UserType.PARTNER, "moshe", "123");
 		member.setLevel(MemberStatus.GOLD.ordinal());
 		clients.add(member);
 	}
@@ -588,9 +560,9 @@ public class MockService {
 		    ac.setStores(stores);
 		    ac.setThreshold((float) 0.5);
 		    if (i==3)  {
-		    	ac.setMeasure(new CatItem((long) 800+i, "Measure", "шт", "RU"));
+		    	ac.setMeasure(new CatItem((long) 800+i, "Measure", "RU", "шт", 1000, (long) 0));
 		    } else {
-		    	ac.setMeasure(new CatItem((long) 800+i, "Measure", "кг", "RU"));
+		    	ac.setMeasure(new CatItem((long) 800+i, "Measure", "RU", "кг", 1000, (long) 0));
 		    } 
 		    if (i % 2 == 0) {
 			    ac.setWinner("Бердычевские пончики");
@@ -611,13 +583,13 @@ public class MockService {
 	}
 	
 	private void createPartner() {
-		partner=new BusinessPartner("",createAddress("Тель-Авив","ул. Гистадрут 20","Бней-брак"), (long) 0);
-		partner.setId(11111);
+		partner=new BusinessPartner(id++,"",createAddress("Тель-Авив","ул. Гистадрут 20","Бней-брак"), (long) 0);
+		partner.setId((long) 11111);
 		partner.setName("Мааданей Росман");
 		partner.setFullName("Сеть Мааданей Росман");
 		ArrayList<Store> stores=new ArrayList<Store>();
-		stores.add(new Store("",createAddress("Хайфа","ул. Герцль 60","Хайфа"),partner.getId()));
-		stores.add(new Store("",createAddress("Тель-Авив","ул. Жаботински 133","Рамат-Ган"),partner.getId()));
+		stores.add(new Store(id++,"",createAddress("Хайфа","ул. Герцль 60","Хайфа"),partner.getId()));
+		stores.add(new Store(id++,"",createAddress("Тель-Авив","ул. Жаботински 133","Рамат-Ган"),partner.getId()));
 		partner.setStores(stores);
 		ArrayList<Contacts> allContacts=new ArrayList<Contacts>();
 		allContacts.add(new Contacts("Михаил","Коэн","050-9999-88-77"));
@@ -897,16 +869,19 @@ public class MockService {
 	}
 	
 	public MockService() {
+		/*
 		createGoodsCategory();
 		createRegions();
 		createMeasures();
 		createSettlments();
 		createStaff();
 		createMembers();
+		
 		createProposals();
 		createActions();
 		createPartner();
 		createIntents();
+		*/
 	}
 		
 

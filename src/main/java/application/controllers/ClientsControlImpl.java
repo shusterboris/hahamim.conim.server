@@ -10,7 +10,7 @@ import application.services.MockService;
 import exceptions.EntityNotFound;
 import proxies.Member;
 import proxies.Person;
-import proxies.User;
+
 
 public class ClientsControlImpl implements ClientsControl {
 	private MockService mService = new MockService();
@@ -79,9 +79,9 @@ public class ClientsControlImpl implements ClientsControl {
 	}
 
 	@Override
-	public ResponseEntity<Object> userLogin(User user) {
+	public ResponseEntity<Object> userLogin(Person user) {
 		try {
-			Member member = mService.getUser(user.getLogin(), user.getPassword());
+			Person member = mService.getUser(user.getLogin());
 			if (member == null)
 				return new ResponseEntity<Object>(new EntityNotFound(),HttpStatus.OK);
 			return new ResponseEntity<Object>(member, HttpStatus.OK);

@@ -1,25 +1,28 @@
-package proxies;
+package application.entities;
 
 import java.io.Serializable;
 import java.time.LocalDate;
 
+import javax.persistence.Entity;
+import javax.persistence.Table;
+
 import enums.ClientStatus;
 import enums.UserType;
 
-public class Person extends BasicEntity  implements Serializable{
+//@Entity
+//@Table(name = "persons")
+public class Person extends BasicEntity implements Serializable{
 	private static final long serialVersionUID = -2772623296089653648L;
 	private String lastName;
 	private String firstName;
 	private Integer gender;
 	private LocalDate birthday;
 	private String nick;
-	private String password;
-	private String login;
 	private String phone;
 	private String email;
 	private String tag;
 	private String note;
-    private User user;
+    private Long userId;
     private ClientStatus status = ClientStatus.POTENTIAL;
 	private UserType userType = UserType.MEMBER;
 
@@ -107,13 +110,7 @@ public class Person extends BasicEntity  implements Serializable{
 	public String toString() {
 		return getLastName().concat(" ").concat(getFirstName());
 	}
-	public String getPassword() {
-		return password;
-	}
 
-	public void setPassword(String password) {
-		this.password = password;
-	}
 	public ClientStatus getStatus() {
 		return status;
 	}
@@ -121,12 +118,13 @@ public class Person extends BasicEntity  implements Serializable{
 	public void setStatus(ClientStatus status) {
 		this.status = status;
 	}
-	public String getLogin() {
-		return login;
+
+	public Long getUserId() {
+		return userId;
 	}
 
-	public void setLogin(String login) {
-		this.login = login;
+	public void setUserId(Long userId) {
+		this.userId = userId;
 	}
 
 }

@@ -1,10 +1,10 @@
 
 spring:
     datasource:
-        password: egjgf,skfcj,frf
-        url: jdbc:mysql://localhost:3306/conimhahamim?useSSL=false&useUnicode=yes&characterEncoding=UTF-8&serverTimezone=UTC
-        username: root
         driver-class-name: com.mysql.cj.jdbc.Driver
+        url: jdbc:mysql://localhost:3306/conimhahamim?useSSL=false&default_authentication_plugin=mysql_native_password&useUnicode=yes&characterEncoding=UTF-8&serverTimezone=UTC
+        username: chserver
+        password: vfnthy0tckjdJ
     jpa:
         hibernate:
             ddl-auto: create

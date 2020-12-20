@@ -1,4 +1,4 @@
-package proxies;
+package application.entities;
 
 import java.io.Serializable;
 import java.util.Collections;
@@ -6,7 +6,7 @@ import java.util.List;
 
 import enums.PriceProposalType;
 
-public class PriceProposal extends BasicEntity  implements Serializable{
+public class PriceProposal extends BasicEntity implements Serializable{
 	private static final long serialVersionUID = 7882895218501386694L;
 	private Long memberId;
 	private Integer priceLevel;
@@ -93,4 +93,5 @@ public class PriceProposal extends BasicEntity  implements Serializable{
 		for(int i=0; i < lst.size(); i++)
 			lst.get(i).setPriceLevel(i);
 	}
+
 }

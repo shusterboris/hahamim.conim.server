@@ -1,12 +1,19 @@
-package proxies;
+package application.entities;
 
 import java.io.Serializable;
 
+import javax.persistence.Entity;
+import javax.persistence.Table;
 
+@Entity
+@Table(name = "catitems")
 public class CatItem extends BasicEntity implements Serializable{
 	private static final long serialVersionUID = -9215990634396625375L;
-	private String key;
+	private String itemKey;
 	private String language;
+	/**
+	 * id of parent item (for items hierarchy)
+	 */
 	private Long parentId = (long) 0;
 	private String value;
 	/**
@@ -26,12 +33,12 @@ public class CatItem extends BasicEntity implements Serializable{
 		this.addValue = addValue;
 	}
 
-	public String getKey() {
-		return key;
+	public String getItemKey() {
+		return itemKey;
 	}
 
-	public void setKey(String key) {
-		this.key = key;
+	public void setItemKey(String key) {
+		this.itemKey = key;
 	}
 
 	public String getLanguage() {
@@ -68,7 +75,7 @@ public class CatItem extends BasicEntity implements Serializable{
 
 	public CatItem(String key, String language, Long parentId, String value, Integer sortOrder) {
 		super();
-		this.key = key;
+		this.itemKey = key;
 		this.language = language;
 		this.parentId = parentId;
 		this.value = value;

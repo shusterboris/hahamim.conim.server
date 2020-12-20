@@ -1,6 +1,13 @@
-package proxies;
+package application.entities;
 
-public class Address extends BasicEntity {
+import java.io.Serializable;
+
+import javax.persistence.Entity;
+import javax.persistence.Table;
+
+//@Entity
+//@Table(name = "addresses")
+public class Address extends BasicEntity implements Serializable {
 	private static final long serialVersionUID = -6276857316780429416L;
 	private String region;  //from catItem
 	private String settlement;  //from catItem

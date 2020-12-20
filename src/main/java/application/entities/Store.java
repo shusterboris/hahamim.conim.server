@@ -1,7 +1,12 @@
-package proxies;
+package application.entities;
 
 import java.io.Serializable;
 
+import javax.persistence.Entity;
+import javax.persistence.Table;
+
+//@Entity
+//@Table(name = "addresses")
 public class Store extends BasicEntity implements Serializable{
 	private static final long serialVersionUID = 2624926622636823053L;
 	protected String name;
@@ -32,16 +37,12 @@ public class Store extends BasicEntity implements Serializable{
 		this.headQuatersId = headQuatersId;
 	}
 
-	public Store(String name, Address address, Long headQuatersId) {
-		super();
+
+	public Store(Long id, String name, Address address, Long headQuatersId) {
+		this.id = id;
 		this.name = name;
 		this.address = address;
 		this.headQuatersId = headQuatersId;
-	}
-
-	public Store(Long id, String name, Address address, Long headQuatersId) {
-		this(name, address, headQuatersId);
-		this.id = id;
 	}
 
 	public String toStringShort() {

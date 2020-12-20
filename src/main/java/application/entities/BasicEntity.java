@@ -75,4 +75,5 @@ public class BasicEntity {
 	public void setCreated(LocalDateTime created) {
 		this.created = created;
 	}
+
 }

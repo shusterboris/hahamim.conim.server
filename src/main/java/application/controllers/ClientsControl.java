@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import proxies.Member;
-import proxies.User;
+import proxies.Person;
 
 @RequestMapping("/clients")
 public interface ClientsControl {
@@ -27,7 +27,7 @@ public interface ClientsControl {
 	public ResponseEntity<Object> getPartnerById(@PathVariable(value = "id") Long id);
 
 	@PostMapping(value = "/login", consumes = "application/json", produces = "application/json")
-	public ResponseEntity<Object> userLogin(@RequestBody User user);
+	public ResponseEntity<Object> userLogin(@RequestBody Person user);
 	
 	@GetMapping(value = "/get/{id}")
 	public ResponseEntity<Object> getClientById(@PathVariable(value = "id") Long id);
