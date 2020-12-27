@@ -23,7 +23,7 @@ public class Person extends BasicEntity implements Serializable{
 	private String tag;
 	private String note;
     private Long userId;
-    private ClientStatus status = ClientStatus.POTENTIAL;
+    private ClientStatus status = ClientStatus.NEW;
 	private UserType userType = UserType.MEMBER;
 
 	public String getLastName() {

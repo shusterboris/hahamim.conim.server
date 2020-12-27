@@ -10,6 +10,7 @@ import application.services.repositories.ActionsDAO;
 
 @Service
 public class ActionService {
+	
 	@Autowired
 	private ActionsDAO repo;
 	

@@ -82,7 +82,7 @@ public class CatItem extends BasicEntity implements Serializable{
 		this.sortOrder = sortOrder;
 	}
 
-	public CatItem(Long id, String key, String language, Long parentId, String value, Integer sortOrder) {
+	public CatItem(Long id, String key, String language, String value, Long parentId, Integer sortOrder) {
 		this(key, language, parentId, value, sortOrder);
 		this.id = id;
 		this.parentId = parentId;

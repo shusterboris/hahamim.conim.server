@@ -6,7 +6,6 @@ import java.io.InputStreamReader;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.nio.file.FileSystem;
 import java.nio.file.FileSystems;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -16,13 +15,21 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 
-import application.controllers.ImageController;
-
 public class ApplicationSettings {
 	private static final String fsepar = FileSystems.getDefault().getSeparator(); 
 	public final static String appPath = getAppFolder();
 	public final static String imgStorePath = getAppFolder().concat("imgStore").concat(fsepar);
 	public static final Logger log = LoggerFactory.getLogger(Starter.class);
+	private static String defaultLanguage = "RU";
+
+	public static String getDefaultLanguage() {
+		return defaultLanguage;
+	}
+
+	public static void setDefaultLanguage(String choosenLanguage) {
+		ApplicationSettings.defaultLanguage = choosenLanguage;
+	}
+
 
 	
 	@Value("${app.host.addr}")
