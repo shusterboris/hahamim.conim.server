@@ -94,5 +94,5 @@ public class ImageController {
 			extention = extention.substring(1);
 		ImageIO.write(bImage, extention, baOut);
 		return baOut.toByteArray();
-	}	
+	}
 }

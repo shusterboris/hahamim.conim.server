@@ -37,10 +37,11 @@ public class Person extends BasicEntity implements Serializable{
     //private ClientStatus status = ClientStatus.POTENTIAL;
 	//private UserType userType = UserType.MEMBER;
 	@Column(name="`status`", nullable=false, length=11)
-	private Integer status;
+	private Integer status=0;
 	@Column(name="`type`", nullable=false, length=11)
-	private Integer type;
+	private Integer type=0;
 	
+
 	public String getLastName() {
 		return lastName;
 	}

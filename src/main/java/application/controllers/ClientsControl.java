@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import proxies.Member;
 import proxies.Person;
 
+
 @RequestMapping("/clients")
 public interface ClientsControl {
 

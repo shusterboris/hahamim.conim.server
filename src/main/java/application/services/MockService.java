@@ -11,7 +11,7 @@ import java.util.Optional;
 import java.util.Random;
 import java.util.stream.Collectors;
 
-import application.UserSettings;
+import application.ApplicationSettings;
 import enums.ClientStatus;
 import enums.Gender;
 import enums.MemberStatus;
@@ -41,7 +41,7 @@ public class MockService {
 
 	public List<CatItem> getCatsByCategory(String key, String language) {
 		if (language == null)
-			language = UserSettings.getChoosenLanguage();
+			language = ApplicationSettings.getDefaultLanguage();
 		final String lang = language;
 		List<CatItem> items = new ArrayList<CatItem>();
 		catByName.forEach((k, value) -> {
@@ -53,7 +53,7 @@ public class MockService {
 
 	public List<CatItem> getRootCatsByCategory(String key, String language) {
 		if (language == null)
-			language = UserSettings.getChoosenLanguage();
+			language = ApplicationSettings.getDefaultLanguage();
 		final String lang = language;
 		List<CatItem> items = new ArrayList<CatItem>();
 		catByName.forEach((k, value) -> {
@@ -212,6 +212,7 @@ public class MockService {
 		p.setLastName(lastName);
 		p.setGender(gender.ordinal());
 		p.setUserType(user);
+		p.setLogin(login);
 		p.setStatus(ClientStatus.ACTIVE);
 		return p;
 	}
@@ -315,6 +316,7 @@ public class MockService {
 	}
 
 	private void createGoodsCategory() {
+		//long id, String key, String language, Long parentId, String value, Integer sortOrder)
 		CatItem item = new CatItem(id++, "Goods.Category", "RU", "Продукты питания", 1000, (long) 0);
 		catByName.put("Goods.Category" + "-" + item.getValue(), item);
 		addToParentwithImage(item, "Goods.Category", "Мясные продукты", "RU","salami.png");
@@ -371,9 +373,11 @@ public class MockService {
 	public void createMembers() {
 		Member member = createMember(2000, "Арон", "Беседер", Gender.MALE, UserType.PARTNER, "aron", "123");
 		member.setPartnerId((long) 11111);
+		member.setPhone("+972557776543");
 		clients.add(member);
 		member = createMember(2001, "Мэй", "Ле-гун", Gender.FEMALE, UserType.MEMBER, "may", "123");
 		member.setLevel(MemberStatus.SIMPLE.ordinal());
+		member.setPhone("0537183654");
 		clients.add(member);
 		member = createMember(2002, "Зион", "Розенблюм", Gender.MALE, UserType.MEMBER, "zion", "123");
 		member.setLevel(MemberStatus.GOLD.ordinal());
@@ -443,8 +447,8 @@ public class MockService {
 				p = createProposal(id++, name, cats, telavivReg, author, randomPrice, dueDate);
 			p.setMaxPrice(random.nextFloat());
 			p.setStatus("ProposalStatus.PUBLISHED");
-			p.setWinner("Сеть магазинов 'Мама'");
-			p.setWinnerId((long)999);
+			p.setSupplier("Сеть магазинов 'Мама'");
+			p.setSupplierId((long)999);
 			p.setMeasure(measures.get(random.nextInt(measures.size()-1)));
 			proposals.add(p);
 		}
@@ -565,11 +569,11 @@ public class MockService {
 		    	ac.setMeasure(new CatItem((long) 800+i, "Measure", "RU", "кг", 1000, (long) 0));
 		    } 
 		    if (i % 2 == 0) {
-			    ac.setWinner("Бердычевские пончики");
-			    ac.setWinnerId((long)998);
+			    ac.setSupplier("Бердычевские пончики");
+			    ac.setSupplierId((long)998);
 		    }else {
-			    ac.setWinner("Мааданей Росман");
-			    ac.setWinnerId((long)11111);
+			    ac.setSupplier("Мааданей Росман");
+			    ac.setSupplierId((long)11111);
 		    }
 		  
 		    List<String> ps=new ArrayList<String>();
@@ -601,7 +605,7 @@ public class MockService {
 	
 	public List<CatItem> getAllCategories(String language){
 		if (language == null)
-			language = UserSettings.getChoosenLanguage();
+			language = ApplicationSettings.getDefaultLanguage();
 		final String lang = language;
 		List<CatItem> items = new ArrayList<CatItem>();
 		catByName.forEach((k, value) -> {
@@ -686,7 +690,7 @@ public class MockService {
 	}
 	
 	public void saveMemberPriceIntent(PriceProposal intent) {
-		if (intent.getId() == 0) {
+		if (intent.getId() == null || intent.getId() == 0) {
 			id++;
 			intent.setId(id);
 			intents.add(intent);
@@ -869,19 +873,20 @@ public class MockService {
 	}
 	
 	public MockService() {
-		/*
+		
 		createGoodsCategory();
+	
 		createRegions();
 		createMeasures();
 		createSettlments();
 		createStaff();
 		createMembers();
 		
-		createProposals();
+		//createProposals();
 		createActions();
 		createPartner();
 		createIntents();
-		*/
+		
 	}
 		
 
