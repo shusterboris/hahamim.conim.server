@@ -20,8 +20,7 @@ public interface ClientsControl {
 	@GetMapping(value = "/staff")
 	public ResponseEntity<Object> getStaff();
 
-	@GetMapping(value = "/members")
-	public ResponseEntity<Object> getMembers();
+
 
 	@GetMapping(value = "/partner/{id}")
 	public ResponseEntity<Object> getPartnerById(@PathVariable(value = "id") Long id);
@@ -32,8 +31,9 @@ public interface ClientsControl {
 	@GetMapping(value = "/get/{id}")
 	public ResponseEntity<Object> getClientById(@PathVariable(value = "id") Long id);
 
-	@PostMapping(value = "/add", consumes = "application/json", produces = "application/json")
-	public ResponseEntity<Object> createClient(@RequestBody Member p);
+	@PostMapping(value = "/add")
+	public ResponseEntity<Object> createClient(@RequestBody String json);
+	
 
 	@PutMapping(value = "/update/{id}")
 	public ResponseEntity<Object> updateClient(@PathVariable("id") Long id, @RequestBody Member p);

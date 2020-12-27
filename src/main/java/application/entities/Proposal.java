@@ -30,8 +30,8 @@ public class Proposal extends BasicEntity {
 	private String status = ProposalStatus.INIT.getMessageKey(); // Из набора TenderStatus
 	private String photos;
 	private LocalDate publicationDate;
-	private String winner;
-	private Long winnerId;
+	
+	private Long supplierId;
 	private Float total;
 	private Integer countMembers;
 	private LocalDate dateOfSailStarting;
@@ -111,13 +111,7 @@ public class Proposal extends BasicEntity {
 		this.status = status;
 	}
 
-	public String getWinner() {
-		return winner;
-	}
-
-	public void setWinner(String winner) {
-		this.winner = winner;
-	}
+	
 
 	public LocalDate getDateOfSailStarting() {
 		return dateOfSailStarting;
@@ -161,14 +155,7 @@ public class Proposal extends BasicEntity {
 		this.publicationDate = publicationDate;
 	}
 
-	public Long getWinnerId() {
-		return winnerId;
-	}
-
-	public void setWinnerId(Long winnerId) {
-		this.winnerId = winnerId;
-	}
-
+	
 	public Float getTotal() {
 		return total;
 	}

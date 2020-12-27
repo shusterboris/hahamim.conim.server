@@ -1,33 +1,84 @@
-package application.entities;
+ package application.entities;
 
 import java.io.Serializable;
 import java.time.LocalDate;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.MappedSuperclass;
 import javax.persistence.Table;
 
 import enums.ClientStatus;
 import enums.UserType;
 
-//@Entity
-//@Table(name = "persons")
+@MappedSuperclass
 public class Person extends BasicEntity implements Serializable{
 	private static final long serialVersionUID = -2772623296089653648L;
+	@Column(name="`lastname`", nullable=false, length=255)
 	private String lastName;
+	@Column(name="`firstname`", nullable=false, length=255)
 	private String firstName;
+	@Column(name="`gender`", nullable=true, length=11)
 	private Integer gender;
-	private LocalDate birthday;
-	private String nick;
+	@Column(name="`birthday`", nullable=true)	
+	private java.util.Date birthday;
+	
+	@Column(name="`phone`", nullable=true, length=255)
 	private String phone;
+	@Column(name="`email`", nullable=true, length=255)
 	private String email;
-	private String tag;
+	//private String tag;
+	@Column(name="`note`", nullable=true, length=255)
 	private String note;
-    private Long userId;
-    private ClientStatus status = ClientStatus.POTENTIAL;
-	private UserType userType = UserType.MEMBER;
-
+	@Column(name="`login`", nullable=true, length=255)
+	private String login;
+	@Column(name="`password`", nullable=true, length=255)
+	private String password;
+    //private ClientStatus status = ClientStatus.POTENTIAL;
+	//private UserType userType = UserType.MEMBER;
+	@Column(name="`status`", nullable=false, length=11)
+	private Integer status;
+	@Column(name="`type`", nullable=false, length=11)
+	private Integer type;
+	
 	public String getLastName() {
 		return lastName;
+	}
+
+	public String getLogin() {
+		return login;
+	}
+
+	public void setLogin(String login) {
+		this.login = login;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+	public Integer getStatus() {
+		return status;
+	}
+
+	public void setStatus(Integer status) {
+		this.status = status;
+	}
+
+	public Integer getType() {
+		return type;
+	}
+
+	public void setType(Integer type) {
+		this.type = type;
+	}
+
+	public void setBirthday(java.util.Date birthday) {
+		this.birthday = birthday;
 	}
 
 	public void setLastName(String lastName) {
@@ -50,22 +101,6 @@ public class Person extends BasicEntity implements Serializable{
 		this.gender = gender;
 	}
 
-	public LocalDate getBirthday() {
-		return birthday;
-	}
-
-	public void setBirthday(LocalDate birthday) {
-		this.birthday = birthday;
-	}
-
-	public String getNick() {
-		return nick;
-	}
-
-	public void setNick(String nick) {
-		this.nick = nick;
-	}
-
 
 	public String getPhone() {
 		return phone;
@@ -83,13 +118,7 @@ public class Person extends BasicEntity implements Serializable{
 		this.email = email;
 	}
 
-	public String getTag() {
-		return tag;
-	}
-
-	public void setTag(String tag) {
-		this.tag = tag;
-	}
+	
 
 	public String getNote() {
 		return note;
@@ -99,32 +128,13 @@ public class Person extends BasicEntity implements Serializable{
 		this.note = note;
 	}
 
-	public UserType getUserType() {
-		return userType;
-	}
-
-	public void setUserType(UserType userType) {
-		this.userType = userType;
-	}
+	
+	
 
 	public String toString() {
 		return getLastName().concat(" ").concat(getFirstName());
 	}
 
-	public ClientStatus getStatus() {
-		return status;
-	}
-
-	public void setStatus(ClientStatus status) {
-		this.status = status;
-	}
-
-	public Long getUserId() {
-		return userId;
-	}
-
-	public void setUserId(Long userId) {
-		this.userId = userId;
-	}
+	
 
 }
