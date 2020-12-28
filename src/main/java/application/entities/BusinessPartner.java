@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import proxies.Address;
-import proxies.Contacts;
+import proxies.Contact;
 import proxies.Store;
 
 
@@ -14,7 +14,7 @@ import proxies.Store;
 		private String name;
 	    private String fullName;
 	    private String phone;
-	    private List<Contacts> contacts;
+	    private List<Contact> contacts;
 	    private List<Store> stores;
 	    private Double raiting;  //оценка поставщика
 	    public Double getRaiting() {
@@ -23,7 +23,7 @@ import proxies.Store;
 		public void setRaiting(Double raiting) {
 			this.raiting = raiting;
 		}
-		public void setContacts(List<Contacts> contacts) {
+		public void setContacts(List<Contact> contacts) {
 			this.contacts = contacts;
 		}
 		public void setStores(List<Store> stores) {
@@ -47,10 +47,10 @@ import proxies.Store;
 		public void setPhone(String phone) {
 			this.phone = phone;
 		}
-		public List<Contacts> getContacts() {
+		public List<Contact> getContacts() {
 			return contacts;
 		}
-		public void setContacts(ArrayList<Contacts> contacts) {
+		public void setContacts(ArrayList<Contact> contacts) {
 			this.contacts = contacts;
 		}
 		public List<Store> getStores() {

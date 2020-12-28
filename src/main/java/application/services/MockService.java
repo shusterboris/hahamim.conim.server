@@ -19,7 +19,7 @@ import enums.UserType;
 import proxies.Address;
 import proxies.BusinessPartner;
 import proxies.CatItem;
-import proxies.Contacts;
+import proxies.Contact;
 import proxies.Member;
 import proxies.Person;
 import proxies.PriceProposal;
@@ -38,6 +38,9 @@ public class MockService {
 	List<PriceProposal> intents = new ArrayList<>();
 	private Random random = new Random();
 	private BusinessPartner partner;
+	private BusinessPartner club;
+	private CatItem haifa;
+	private CatItem haifaRegion;
 
 	public List<CatItem> getCatsByCategory(String key, String language) {
 		if (language == null)
@@ -221,7 +224,8 @@ public class MockService {
 		List<CatItem> result = new ArrayList<CatItem>();
 		result.add(new CatItem(id++, "Country.Regions", "RU", "Северный", 1000, (long) 0));
 		result.add(new CatItem(id++, "Country.Regions", "RU", "Южный", 1000, (long) 0));
-		result.add(new CatItem(id++, "Country.Regions", "RU", "Хайфа",  1000, (long) 0));
+		haifaRegion = new CatItem(id++, "Country.Regions", "RU", "Хайфа",  1000, (long) 0);
+		result.add(haifaRegion);
 		result.add(new CatItem(id++, "Country.Regions", "RU", "Центральный",  1000, (long) 0));
 		result.add(new CatItem(id++, "Country.Regions", "RU", "Иудея и Самария",  1000, (long) 0));
 		result.add(new CatItem(id++, "Country.Regions", "RU", "Тель-Авив",  1000, (long) 0));
@@ -268,7 +272,7 @@ public class MockService {
 		addToParent(getCatByName("Country.Regions-Северный"), "Regions.Settlments", "Кфар Манда", "RU");
 		addToParent(getCatByName("Country.Regions-Северный"), "Regions.Settlments", "Нацрат Элит", "RU");
 
-		addToParent(getCatByName("Country.Regions-Хайфа"), "Regions.Settlments", "Хайфа", "RU");
+		haifa = addToParent(getCatByName("Country.Regions-Хайфа"), "Regions.Settlments", "Хайфа", "RU");
 		addToParent(getCatByName("Country.Regions-Хайфа"), "Regions.Settlments", "Нешер", "RU");
 		addToParent(getCatByName("Country.Regions-Хайфа"), "Regions.Settlments", "Крайот", "RU");
 
@@ -353,7 +357,6 @@ public class MockService {
 		addToParent(item, "Goods.Category", "TV and computers", "EN");
 		addToParent(item, "Goods.Category", "Mobile devices", "EN");
 
-		
 		item = new CatItem(id++, "Goods.Category", "EN", "Goods for home", 1000, (long) 0);
 		catByName.put("Goods.Category" + "-" + item.getValue(), item);
 		addToParent(item, "Goods.Category", "Kitchens", "EN");
@@ -363,10 +366,36 @@ public class MockService {
 	}
 
 	public List<Member> createStaff() {
-		clients.add(createMember(1,"Борис", "Шустер", Gender.MALE, UserType.SUPERVISOR, "boris", "123"));
-		clients.add(createMember(2,"Инна", "Шустер", Gender.FEMALE, UserType.SUPERVISOR, "inna", "123"));
-		clients.add(createMember(3,"Владимир", "Олевский", Gender.MALE, UserType.MODERATOR, "vlad", "123"));
-		clients.add(createMember(4,"Хаим", "Шапошник", Gender.MALE, UserType.STACKHOLDER, "haim", "123"));
+		Address address = new Address();
+		address.setSettlement("Хайфа");
+		address.setId(id++);
+		address.setRegion("Хайфа");
+		address.setStreetAddress("ул. Ха навиим, 25");
+		club = new BusinessPartner((long) 969, "Клуб 'Коним Хахамим'", address, (long) 0);
+		List<Contact> contacts = new ArrayList<>();
+		Member employee = createMember(1,"Борис", "Шустер", Gender.MALE, UserType.SUPERVISOR, "boris", "123");
+		Contact c = new Contact(employee.getFirstName(), employee.getLastName(), employee.getPhone());
+		employee.setPartnerId((long) 969);
+		contacts.add(c);
+		clients.add(employee);
+		employee = createMember(2,"Инна", "Шустер", Gender.FEMALE, UserType.SUPERVISOR, "inna", "123");
+		employee.setPartnerId((long) 969);
+		c = new Contact(employee.getFirstName(), employee.getLastName(), employee.getPhone());
+		contacts.add(c);
+		clients.add(employee);
+		employee = createMember(3,"Владимир", "Олевский", Gender.MALE, UserType.MODERATOR, "vlad", "123");
+		c = new Contact(employee.getFirstName(), employee.getLastName(), employee.getPhone());
+		employee.setPartnerId((long) 969);
+		contacts.add(c);
+		clients.add(employee);
+		employee = createMember(4,"Хаим", "Шапошник", Gender.MALE, UserType.STACKHOLDER, "haim", "123");
+		c = new Contact(employee.getFirstName(), employee.getLastName(), employee.getPhone());
+		employee.setPartnerId((long) 969);
+		contacts.add(c);
+		clients.add(employee);
+		club.setContacts(contacts);
+		club.setPhone("+972559195963");
+		club.setFullName(club.getName());
 		return clients;
 	}
 
@@ -595,10 +624,10 @@ public class MockService {
 		stores.add(new Store(id++,"",createAddress("Хайфа","ул. Герцль 60","Хайфа"),partner.getId()));
 		stores.add(new Store(id++,"",createAddress("Тель-Авив","ул. Жаботински 133","Рамат-Ган"),partner.getId()));
 		partner.setStores(stores);
-		ArrayList<Contacts> allContacts=new ArrayList<Contacts>();
-		allContacts.add(new Contacts("Михаил","Коэн","050-9999-88-77"));
-		allContacts.add(new Contacts("Давид","Левин", "050-9999-88-77"));
-		allContacts.add(new Contacts("Арон","Беседер", "050-9999-77-77"));
+		ArrayList<Contact> allContacts=new ArrayList<Contact>();
+		allContacts.add(new Contact("Михаил","Коэн","050-9999-88-77"));
+		allContacts.add(new Contact("Давид","Левин", "050-9999-88-77"));
+		allContacts.add(new Contact("Арон","Беседер", "050-9999-77-77"));
 		partner.setContacts(allContacts);
 		partners.add(partner);
 	}
