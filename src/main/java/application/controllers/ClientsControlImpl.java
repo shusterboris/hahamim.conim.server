@@ -45,7 +45,8 @@ public class ClientsControlImpl implements ClientsControl {
 		em.setLevel(0);
 		em.setStatus(0);
 		em.setType(0);
-		
+		em.setLogin(pm.getLogin());
+		em.setPassword(pm.getPassword());
 		boolean res = cserv.createMember(em);
 		//добавить проверку на телефон и мейл
 		//p.setId(++id);
