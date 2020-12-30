@@ -3,17 +3,20 @@ package application.controllers;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
+import application.services.CatItemServices;
 import application.services.MockService;
 import proxies.CatItem;
 
 @RestController
 public class CatalogsControlImpl implements CatalogsControl {
 	private MockService mService = new MockService();
-
+	@Autowired
+	private CatItemServices serv;
 	@Override
 	public ResponseEntity<Object> getItemsByKey(String key, String language) {
 		try {
@@ -119,5 +122,29 @@ public class CatalogsControlImpl implements CatalogsControl {
 			return new ResponseEntity<Object>("Server error:".concat(e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
-
+	@Override
+	public  ResponseEntity<Object> create(){
+	
+	/*result.add(new CatItem(id++, "Country.Regions", "RU", "Северный", 1000, (long) 0));
+	result.add(new CatItem(id++, "Country.Regions", "RU", "Южный", 1000, (long) 0));
+	haifaRegion = new CatItem(id++, "Country.Regions", "RU", "Хайфа",  1000, (long) 0);
+	result.add(haifaRegion);
+	result.add(new CatItem(id++, "Country.Regions", "RU", "Центральный",  1000, (long) 0));
+	result.add(new CatItem(id++, "Country.Regions", "RU", "Иудея и Самария",  1000, (long) 0));
+	result.add(new CatItem(id++, "Country.Regions", "RU", "Тель-Авив",  1000, (long) 0));
+	result.add(new CatItem(id++, "Country.Regions", "RU", "Иерусалим",  1000, (long) 0));
+	result.add(new CatItem(id++, "Country.Regions", "EN", "North",  1000, (long) 0));
+	result.add(new CatItem(id++, "Country.Regions", "EN", "South",  1000, (long) 0));
+	cat=new CatItem((long) 0, "Country.Regions", "EN", "North",  0, (long) 0);*/
+	application.entities.CatItem ec=new application.entities.CatItem("Country.Regions","North","EN");
+	serv.create(ec);
+	ec=new application.entities.CatItem("Country.Regions","North","RU");
+	serv.create(ec);
+	ec=new application.entities.CatItem("Country.Regions","Haifa","EN");
+	serv.create(ec);
+	ec=new application.entities.CatItem("Country.Regions","Haifa","RU");
+	serv.create(ec);
+	
+	return new ResponseEntity<Object>("", HttpStatus.OK);
+	}
 }

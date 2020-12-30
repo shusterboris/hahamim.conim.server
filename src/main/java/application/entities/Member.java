@@ -37,6 +37,10 @@ public class Member extends Person implements Serializable{
 	@Basic(fetch=FetchType.LAZY)
 	private Long region;
 	
+	@ManyToOne(targetEntity=application.entities.BusinessPartner.class)	
+	@org.hibernate.annotations.Cascade({org.hibernate.annotations.CascadeType.LOCK})	
+	@JoinColumns({ @JoinColumn(name="`partnerId`", referencedColumnName="`id`") })	
+	@Basic(fetch=FetchType.LAZY)
 	private Long partnerId;
 	
 	public Long getPartnerId() {
@@ -55,10 +59,6 @@ public class Member extends Person implements Serializable{
 		this.level = level;
 	}
 	
-	/*
-	 * public List<String> getRegions() { return regions; }
-	 * 
-	 * public void setRegions(List<String> regions) { this.regions = regions; }
-	 */
+	
 
 }

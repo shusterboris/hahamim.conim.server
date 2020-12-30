@@ -3,6 +3,8 @@ package application.controllers;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @RequestMapping("/catalogs")
@@ -15,7 +17,7 @@ public interface CatalogsControl {
 	@GetMapping({ "/items/allcats/{key}/{language}", "/items/allcats/{key}" })
 	public ResponseEntity<Object> getAllItemsByKey(@PathVariable("key") String key,
 			@PathVariable(name = "language", required = false) String language);
-
+//пока не трогать
 	@GetMapping({ "/items/all/{language}", "/items/all" })
 	public ResponseEntity<Object> getAllItems(@PathVariable(name = "language", required = false) String language);
 
@@ -44,5 +46,8 @@ public interface CatalogsControl {
 	@GetMapping({ "/settlmentsstrings/{region}/{language}", "/settlmentsstrings/{region}" })
 	public ResponseEntity<Object> getSetllmetsStrings(@PathVariable("region") String region,
 			@PathVariable(name = "language", required = false) String language);
+	
+	@GetMapping(value = "/addAll")
+	public ResponseEntity<Object> create();
 
 }

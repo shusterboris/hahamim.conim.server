@@ -105,9 +105,9 @@ public class CatItem extends BasicEntity implements Serializable{
 		this.parentId = parentId;
 	}
 
-	public CatItem(Long id, String key, String value, String language) {
-		this(key, language, (long) 0, value, 1000);
-		this.id = id;
+	public CatItem(String key, String value, String language) {
+		this(key, language, (long) 0, value, 0);
+	
 	}
 
 	@Override

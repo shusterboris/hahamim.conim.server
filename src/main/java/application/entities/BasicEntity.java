@@ -1,5 +1,6 @@
 package application.entities;
 
+import java.sql.Date;
 import java.time.LocalDateTime;
 
 import javax.persistence.Column;
@@ -59,6 +60,7 @@ public class BasicEntity {
 	
 	@PrePersist
 	protected void onCreate() {
+		
 		setCreated(LocalDateTime.now());
 		modified = LocalDateTime.now();
 	}

@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import application.entities.Member;
 import application.services.repositories.MembersDAO;
+import proxies.Person;
 
 
 @Service
@@ -32,6 +33,15 @@ public class ClientService {
 		} catch (Exception e) {
 			return false;
 		}
+	}
+	
+	public Member getUser(String login) {
+		Optional<Member> res = cDAO.findByLogin(login);
+		if (res.isEmpty()) return null;
+		return res.get();
+	}
+	public List<Member> getClients() {
+		return cDAO.findAll();
 	}
 	
 }

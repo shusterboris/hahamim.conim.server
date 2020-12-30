@@ -17,6 +17,7 @@ import exceptions.EntityNotFound;
 import application.entities.Member;
 import application.entities.Person;
 import enums.ClientStatus;
+import enums.Gender;
 import enums.UserType;
 
 @RestController
@@ -103,10 +104,25 @@ public class ClientsControlImpl implements ClientsControl {
 	@Override
 	public ResponseEntity<Object> userLogin(proxies.Person user) {
 		try {
-			proxies.Person member = mService.getUser(user.getLogin());
-			if (member == null)
+			//proxies.Person member = mService.getUser(user.getLogin());
+			Member me=cserv.getUser(user.getLogin());
+			if (me == null)
 				return new ResponseEntity<Object>(new EntityNotFound(),HttpStatus.OK);
-			return new ResponseEntity<Object>(member, HttpStatus.OK);
+			//сделать прокси объект
+			ClientStatus[] st = ClientStatus.values();
+			UserType[] u = UserType.values();
+			//proxies.Member member = createMember(me.getId(),me.getFirstName(), me.getLastName(), g[me.getGender()], u[me.getType()], "", "");
+			proxies.Member p = new proxies.Member();
+			p.setId(me.getId());
+			p.setFirstName(me.getFirstName());
+			p.setLastName(me.getLastName());
+			p.setGender(me.getGender());
+			p.setUserType(u[me.getType()]);
+			p.setStatus(st[me.getStatus()]);
+			p.setPartnerId(me.getPartnerId());
+			p.setPhone(me.getPhone());
+			p.setLogin(me.getLogin());
+			return new ResponseEntity<Object>(p, HttpStatus.OK);
 		}catch (Exception e) {
 			return new ResponseEntity<>("Invalid user", HttpStatus.INTERNAL_SERVER_ERROR);
 		}
@@ -122,6 +138,46 @@ public class ClientsControlImpl implements ClientsControl {
 		}catch (Exception e) {
 			return new ResponseEntity<>("Invalid partner staff, id "+String.valueOf(id), HttpStatus.INTERNAL_SERVER_ERROR);
 		}
+	}
+
+	@Override
+	public ResponseEntity<Object> createAll() {
+		Member em=new Member();
+		em.setFirstName("May");
+		em.setLastName("Levi");
+		em.setPhone("+972556664444");
+		em.setLogin("may");
+		em.setPassword("123");
+		em.setPartnerId(null);
+		em.setType(0);
+		em.setStatus(2);
+		boolean res = cserv.createMember(em);
+		if (!res) return new ResponseEntity<Object>("", HttpStatus.INTERNAL_SERVER_ERROR);	
+		
+		em=new Member();
+		em.setFirstName("Aron");
+		em.setLastName("Kogan");
+		em.setPhone("+972556664442");
+		em.setLogin("aron");
+		em.setPassword("123");
+		em.setPartnerId((long) 1);
+		em.setType(1);
+		em.setStatus(2);
+		res = cserv.createMember(em);
+		if (!res) return new ResponseEntity<Object>("", HttpStatus.INTERNAL_SERVER_ERROR);	
+		
+		if (!res) return new ResponseEntity<Object>("", HttpStatus.INTERNAL_SERVER_ERROR);	
+		em=new Member();
+		em.setFirstName("Vladimir");
+		em.setLastName("Olevski");
+		em.setPhone("+972556664477");
+		em.setLogin("vova");
+		em.setPassword("123");
+		em.setPartnerId((long) 1);
+		em.setType(2);
+		em.setStatus(2);
+		res = cserv.createMember(em);
+		return new ResponseEntity<Object>("", HttpStatus.OK);
 	}
 
 }

@@ -39,5 +39,6 @@ public interface ClientsControl {
 	@PutMapping(value = "/update/{id}")
 	public ResponseEntity<Object> updateClient(@PathVariable("id") Long id, @RequestBody Member p);
 	
-
+	@GetMapping(value = "/addAll")
+	public ResponseEntity<Object> createAll();
 }
