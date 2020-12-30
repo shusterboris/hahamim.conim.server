@@ -609,6 +609,8 @@ public class MockService {
 		    ps.add(foodcat[i].getAddValue());
 			ac.setPhotos(ps);
 			ac.setDescription(desc[i]);
+			if (i==4)
+				ac.setThresholdmax((float) 11.0);
 			calculateProposalSummary(ac);
 		    actions.add(ac);
 		}
@@ -748,7 +750,7 @@ public class MockService {
 	public void createIntents() {
 		//Борис заказал
 		PriceProposal pp = new PriceProposal();
-		pp.setMemberId((long) 10097);
+		pp.setMemberId((long) 2);
 		pp.setPriceLevel(0);
 		pp.setPrice((float) 240);
 		pp.setProposalId((long) 104);
@@ -757,7 +759,7 @@ public class MockService {
 		saveMemberPriceIntent(pp);
 		
 		pp = new PriceProposal();
-		pp.setMemberId((long) 10097);
+		pp.setMemberId((long) 2);
 		pp.setPrice((float) 210);
 		pp.setPriceLevel(1);
 		pp.setProposalId((long) 104);
@@ -766,7 +768,7 @@ public class MockService {
 		saveMemberPriceIntent(pp);
 		
 		pp = new PriceProposal();
-		pp.setMemberId((long) 10097);
+		pp.setMemberId((long) 2);
 		pp.setPrice((float) 180);
 		pp.setPriceLevel(2);
 		pp.setProposalId((long) 104);
@@ -776,7 +778,7 @@ public class MockService {
 		
 		// Терпила
 		pp = new PriceProposal();
-		pp.setMemberId((long) 20001);
+		pp.setMemberId((long) 2002);
 		pp.setPriceLevel(0);
 		pp.setPrice((float) 240);
 		pp.setProposalId((long) 104);
@@ -785,7 +787,7 @@ public class MockService {
 		saveMemberPriceIntent(pp);
 		
 		pp = new PriceProposal();
-		pp.setMemberId((long) 20001);
+		pp.setMemberId((long) 2002);
 		pp.setPrice((float) 210);
 		pp.setPriceLevel(1);
 		pp.setProposalId((long) 104);
@@ -794,7 +796,7 @@ public class MockService {
 		saveMemberPriceIntent(pp);
 		
 		pp = new PriceProposal();
-		pp.setMemberId((long) 20001);
+		pp.setMemberId((long) 2002);
 		pp.setPrice((float) 180);
 		pp.setPriceLevel(2);
 		pp.setProposalId((long) 104);
@@ -807,7 +809,7 @@ public class MockService {
 		
 		//************************************
 		pp = new PriceProposal();
-		pp.setMemberId((long) 20001);
+		pp.setMemberId((long) 2001);
 		pp.setPriceLevel(0);
 		pp.setPrice((float) 48);
 		pp.setProposalId((long) 100);
@@ -816,7 +818,7 @@ public class MockService {
 		saveMemberPriceIntent(pp);
 		
 		pp = new PriceProposal();
-		pp.setMemberId((long) 20001);
+		pp.setMemberId((long) 2001);
 		pp.setPrice((float) 42);
 		pp.setPriceLevel(1);
 		pp.setProposalId((long) 100);
@@ -825,7 +827,7 @@ public class MockService {
 		saveMemberPriceIntent(pp);
 		
 		pp = new PriceProposal();
-		pp.setMemberId((long) 20001);
+		pp.setMemberId((long) 2001);
 		pp.setPrice((float) 36);
 		pp.setPriceLevel(2);
 		pp.setProposalId((long) 100);
