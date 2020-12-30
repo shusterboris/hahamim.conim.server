@@ -13,4 +13,7 @@ public interface BPcontrol {
 	
 	@GetMapping(value = "/get/{id}")
 	public ResponseEntity<Object> getPartnerById(@PathVariable(value = "id") Long id);
+	
+	@GetMapping("/addAll")
+	public ResponseEntity<Object> createAll();
 }
