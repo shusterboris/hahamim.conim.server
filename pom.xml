@@ -5,12 +5,12 @@
 	<groupId>club.conim.hahamim</groupId>
 	<artifactId>server</artifactId>
 	<packaging>jar</packaging>
-	<version>0.5</version>
+	<version>0.6</version>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-		<java.version>11</java.version>
+		<java.version>8</java.version>
 		<maven-jar-plugin.version>3.1.1</maven-jar-plugin.version>
 		<maven.test.skip>true</maven.test.skip>
 	</properties>
@@ -58,6 +58,13 @@
 		    <groupId>commons-codec</groupId>
 		    <artifactId>commons-codec</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>club.conim.hahamim</groupId>
+			<artifactId>common</artifactId>
+			<version>0.6.0</version>
+			<scope>system</scope>
+    		<systemPath>C:\workspace2020\hahahim.conim.common.jar</systemPath>
+		</dependency>
 	</dependencies>
 
 	<build>
@@ -71,10 +78,10 @@
 							<goal>repackage</goal>
 						</goals>
 						<configuration>
-
+							<includeSystemScope>true</includeSystemScope>
 							<classifier>spring-boot</classifier>
 							<mainClass>
-								starter.Starter
+								application.Starter
 							</mainClass>
 						</configuration>
 					</execution>

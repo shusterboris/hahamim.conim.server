@@ -18,9 +18,6 @@ import net.minidev.json.JSONObject;
 import proxies.PriceProposal;
 import proxies.Proposal;
 
-
-
-
 @RestController
 public class ActionsControlImpl implements ActionsControl {
 	private MockService mService = new MockService();
