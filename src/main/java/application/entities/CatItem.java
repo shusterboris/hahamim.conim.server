@@ -16,8 +16,13 @@ import javax.persistence.Table;
 @Table(name = "catitems")
 public class CatItem extends BasicEntity implements Serializable{
 	private static final long serialVersionUID = -9215990634396625375L;
+	//уникальный для справочника, общий для языковых вариантов темы
+	@Column(name="`itemId`", nullable=false, length=11)
+	private Long itemId;
+	//раздел: регионы, ед измерения, другое
 	@Column(name="`itemKey`", nullable=false, length=255)
 	private String itemKey;
+	
 	@Column(name="`language`", nullable=false, length=11)
 	private String language;
 	
@@ -32,10 +37,8 @@ public class CatItem extends BasicEntity implements Serializable{
 	
 	@Column(name="`value`", nullable=false, length=255)
 	private String value;
-	/**
-	 * if I need special sort order, not by alphabet
-	 */
-	@Column(name="`itemKey`", nullable=false, length=255)
+	
+	@Column(name="`sortOrder`", nullable=false, length=255)
 	private Integer sortOrder = 1000;
 	/**
 	 * additional info, particularly name of image file
@@ -91,7 +94,6 @@ public class CatItem extends BasicEntity implements Serializable{
 	}
 
 	public CatItem(String key, String language, Long parentId, String value, Integer sortOrder) {
-		super();
 		this.itemKey = key;
 		this.language = language;
 		this.parentId = parentId;
@@ -99,13 +101,17 @@ public class CatItem extends BasicEntity implements Serializable{
 		this.sortOrder = sortOrder;
 	}
 
-	public CatItem(Long id, String key, String language, String value, Long parentId, Integer sortOrder) {
-		this(key, language, parentId, value, sortOrder);
-		this.id = id;
-		this.parentId = parentId;
+	
+
+	public Long getItemId() {
+		return itemId;
 	}
 
-	public CatItem(String key, String value, String language) {
+	public void setItemId(Long itemId) {
+		this.itemId = itemId;
+	}
+
+	public CatItem(String key, String value, String language, long parentItemId) {
 		this(key, language, (long) 0, value, 0);
 	
 	}

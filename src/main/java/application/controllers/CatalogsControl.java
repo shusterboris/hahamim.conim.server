@@ -48,6 +48,6 @@ public interface CatalogsControl {
 			@PathVariable(name = "language", required = false) String language);
 	
 	@GetMapping(value = "/addAll")
-	public ResponseEntity<Object> create();
+	public ResponseEntity<Object> createAll();
 
 }

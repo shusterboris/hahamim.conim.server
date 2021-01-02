@@ -23,10 +23,10 @@ public class Address extends BasicEntity implements Serializable {
 		this.settlement = settlement;
 	}
 
-	@OneToOne(targetEntity=application.entities.CatItem.class)	
-	@org.hibernate.annotations.Cascade({org.hibernate.annotations.CascadeType.LOCK})	
-	@JoinColumns({ @JoinColumn(name="`settlement`", referencedColumnName="`id`") })	
-	@Basic(fetch=FetchType.LAZY)
+	//@OneToOne(targetEntity=application.entities.CatItem.class)	
+	//@org.hibernate.annotations.Cascade({org.hibernate.annotations.CascadeType.LOCK})	
+	//@JoinColumns({ @JoinColumn(name="`settlement`", referencedColumnName="`itemId`") })	
+	//@Basic(fetch=FetchType.LAZY)
 	protected Long settlement;  
 	
 	@Column(name="`streetAddress`", nullable=true, length=255)	

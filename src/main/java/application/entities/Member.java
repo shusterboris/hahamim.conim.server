@@ -31,10 +31,10 @@ public class Member extends Person implements Serializable{
 	@Column(name="`level`", nullable=false, length=11)	
 	private Integer level; //member level
 	
-	@OneToOne(targetEntity=application.entities.CatItem.class)	
-	@org.hibernate.annotations.Cascade({org.hibernate.annotations.CascadeType.LOCK})	
-	@JoinColumns({ @JoinColumn(name="`region`", referencedColumnName="`id`") })	
-	@Basic(fetch=FetchType.LAZY)
+	//@OneToOne(targetEntity=application.entities.CatItem.class)	
+	//@org.hibernate.annotations.Cascade({org.hibernate.annotations.CascadeType.LOCK})	
+	//@JoinColumns({ @JoinColumn(name="`region`", referencedColumnName="`itemId`") })	
+	//@Basic(fetch=FetchType.LAZY)
 	private Long region;
 	
 	@ManyToOne(targetEntity=application.entities.BusinessPartner.class)	

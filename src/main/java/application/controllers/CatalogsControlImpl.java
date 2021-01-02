@@ -123,8 +123,8 @@ public class CatalogsControlImpl implements CatalogsControl {
 		}
 	}
 	@Override
-	public  ResponseEntity<Object> create(){
-	
+	public  ResponseEntity<Object> createAll(){
+	List<application.entities.CatItem> ref=new ArrayList<application.entities.CatItem>();
 	/*result.add(new CatItem(id++, "Country.Regions", "RU", "Северный", 1000, (long) 0));
 	result.add(new CatItem(id++, "Country.Regions", "RU", "Южный", 1000, (long) 0));
 	haifaRegion = new CatItem(id++, "Country.Regions", "RU", "Хайфа",  1000, (long) 0);
@@ -136,14 +136,19 @@ public class CatalogsControlImpl implements CatalogsControl {
 	result.add(new CatItem(id++, "Country.Regions", "EN", "North",  1000, (long) 0));
 	result.add(new CatItem(id++, "Country.Regions", "EN", "South",  1000, (long) 0));
 	cat=new CatItem((long) 0, "Country.Regions", "EN", "North",  0, (long) 0);*/
-	application.entities.CatItem ec=new application.entities.CatItem("Country.Regions","North","EN");
-	serv.create(ec);
-	ec=new application.entities.CatItem("Country.Regions","North","RU");
-	serv.create(ec);
-	ec=new application.entities.CatItem("Country.Regions","Haifa","EN");
-	serv.create(ec);
-	ec=new application.entities.CatItem("Country.Regions","Haifa","RU");
-	serv.create(ec);
+	//создаем пачку верхнего уровня
+
+	ref.add(new application.entities.CatItem("Country.Regions","North","EN",0));
+	ref.add(new application.entities.CatItem("Country.Regions","North","RU",0));
+	serv.create(ref);
+	ref.clear();
+	ref.add(new application.entities.CatItem("Country.Regions","Haifa","EN",0));
+	ref.add(new application.entities.CatItem("Country.Regions","Haifa","RU",0));
+	serv.create(ref);
+	ref.clear();
+	ref.add(new application.entities.CatItem("Country.Regions","Tel-Aviv","EN",0));
+	ref.add(new application.entities.CatItem("Country.Regions","Tel-Aviv","RU",0));
+	serv.create(ref);
 	
 	return new ResponseEntity<Object>("", HttpStatus.OK);
 	}
