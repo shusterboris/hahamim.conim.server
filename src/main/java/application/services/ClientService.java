@@ -1,6 +1,5 @@
 package application.services;
 
-import java.math.BigInteger;
 import java.util.List;
 import java.util.Optional;
 
@@ -9,8 +8,6 @@ import org.springframework.stereotype.Service;
 
 import application.entities.Member;
 import application.services.repositories.MembersDAO;
-import proxies.Person;
-
 
 @Service
 public class ClientService {
@@ -22,14 +19,8 @@ public class ClientService {
 	}
 	
 	public boolean createMember(Member m) {
-		
 		try {
-			if (cDAO.save(m)!=null) {
-				
-				return true;
-			}else {
-				return false;
-			}
+			return cDAO.save(m) != null;
 		} catch (Exception e) {
 			return false;
 		}
@@ -37,8 +28,7 @@ public class ClientService {
 	
 	public Member getUser(String login) {
 		Optional<Member> res = cDAO.findByLogin(login);
-		if (res.isEmpty()) return null;
-		return res.get();
+		return res.orElse(null);
 	}
 	public List<Member> getClients() {
 		return cDAO.findAll();
