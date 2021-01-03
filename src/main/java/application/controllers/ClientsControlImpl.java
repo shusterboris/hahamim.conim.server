@@ -48,12 +48,15 @@ public class ClientsControlImpl implements ClientsControl {
 		em.setType(0);
 		em.setLogin(pm.getLogin());
 		em.setPassword(pm.getPassword());
-		boolean res = cserv.createMember(em);
+		em.setGender(pm.getGender());
+		em = cserv.createMember(em);
 		//добавить проверку на телефон и мейл
 		//p.setId(++id);
 		//clients.add(p);
-		if (res) {
-		return new ResponseEntity<Object>("", HttpStatus.OK);
+	
+		if (em!=null) {
+			pm=convertMemberToProxy(em);
+		return new ResponseEntity<Object>(pm, HttpStatus.OK);
 		} else
 			return new ResponseEntity<Object>("", HttpStatus.INTERNAL_SERVER_ERROR);	
 	}
@@ -109,23 +112,28 @@ public class ClientsControlImpl implements ClientsControl {
 			if (me == null)
 				return new ResponseEntity<Object>(new EntityNotFound(),HttpStatus.OK);
 			//сделать прокси объект
-			ClientStatus[] st = ClientStatus.values();
-			UserType[] u = UserType.values();
-			//proxies.Member member = createMember(me.getId(),me.getFirstName(), me.getLastName(), g[me.getGender()], u[me.getType()], "", "");
-			proxies.Member p = new proxies.Member();
-			p.setId(me.getId());
-			p.setFirstName(me.getFirstName());
-			p.setLastName(me.getLastName());
-			p.setGender(me.getGender());
-			p.setUserType(u[me.getType()]);
-			p.setStatus(st[me.getStatus()]);
-			p.setPartnerId(me.getPartnerId());
-			p.setPhone(me.getPhone());
-			p.setLogin(me.getLogin());
+			proxies.Member p = convertMemberToProxy(me);
 			return new ResponseEntity<Object>(p, HttpStatus.OK);
 		}catch (Exception e) {
 			return new ResponseEntity<>("Invalid user", HttpStatus.INTERNAL_SERVER_ERROR);
 		}
+	}
+	
+	private proxies.Member convertMemberToProxy(Member me){
+		ClientStatus[] st = ClientStatus.values();
+		UserType[] u = UserType.values();
+		//proxies.Member member = createMember(me.getId(),me.getFirstName(), me.getLastName(), g[me.getGender()], u[me.getType()], "", "");
+		proxies.Member p = new proxies.Member();
+		p.setId(me.getId());
+		p.setFirstName(me.getFirstName());
+		p.setLastName(me.getLastName());
+		p.setGender(me.getGender());
+		p.setUserType(u[me.getType()]);
+		p.setStatus(st[me.getStatus()]);
+		p.setPartnerId(me.getPartnerId());
+		p.setPhone(me.getPhone());
+		p.setLogin(me.getLogin());
+		return p;
 	}
 	
 	@Override
@@ -151,8 +159,8 @@ public class ClientsControlImpl implements ClientsControl {
 		em.setPartnerId(null);
 		em.setType(0);
 		em.setStatus(2);
-		boolean res = cserv.createMember(em);
-		if (!res) return new ResponseEntity<Object>("", HttpStatus.INTERNAL_SERVER_ERROR);	
+		Member res = cserv.createMember(em);
+		if (res==null) return new ResponseEntity<Object>("", HttpStatus.INTERNAL_SERVER_ERROR);	
 		
 		em=new Member();
 		em.setFirstName("Aron");
@@ -164,9 +172,8 @@ public class ClientsControlImpl implements ClientsControl {
 		em.setType(1);
 		em.setStatus(2);
 		res = cserv.createMember(em);
-		if (!res) return new ResponseEntity<Object>("", HttpStatus.INTERNAL_SERVER_ERROR);	
+		if (res==null) return new ResponseEntity<Object>("", HttpStatus.INTERNAL_SERVER_ERROR);	
 		
-		if (!res) return new ResponseEntity<Object>("", HttpStatus.INTERNAL_SERVER_ERROR);	
 		em=new Member();
 		em.setFirstName("Vladimir");
 		em.setLastName("Olevski");
@@ -177,7 +184,8 @@ public class ClientsControlImpl implements ClientsControl {
 		em.setType(2);
 		em.setStatus(2);
 		res = cserv.createMember(em);
-		return new ResponseEntity<Object>("", HttpStatus.OK);
+		if (res==null) return new ResponseEntity<Object>("", HttpStatus.INTERNAL_SERVER_ERROR);
+		return new ResponseEntity<Object>(null, HttpStatus.OK);
 	}
 
 }

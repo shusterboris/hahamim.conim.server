@@ -1,12 +1,15 @@
 package application.entities;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
 import enums.ProposalStatus;
+import proxies.Address;
+import proxies.PriceProposal;
 
 /**
  * Тендерное предложение (предложение на совместную закупку)
@@ -17,51 +20,35 @@ import enums.ProposalStatus;
 @Entity
 @Table(name = "actions")
 public class Proposal extends BasicEntity {
-	private String name;
+	
+	 private String name;
 	/**
 	 * base price (non actions) from proposals for actions and initial tender's price for tender
 	 */
-	private Float price;
+	//категория товара
+	 private Long category; 
+	 private Long region;
+	 private Member initiator;
+	 private Float price;//розничная цена 
 	/**
 	 * lowest price from proposals for actions and final (best price proposal) tender's price for tender
 	 */	
 	private Float lastPrice;
-	private LocalDate dueDate;// срок окончания приема заявок
-	private String status = ProposalStatus.INIT.getMessageKey(); // Из набора TenderStatus
-	private String photos;
-	private LocalDate publicationDate;
-	
+	private LocalDateTime dueDate;// срок окончания приема заявок
+	private Long measure;
+	private Float threshold; //минимальная закупка
+	private Float thresholdmax;//верхний предел закупки
+	private Integer status; // Из набора TenderStatus
+    private Long photos;
+	private LocalDateTime publicationDate;
 	private Long supplierId;
-	private Float total;
-	private Integer countMembers;
-	private LocalDate dateOfSailStarting;
-	private LocalDate closeDate;
+	private Float total = (float) 0.0;
+	private LocalDateTime dateOfSailStarting;
+	private LocalDateTime closeDate;
 	private String description;
-
-	/*
-	private CatItem region;
-	private Member initiator;
-	private CatItem measure;
-	private List<CatItem> categories;
-
-
-	public List<CatItem> getCategories() {
-		return categories;
-	}
-
-	public void setCategories(List<CatItem> categories) {
-		this.categories = categories;
-	}
-
-	public CatItem getRegions() {
-		return region;
-	}
-
-	public void setRegions(CatItem regions) {
-		this.region = regions;
-	}
-
-	
+	private List<PriceProposal> priceProposals;
+	private List<Address> stores;
+	private Long bundle; //общая закупка
 	public Person getAuthor() {
 		return initiator;
 	}
@@ -78,47 +65,13 @@ public class Proposal extends BasicEntity {
 		this.initiator = initiator;
 	}
 
-	public CatItem getMeasure() {
-		return measure;
-	}
-
-	public void setMeasure(CatItem measure) {
-		this.measure = measure;
-	}
-
-	*/
+	
 	public Float getMaxPrice() {
 		return price;
 	}
 
 	public void setMaxPrice(Float maxPrice) {
 		this.price = maxPrice;
-	}
-
-	public LocalDate getDueDate() {
-		return dueDate;
-	}
-
-	public void setDueDate(LocalDate dueDate) {
-		this.dueDate = dueDate;
-	}
-
-	public String getStatus() {
-		return status;
-	}
-
-	public void setStatus(String status) {
-		this.status = status;
-	}
-
-	
-
-	public LocalDate getDateOfSailStarting() {
-		return dateOfSailStarting;
-	}
-
-	public void setDateOfSailStarting(LocalDate dateOfSailStarting) {
-		this.dateOfSailStarting = dateOfSailStarting;
 	}
 
 	public String getName() {
@@ -139,23 +92,6 @@ public class Proposal extends BasicEntity {
 	}
 
 
-	public String getPhotos() {
-		return photos;
-	}
-
-	public void setPhotos(String photos) {
-		this.photos = photos;
-	}
-
-	public LocalDate getPublicationDate() {
-		return publicationDate;
-	}
-
-	public void setPublicationDate(LocalDate publicationDate) {
-		this.publicationDate = publicationDate;
-	}
-
-	
 	public Float getTotal() {
 		return total;
 	}
@@ -164,22 +100,7 @@ public class Proposal extends BasicEntity {
 		this.total = total;
 	}
 
-	public Integer getCountMembers() {
-		return countMembers;
-	}
-
-	public void setCountMembers(Integer countMembers) {
-		this.countMembers = countMembers;
-	}
-
-	public LocalDate getCloseDate() {
-		return closeDate;
-	}
-
-	public void setCloseDate(LocalDate closeDate) {
-		this.closeDate = closeDate;
-	}
-
+	
 	public String getDescription() {
 		return description;
 	}
@@ -199,17 +120,7 @@ public class Proposal extends BasicEntity {
 	 * @param i          - максимальная цена, по которой участник приобретет товар
 	 * @param dueDate    - дата завершения тендера
 	 */
-	public Proposal(Long id, String name, List<CatItem> categories, CatItem region, Long authorId, Float price,
-			LocalDate dueDate) {
-		super();
-		this.name = name;
-//		this.categories = categories;
-//		this.region = region;
-		
-		this.price = price;
-		this.dueDate = dueDate;
-	}
-
+	
 	@Override
 	public String toString() {
 		return name;

@@ -18,11 +18,12 @@ public class ClientService {
 		return cDAO.findAll();
 	}
 	
-	public boolean createMember(Member m) {
+	public Member createMember(Member m) {
 		try {
-			return cDAO.save(m) != null;
+			Member nm = cDAO.save(m);
+			return nm;
 		} catch (Exception e) {
-			return false;
+			return null;
 		}
 	}
 	
@@ -35,3 +36,4 @@ public class ClientService {
 	}
 	
 }
+ 
