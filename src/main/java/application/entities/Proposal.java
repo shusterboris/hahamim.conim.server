@@ -1,15 +1,27 @@
 package application.entities;
 
+
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.List;
 
+import java.util.HashSet;
+import java.util.Set;
+
+import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinColumns;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
-import enums.ProposalStatus;
-import proxies.Address;
-import proxies.PriceProposal;
+import lombok.Getter;
+import lombok.Setter;
+
+
 
 /**
  * Тендерное предложение (предложение на совместную закупку)
@@ -17,113 +29,69 @@ import proxies.PriceProposal;
  * @author Одиссей
  *
  */
+@Getter
+@Setter
 @Entity
 @Table(name = "actions")
-public class Proposal extends BasicEntity {
-	
-	 private String name;
+public class Proposal extends BasicEntity implements Serializable{
+	private static final long serialVersionUID = 985468545500612436L;
+	private String name;
 	/**
 	 * base price (non actions) from proposals for actions and initial tender's price for tender
 	 */
 	//категория товара
-	 private Long category; 
-	 private Long region;
-	 private Member initiator;
-	 private Float price;//розничная цена 
+	private String category; 
+	private String region;
+	private Long initiator;
+	private Float price;//розничная цена 
 	/**
 	 * lowest price from proposals for actions and final (best price proposal) tender's price for tender
 	 */	
 	private Float lastPrice;
-	private LocalDateTime dueDate;// срок окончания приема заявок
-	private Long measure;
+	private String measure;
 	private Float threshold; //минимальная закупка
 	private Float thresholdmax;//верхний предел закупки
 	private Integer status; // Из набора TenderStatus
-    private Long photos;
-	private LocalDateTime publicationDate;
-	private Long supplierId;
 	private Float total = (float) 0.0;
-	private LocalDateTime dateOfSailStarting;
-	private LocalDateTime closeDate;
 	private String description;
-	private List<PriceProposal> priceProposals;
-	private List<Address> stores;
+	private LocalDate dueDate;// срок окончания приема заявок
+	private LocalDate publicationDate; private LocalDate dateOfSailStarting;
+	private LocalDate closeDate;
 	private Long bundle; //общая закупка
-	public Person getAuthor() {
-		return initiator;
-	}
 
-	public void setAuthor(Member author) {
-		this.initiator = author;
-	}
+	/*
+	 * @OneToOne(targetEntity=application.entities.BusinessPartner.class)
+	 * 	 * @org.hibernate.annotations.Cascade({org.hibernate.annotations.CascadeType.	 * LOCK})
+	 *	 * @JoinColumns({ @JoinColumn(name="`supplier`", referencedColumnName="`Id`") })
+	 * 	 * @Basic(fetch=FetchType.LAZY) private BusinessPartner supplier;
+	 */
+	private Long supplier;
 
-	public Member getInitiator() {
-		return initiator;
-	}
 
-	public void setInitiator(Member initiator) {
-		this.initiator = initiator;
-	}
-
+	@OneToMany(cascade = CascadeType.ALL,
+    fetch = FetchType.LAZY,
+    mappedBy = "proposal")
+	private Set<AppImage> photos ;
 	
-	public Float getMaxPrice() {
-		return price;
-	}
+	//@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	//@JoinColumn(name="id") 
+	// private Set<Comment> comments = new HashSet<>();
+	@OneToMany(cascade = CascadeType.ALL,
+    fetch = FetchType.LAZY,
+    mappedBy = "proposal")
 
-	public void setMaxPrice(Float maxPrice) {
-		this.price = maxPrice;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	
-	public Float getLastPrice() {
-		return lastPrice;
-	}
-
-	public void setLastPrice(Float lastPrice) {
-		this.lastPrice = lastPrice;
-	}
-
-
-	public Float getTotal() {
-		return total;
-	}
-
-	public void setTotal(Float total) {
-		this.total = total;
-	}
-
-	
-	public String getDescription() {
-		return description;
-	}
-
-	public void setDescription(String description) {
-		this.description = description;
-	}
-
-	/**
-	 * Исключительно для отладки
+	private Set<PriceProposal> priceProposals;
+		/*
+	 * @OneToMany(targetEntity=application.entities.Store.class)
 	 * 
-	 * @param id         - уникальный id для таблицы
-	 * @param item       - название товара на избранном языке
-	 * @param categories - категория из справочника
-	 * @param region     - регион из справочника
-	 * @param author     - инициатор тендера, Person
-	 * @param i          - максимальная цена, по которой участник приобретет товар
-	 * @param dueDate    - дата завершения тендера
+	 * @org.hibernate.annotations.Cascade({org.hibernate.annotations.CascadeType.
+	 * LOCK}) //@JoinColumns({ @JoinColumn(name="`stores`",
+	 * referencedColumnName="`Id`") }) //@Basic(fetch=FetchType.LAZY)
+	 * 
+	 * @JoinColumn(name="`proposalid`", nullable=true)
+	 * 
+	 * @org.hibernate.annotations.LazyCollection(org.hibernate.annotations.
+	 * LazyCollectionOption.TRUE) private List<Store> stores;
 	 */
 	
-	@Override
-	public String toString() {
-		return name;
-	}
-
 }

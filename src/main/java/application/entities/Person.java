@@ -5,13 +5,15 @@ import java.time.LocalDate;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.Table;
 
 import enums.ClientStatus;
 import enums.UserType;
 
-@MappedSuperclass
+
 public class Person extends BasicEntity implements Serializable{
 	private static final long serialVersionUID = -2772623296089653648L;
 	@Column(name="`lastname`", nullable=false, length=255)

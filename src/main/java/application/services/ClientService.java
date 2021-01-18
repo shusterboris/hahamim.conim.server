@@ -31,8 +31,28 @@ public class ClientService {
 		Optional<Member> res = cDAO.findByLogin(login);
 		return res.orElse(null);
 	}
-	public List<Member> getClients() {
-		return cDAO.findAll();
+	 
+	public Member getMemberById(Long id) {
+		try {
+			Optional<Member> nm = cDAO.findById(id);
+			return nm.orElse(null);
+		} catch (Exception e) {
+			return null;
+		}
+	}
+
+	public String isUnique(Member em) {
+		Optional<Member> m = cDAO.findByLogin(em.getLogin());
+		if (m!=null) return "login exists";
+		if (em.getEmail()!=null) {  
+			if (!em.getEmail().equalsIgnoreCase("")){
+			    m = cDAO.findByEmail(em.getEmail());
+				if (m!=null) return "email exists";
+			}
+		}
+		m = cDAO.findByPhone(em.getPhone());
+		if (m!=null) return "phone exists";
+		return"";
 	}
 	
 }

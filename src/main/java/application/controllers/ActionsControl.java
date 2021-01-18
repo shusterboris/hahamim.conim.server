@@ -26,14 +26,9 @@ public interface ActionsControl {
 	@GetMapping("/actions/get/member/{memberId}")
 	public ResponseEntity<Object> getActionByMember(@PathVariable("memberId") Long memberId);
 	
-	@PutMapping("/actions/update")
-	public ResponseEntity<Object> saveAction();
-
-	@PostMapping("/actions/add")
-	public ResponseEntity<Object> addAction(@RequestBody String json);
 
 	@PostMapping("/action/add")
-	public ResponseEntity<Object> addNewAction(@RequestBody String json);
+	public ResponseEntity<Object> addAction(@RequestBody String json);
 
 	@GetMapping("/actions/intents/get/{proposalId}/{memberId}")
 	public ResponseEntity<Object> getMemberPriceIntents(@PathVariable("proposalId") Long proposalId, 
@@ -41,4 +36,7 @@ public interface ActionsControl {
 	
 	@PutMapping(value = "/actions/intents/put", consumes = "application/json", produces = "application/json" )
 	public ResponseEntity<Object> saveMemberPriceIntents(@RequestBody List<PriceProposal> price);
+	
+	@GetMapping("/actions/testAdd")
+	public ResponseEntity<Object> testAdd();
 }

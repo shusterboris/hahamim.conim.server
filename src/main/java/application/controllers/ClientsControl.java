@@ -18,15 +18,7 @@ public interface ClientsControl {
 	@GetMapping(value = "/all")
 	public ResponseEntity<Object> getAll();
 
-	@GetMapping(value = "/staff")
-	public ResponseEntity<Object> getStaff();
-
-
-
-	@GetMapping(value = "/partner/{id}")
-	public ResponseEntity<Object> getPartnerById(@PathVariable(value = "id") Long id);
-
-	@PostMapping(value = "/login", consumes = "application/json", produces = "application/json")
+		@PostMapping(value = "/login", consumes = "application/json", produces = "application/json")
 	public ResponseEntity<Object> userLogin(@RequestBody Person user);
 	
 	@GetMapping(value = "/get/{id}")
@@ -36,8 +28,10 @@ public interface ClientsControl {
 	public ResponseEntity<Object> createClient(@RequestBody String json);
 	
 
-	@PutMapping(value = "/update/{id}")
-	public ResponseEntity<Object> updateClient(@PathVariable("id") Long id, @RequestBody Member p);
+	//@PutMapping(value = "/update/{id}")
+	//public ResponseEntity<Object> updateClient(@PathVariable("id") Long id, @RequestBody Member p);
+	@PutMapping(value = "/update")
+	public ResponseEntity<Object> updateClient(@RequestBody String json);	
 	
 	@GetMapping(value = "/addAll")
 	public ResponseEntity<Object> createAll();

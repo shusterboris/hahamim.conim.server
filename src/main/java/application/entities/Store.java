@@ -20,9 +20,9 @@ public class Store extends Address implements Serializable{
 	
 	@OneToOne(targetEntity=application.entities.Store.class)	
 	@org.hibernate.annotations.Cascade({org.hibernate.annotations.CascadeType.LOCK})	
-	@JoinColumns({ @JoinColumn(name="`headQuatersId`", referencedColumnName="`id`") })	
+	@JoinColumns({ @JoinColumn(name="`headQuaters_Id`", referencedColumnName="`id`") })	
 	@Basic(fetch=FetchType.LAZY)		
-	protected Long headQuatersId = (long) 0;
+	protected Store headQuaters = null;
 
 	public String getName() {
 		return name;
@@ -32,30 +32,27 @@ public class Store extends Address implements Serializable{
 		this.name = name;
 	}
 
-	public Long getHeadQuatersId() {
-		return headQuatersId;
-	}
+	
 
-	public void setHeadQuatersId(Long headQuatersId) {
-		this.headQuatersId = headQuatersId;
-	}
-
-
-	public Store(String name, Address address, Long headQuatersId) {
+	public Store(String name, Address address, Store headQuaters) {
 	
 		this.name = name;
 		this.settlement = address.getSettlement();
 		this.streetAddress= address.getStreetAddress();
 		this.latitude= address.getLatitude();
 		this.altitude= address.getAltitude();
-		this.headQuatersId = headQuatersId;
+		this.headQuaters = headQuaters;
 	}
-	public Store(String name, String addr, Long headQuatersId) {
+	public Store(String name, String addr, Store headQuaters) {
 		
 		this.name = name;
 		this.streetAddress= addr;
 		
-		this.headQuatersId = headQuatersId;
+		this.headQuaters = headQuaters;
+	}
+
+	public Store() {
+		super();
 	}
 
 	/*

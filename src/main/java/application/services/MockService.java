@@ -220,44 +220,41 @@ public class MockService {
 		return p;
 	}
 
-	public void createRegions() {
-		List<CatItem> result = new ArrayList<CatItem>();
-		result.add(new CatItem(id++, "Country.Regions", "RU", "Северный", 1000, (long) 0));
-		result.add(new CatItem(id++, "Country.Regions", "RU", "Южный", 1000, (long) 0));
-		haifaRegion = new CatItem(id++, "Country.Regions", "RU", "Хайфа",  1000, (long) 0);
-		result.add(haifaRegion);
-		result.add(new CatItem(id++, "Country.Regions", "RU", "Центральный",  1000, (long) 0));
-		result.add(new CatItem(id++, "Country.Regions", "RU", "Иудея и Самария",  1000, (long) 0));
-		result.add(new CatItem(id++, "Country.Regions", "RU", "Тель-Авив",  1000, (long) 0));
-		result.add(new CatItem(id++, "Country.Regions", "RU", "Иерусалим",  1000, (long) 0));
-		result.add(new CatItem(id++, "Country.Regions", "EN", "North",  1000, (long) 0));
-		result.add(new CatItem(id++, "Country.Regions", "EN", "South",  1000, (long) 0));
-		result.add(new CatItem(id++, "Country.Regions", "EN", "Haifa",  1000, (long) 0));
-		result.add(new CatItem(id++, "Country.Regions", "EN", "Center",  1000, (long) 0));
-		result.add(new CatItem(id++, "Country.Regions", "EN", "Judea and Samaria",  1000, (long) 0));
-		result.add(new CatItem(id++, "Country.Regions", "EN", "Tel-Aviv",  1000, (long) 0));
-		result.add(new CatItem(id++, "Country.Regions", "EN", "Jerusalem",  1000, (long) 0));
-		for (CatItem item : result) {
-			catByName.put("Country.Regions" + "-" + item.getValue(), item);
-			catById.put(item.getId(), item);
-		}
-	}
-	
-	private void createMeasures() {
-		measures.add(new CatItem(id++, "Measures", "RU", "кг", 1000, (long) 0));
-		measures.add(new CatItem(id++, "Measures", "RU", "шт", 1000, (long) 0));
-		measures.add(new CatItem(id++, "Measures", "RU", "л",  1000, (long) 0));
-		measures.add(new CatItem(id++, "Measures", "EN", "kg",  1000, (long) 0));
-		measures.add(new CatItem(id++, "Measures", "EN", "piece",  1000, (long) 0));
-		measures.add(new CatItem(id++, "Measures", "EN", "liter",  1000, (long) 0));
-
-		for (CatItem item : measures) {
-			catByName.put("Measures" + "-" + item.getValue(), item);
-			catById.put(item.getId(), item);
-		}
-		
-	}
-
+	/*
+	 * public void createRegions() { List<CatItem> result = new
+	 * ArrayList<CatItem>(); result.add(new CatItem(id++, "Country.Regions", "RU",
+	 * "Северный", 1000, (long) 0)); result.add(new CatItem(id++, "Country.Regions",
+	 * "RU", "Южный", 1000, (long) 0)); haifaRegion = new CatItem(id++,
+	 * "Country.Regions", "RU", "Хайфа", 1000, (long) 0); result.add(haifaRegion);
+	 * result.add(new CatItem(id++, "Country.Regions", "RU", "Центральный", 1000,
+	 * (long) 0)); result.add(new CatItem(id++, "Country.Regions", "RU",
+	 * "Иудея и Самария", 1000, (long) 0)); result.add(new CatItem(id++,
+	 * "Country.Regions", "RU", "Тель-Авив", 1000, (long) 0)); result.add(new
+	 * CatItem(id++, "Country.Regions", "RU", "Иерусалим", 1000, (long) 0));
+	 * result.add(new CatItem(id++, "Country.Regions", "EN", "North", 1000, (long)
+	 * 0)); result.add(new CatItem(id++, "Country.Regions", "EN", "South", 1000,
+	 * (long) 0)); result.add(new CatItem(id++, "Country.Regions", "EN", "Haifa",
+	 * 1000, (long) 0)); result.add(new CatItem(id++, "Country.Regions", "EN",
+	 * "Center", 1000, (long) 0)); result.add(new CatItem(id++, "Country.Regions",
+	 * "EN", "Judea and Samaria", 1000, (long) 0)); result.add(new CatItem(id++,
+	 * "Country.Regions", "EN", "Tel-Aviv", 1000, (long) 0)); result.add(new
+	 * CatItem(id++, "Country.Regions", "EN", "Jerusalem", 1000, (long) 0)); for
+	 * (CatItem item : result) { catByName.put("Country.Regions" + "-" +
+	 * item.getValue(), item); catById.put(item.getId(), item); } }
+	 * 
+	 * private void createMeasures() { measures.add(new CatItem(id++, "Measures",
+	 * "RU", "кг", 1000, (long) 0)); measures.add(new CatItem(id++, "Measures",
+	 * "RU", "шт", 1000, (long) 0)); measures.add(new CatItem(id++, "Measures",
+	 * "RU", "л", 1000, (long) 0)); measures.add(new CatItem(id++, "Measures", "EN",
+	 * "kg", 1000, (long) 0)); measures.add(new CatItem(id++, "Measures", "EN",
+	 * "piece", 1000, (long) 0)); measures.add(new CatItem(id++, "Measures", "EN",
+	 * "liter", 1000, (long) 0));
+	 * 
+	 * for (CatItem item : measures) { catByName.put("Measures" + "-" +
+	 * item.getValue(), item); catById.put(item.getId(), item); }
+	 * 
+	 * }
+	 */
 	private Address createAddress(String region, String street,String sity) {
 		Address a=new Address();
 		a.setRegion(region);
@@ -319,51 +316,54 @@ public class MockService {
 		addToParent(getCatByName("Country.Regions-Tel-Aviv"), "Regions.Settlments", "Jaffo", "EN");
 	}
 
-	private void createGoodsCategory() {
-		//long id, String key, String language, Long parentId, String value, Integer sortOrder)
-		CatItem item = new CatItem(id++, "Goods.Category", "RU", "Продукты питания", 1000, (long) 0);
-		catByName.put("Goods.Category" + "-" + item.getValue(), item);
-		addToParentwithImage(item, "Goods.Category", "Мясные продукты", "RU","salami.png");
-		addToParentwithImage(item, "Goods.Category", "Овощи и фрукты", "RU","fruits.png");
-		addToParentwithImage(item, "Goods.Category", "Деликатесы", "RU","seafoods.png");
-		addToParentwithImage(item, "Goods.Category", "Алкоголь", "RU","wine.png");
-		addToParentwithImage(item, "Goods.Category", "Сладости", "RU","sw.png");
-		addToParentwithImage(item, "Goods.Category", "Сыр", "RU","cheese.png");
-
-		item = new CatItem(id++, "Goods.Category", "RU", "Электроника", 1000, (long) 0);
-		catByName.put("Goods.Category" + "-" + item.getValue(), item);
-		addToParent(item, "Goods.Category", "Музыка и звук", "RU");
-		addToParent(item, "Goods.Category", "Телевидение и компьютеры", "RU");
-		addToParent(item, "Goods.Category", "Мобильные устройства", "RU");
-
-		item = new CatItem(id++, "Goods.Category", "RU", "Товары для дома", 1000, (long) 0);
-		catByName.put("Goods.Category" + "-" + item.getValue(), item);
-		addToParent(item, "Goods.Category", "Кухни", "RU");
-		addToParent(item, "Goods.Category", "Спальни", "RU");
-		addToParent(item, "Goods.Category", "Службы", "RU");
-		// ********************************************************
-		item = new CatItem(id++, "Goods.Category", "EN", "Food", 1000, (long) 0);
-		catByName.put("Goods.Category" + "-" + item.getValue(), item);
-		addToParentwithImage(item, "Goods.Category", "Meat", "EN","Salami.png");
-		addToParentwithImage(item, "Goods.Category", "Vegetables and fruits", "EN","fruits.png");
-		addToParentwithImage(item, "Goods.Category", "Delicacies", "EN","seafoods.png");
-		addToParentwithImage(item, "Goods.Category", "Drinks", "EN","wine.png");
-		addToParentwithImage(item, "Goods.Category", "Sweets", "EN","sw.png");
-		addToParentwithImage(item, "Goods.Category", "Cheese", "EN","cheese.png");
-
-		item = new CatItem(id++, "Goods.Category", "EN", "Electronic devices", 1000, (long) 0);
-		catByName.put("Goods.Category" + "-" + item.getValue(), item);
-		addToParent(item, "Goods.Category", "Music and audio", "EN");
-		addToParent(item, "Goods.Category", "TV and computers", "EN");
-		addToParent(item, "Goods.Category", "Mobile devices", "EN");
-
-		item = new CatItem(id++, "Goods.Category", "EN", "Goods for home", 1000, (long) 0);
-		catByName.put("Goods.Category" + "-" + item.getValue(), item);
-		addToParent(item, "Goods.Category", "Kitchens", "EN");
-		addToParent(item, "Goods.Category", "Bedrooms", "EN");
-		addToParent(item, "Goods.Category", "Toilets and Baths", "EN");
-
-	}
+	/*
+	 * private void createGoodsCategory() { //long id, String key, String language,
+	 * Long parentId, String value, Integer sortOrder) CatItem item = new
+	 * CatItem(id++, "Goods.Category", "RU", "Продукты питания", 1000, (long) 0);
+	 * catByName.put("Goods.Category" + "-" + item.getValue(), item);
+	 * addToParentwithImage(item, "Goods.Category", "Мясные продукты",
+	 * "RU","salami.png"); addToParentwithImage(item, "Goods.Category",
+	 * "Овощи и фрукты", "RU","fruits.png"); addToParentwithImage(item,
+	 * "Goods.Category", "Деликатесы", "RU","seafoods.png");
+	 * addToParentwithImage(item, "Goods.Category", "Алкоголь", "RU","wine.png");
+	 * addToParentwithImage(item, "Goods.Category", "Сладости", "RU","sw.png");
+	 * addToParentwithImage(item, "Goods.Category", "Сыр", "RU","cheese.png");
+	 * 
+	 * item = new CatItem(id++, "Goods.Category", "RU", "Электроника", 1000, (long)
+	 * 0); catByName.put("Goods.Category" + "-" + item.getValue(), item);
+	 * addToParent(item, "Goods.Category", "Музыка и звук", "RU"); addToParent(item,
+	 * "Goods.Category", "Телевидение и компьютеры", "RU"); addToParent(item,
+	 * "Goods.Category", "Мобильные устройства", "RU");
+	 * 
+	 * item = new CatItem(id++, "Goods.Category", "RU", "Товары для дома", 1000,
+	 * (long) 0); catByName.put("Goods.Category" + "-" + item.getValue(), item);
+	 * addToParent(item, "Goods.Category", "Кухни", "RU"); addToParent(item,
+	 * "Goods.Category", "Спальни", "RU"); addToParent(item, "Goods.Category",
+	 * "Службы", "RU"); // ********************************************************
+	 * item = new CatItem(id++, "Goods.Category", "EN", "Food", 1000, (long) 0);
+	 * catByName.put("Goods.Category" + "-" + item.getValue(), item);
+	 * addToParentwithImage(item, "Goods.Category", "Meat", "EN","Salami.png");
+	 * addToParentwithImage(item, "Goods.Category", "Vegetables and fruits",
+	 * "EN","fruits.png"); addToParentwithImage(item, "Goods.Category",
+	 * "Delicacies", "EN","seafoods.png"); addToParentwithImage(item,
+	 * "Goods.Category", "Drinks", "EN","wine.png"); addToParentwithImage(item,
+	 * "Goods.Category", "Sweets", "EN","sw.png"); addToParentwithImage(item,
+	 * "Goods.Category", "Cheese", "EN","cheese.png");
+	 * 
+	 * item = new CatItem(id++, "Goods.Category", "EN", "Electronic devices", 1000,
+	 * (long) 0); catByName.put("Goods.Category" + "-" + item.getValue(), item);
+	 * addToParent(item, "Goods.Category", "Music and audio", "EN");
+	 * addToParent(item, "Goods.Category", "TV and computers", "EN");
+	 * addToParent(item, "Goods.Category", "Mobile devices", "EN");
+	 * 
+	 * item = new CatItem(id++, "Goods.Category", "EN", "Goods for home", 1000,
+	 * (long) 0); catByName.put("Goods.Category" + "-" + item.getValue(), item);
+	 * addToParent(item, "Goods.Category", "Kitchens", "EN"); addToParent(item,
+	 * "Goods.Category", "Bedrooms", "EN"); addToParent(item, "Goods.Category",
+	 * "Toilets and Baths", "EN");
+	 * 
+	 * }
+	 */
 
 	public List<Member> createStaff() {
 		Address address = new Address();
@@ -905,10 +905,10 @@ public class MockService {
 	
 	public MockService() {
 		
-		createGoodsCategory();
+		//createGoodsCategory();
 	
-		createRegions();
-		createMeasures();
+		//createRegions();
+		//createMeasures();
 		createSettlments();
 		createStaff();
 		createMembers();

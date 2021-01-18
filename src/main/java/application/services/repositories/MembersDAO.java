@@ -14,4 +14,6 @@ public interface MembersDAO extends CrudRepository<Member, Long>{
 	public List<Member> findAll();
 	public Optional<Member> findById(Long id);
 	public Optional<Member> findByLogin(String login);
+	public Optional<Member> findByPhone(String phone);
+	public Optional<Member> findByEmail(String email);
 }

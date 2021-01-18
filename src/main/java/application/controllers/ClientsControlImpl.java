@@ -11,9 +11,11 @@ import org.springframework.web.bind.annotation.RestController;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
+import application.services.BPservice;
 import application.services.ClientService;
 import application.services.MockService;
 import exceptions.EntityNotFound;
+import application.entities.BusinessPartner;
 import application.entities.Member;
 import application.entities.Person;
 import enums.ClientStatus;
@@ -22,38 +24,51 @@ import enums.UserType;
 
 @RestController
 public class ClientsControlImpl implements ClientsControl {
-	private MockService mService = new MockService();
+	//private MockService mService = new MockService();
 	@Autowired
 	private ClientService cserv;
+	@Autowired
+	private BPservice bserv;
 	Long id = (long) 1;
 	List<proxies.Member> clients = new ArrayList<proxies.Member>();
 
 	@Override
 	public ResponseEntity<Object> getAll() {
+		List<Member> lme = cserv.findMembersAll();
 		
-		clients = mService.getClients();
+		for (Member me:lme) {
+		clients.add(convertMemberToProxy(me))	;
+		}
+		
+		//clients = mService.getClients();
 		return new ResponseEntity<Object>(clients, HttpStatus.OK);
 	}
 
-	@Override
-	public ResponseEntity<Object> createClient(String json) {
-		proxies.Member pm = new Gson().fromJson(json, proxies.Member.class);
+	private Member proxyToEntity(proxies.Member pm) {
+		//пока без региона
 		Member em=new Member();
 		em.setFirstName(pm.getFirstName());
 		em.setLastName(pm.getLastName());
 		em.setEmail(pm.getEmail());
 		em.setPhone(pm.getPhone());
 		em.setLevel(0);
-		em.setStatus(0);
-		em.setType(0);
+		em.setStatus(pm.getStatus().ordinal());
+		em.setType(pm.getUserType().ordinal());
 		em.setLogin(pm.getLogin());
 		em.setPassword(pm.getPassword());
 		em.setGender(pm.getGender());
-		em = cserv.createMember(em);
-		//добавить проверку на телефон и мейл
-		//p.setId(++id);
-		//clients.add(p);
+		
+		return em;
+	}
 	
+	@Override
+	public ResponseEntity<Object> createClient(String json) {
+		proxies.Member pm = new Gson().fromJson(json, proxies.Member.class);
+		Member em=proxyToEntity(pm);
+		// проверка на логин  телефон и мейл
+		String res=cserv.isUnique(em);
+		if (!res.equalsIgnoreCase("")) return new ResponseEntity<Object>(res,HttpStatus.OK);
+		em = cserv.createMember(em);
 		if (em!=null) {
 			pm=convertMemberToProxy(em);
 		return new ResponseEntity<Object>(pm, HttpStatus.OK);
@@ -61,41 +76,25 @@ public class ClientsControlImpl implements ClientsControl {
 			return new ResponseEntity<Object>("", HttpStatus.INTERNAL_SERVER_ERROR);	
 	}
 
-	@Override
-	public ResponseEntity<Object> updateClient(Long id, proxies.Member p) {
-		int i = 0;
-		for (proxies.Member pers : clients) {
-			if (pers.getId() == id) {
-				clients.remove(i);
-				clients.add(p);
-				break;
-			}
-			i++;
-		}
-		return new ResponseEntity<Object>(clients.get(i), HttpStatus.OK);
-	}
+	
 
 	@Override
 	public ResponseEntity<Object> getClientById(Long id) {
-		Long cId = Long.valueOf(id);
-		for (proxies.Person p : clients)
-			if (p.getId() == cId)
-				return new ResponseEntity<Object>(p, HttpStatus.OK);
-		return new ResponseEntity<Object>("Not found", HttpStatus.INTERNAL_SERVER_ERROR);
+		Member me=cserv.getMemberById(id);
+		if (me==null)  return new ResponseEntity<Object>(null, HttpStatus.NOT_FOUND);
+		proxies.Member res = convertMemberToProxy(me);
+		return new ResponseEntity<Object>(res, HttpStatus.OK);
+		
+		/*из мока
+		 * Long cId = Long.valueOf(id); for (proxies.Person p : clients) if (p.getId()
+		 * == cId) return new ResponseEntity<Object>(p, HttpStatus.OK); return new
+		 * ResponseEntity<Object>("Not found", HttpStatus.INTERNAL_SERVER_ERROR);
+		 */
+		 
 
 	}
 
 	
-	@Override
-	public ResponseEntity<Object> getStaff() {
-		try {
-			List<proxies.Member> res = mService.getClubStaff();
-			return new ResponseEntity<Object>(res, HttpStatus.OK);
-		} catch (Exception e) {
-			return new ResponseEntity<Object>("Server error:".concat(e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
-		}
-	}
-
 	/*
 	 * @Override public ResponseEntity<Object> getMembers() { try {
 	 * List<proxies.Member> res = mService.getClubMembers(); return new
@@ -108,10 +107,11 @@ public class ClientsControlImpl implements ClientsControl {
 	public ResponseEntity<Object> userLogin(proxies.Person user) {
 		try {
 			//proxies.Person member = mService.getUser(user.getLogin());
+	
 			Member me=cserv.getUser(user.getLogin());
-			if (me == null)
-				return new ResponseEntity<Object>(new EntityNotFound(),HttpStatus.OK);
-			//сделать прокси объект
+ 			if (me == null)	return new ResponseEntity<Object>(new EntityNotFound(),HttpStatus.OK);
+ 			if (!me.getPassword().equalsIgnoreCase(user.getPassword())) return new ResponseEntity<Object>(new EntityNotFound(),HttpStatus.OK);
+ 			//сделать прокси объект
 			proxies.Member p = convertMemberToProxy(me);
 			return new ResponseEntity<Object>(p, HttpStatus.OK);
 		}catch (Exception e) {
@@ -130,24 +130,13 @@ public class ClientsControlImpl implements ClientsControl {
 		p.setGender(me.getGender());
 		p.setUserType(u[me.getType()]);
 		p.setStatus(st[me.getStatus()]);
-		p.setPartnerId(me.getPartnerId());
+		p.setPartnerId(me.getPartner());
 		p.setPhone(me.getPhone());
 		p.setLogin(me.getLogin());
 		return p;
 	}
 	
-	@Override
-	public ResponseEntity<Object> getPartnerById(Long id) {
-		try {
-			proxies.Member member = mService.getPartnerStaffById(id);
-			if (member == null)
-				return new ResponseEntity<Object>(new EntityNotFound(),HttpStatus.OK);
-			return new ResponseEntity<Object>(member, HttpStatus.OK);
-		}catch (Exception e) {
-			return new ResponseEntity<>("Invalid partner staff, id "+String.valueOf(id), HttpStatus.INTERNAL_SERVER_ERROR);
-		}
-	}
-
+	
 	@Override
 	public ResponseEntity<Object> createAll() {
 		Member em=new Member();
@@ -156,9 +145,10 @@ public class ClientsControlImpl implements ClientsControl {
 		em.setPhone("+972556664444");
 		em.setLogin("may");
 		em.setPassword("123");
-		em.setPartnerId(null);
+		//em.setPartner(null);
 		em.setType(0);
 		em.setStatus(2);
+		em.setLevel(0);
 		Member res = cserv.createMember(em);
 		if (res==null) return new ResponseEntity<Object>("", HttpStatus.INTERNAL_SERVER_ERROR);	
 		
@@ -168,9 +158,10 @@ public class ClientsControlImpl implements ClientsControl {
 		em.setPhone("+972556664442");
 		em.setLogin("aron");
 		em.setPassword("123");
-		em.setPartnerId((long) 1);
+		//em.setPartner(null);
 		em.setType(1);
 		em.setStatus(2);
+		em.setLevel(0);
 		res = cserv.createMember(em);
 		if (res==null) return new ResponseEntity<Object>("", HttpStatus.INTERNAL_SERVER_ERROR);	
 		
@@ -180,12 +171,29 @@ public class ClientsControlImpl implements ClientsControl {
 		em.setPhone("+972556664477");
 		em.setLogin("vova");
 		em.setPassword("123");
-		em.setPartnerId((long) 1);
+		//em.setPartner(null);
 		em.setType(2);
 		em.setStatus(2);
+		em.setLevel(0);
 		res = cserv.createMember(em);
 		if (res==null) return new ResponseEntity<Object>("", HttpStatus.INTERNAL_SERVER_ERROR);
 		return new ResponseEntity<Object>(null, HttpStatus.OK);
+	}
+
+	
+
+	@Override
+	public ResponseEntity<Object> updateClient(String json) {
+		proxies.Member pm = new Gson().fromJson(json, proxies.Member.class);
+		Member em=proxyToEntity(pm);
+		em.setId(pm.getId());
+		// проверка на логин  телефон и мейл
+			em = cserv.createMember(em);
+		if (em!=null) {
+			pm=convertMemberToProxy(em);
+		return new ResponseEntity<Object>(pm, HttpStatus.OK);
+		} else
+			return new ResponseEntity<Object>("", HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 
 }

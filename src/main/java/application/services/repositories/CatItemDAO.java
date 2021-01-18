@@ -10,6 +10,8 @@ import application.entities.CatItem;
 @Repository
 public interface CatItemDAO extends CrudRepository<CatItem, Long>{
 	public List<CatItem> findAll();
+	public List<CatItem> findByLanguage( String Language);
 	public Optional<CatItem> findById(Long id);
-
+	public List<CatItem> findByItemKeyAndValue(String itemKey,String itemValue);
+	public List<CatItem> findByItemKeyAndValueAndLanguage(String itemKey,String itemValue, String Language);
 }

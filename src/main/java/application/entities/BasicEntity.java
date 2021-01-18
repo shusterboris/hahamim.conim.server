@@ -1,6 +1,6 @@
 package application.entities;
 
-import java.sql.Date;
+
 import java.time.LocalDateTime;
 
 import javax.persistence.Column;
@@ -10,49 +10,26 @@ import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
+import javax.persistence.Version;
+
+import lombok.Getter;
+import lombok.Setter;
 
 @MappedSuperclass
+@Getter
+@Setter
 public class BasicEntity {
-	protected long id;
-	private LocalDateTime modified;
-	private LocalDateTime created;
-	private int version = 1;
-	private boolean isDeleted = false;
-
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id", nullable = false)
-	public long getId() {
-		return id;
-	}
+	protected long id;
+	private LocalDateTime modified;
+	private LocalDateTime created;
+	@Version
+	private int version = 1;
+	private boolean isDeleted = false;
 
-	public void setId(long id) {
-		this.id = id;
-	}
-
-	public LocalDateTime getModified() {
-		return modified;
-	}
-
-	public void setModified(LocalDateTime modified) {
-		this.modified = modified;
-	}
-
-	public int getVersion() {
-		return version;
-	}
-
-	public void setVersion(int version) {
-		this.version = version;
-	}
-
-	public boolean isDeleted() {
-		return isDeleted;
-	}
-
-	public void setDeleted(boolean isDeleted) {
-		this.isDeleted = isDeleted;
-	}
+	
 	
 	public String toString() {
 		return String.valueOf(getId());
@@ -70,12 +47,6 @@ public class BasicEntity {
 		modified = LocalDateTime.now();
 	}
 
-	public LocalDateTime getCreated() {
-		return created;
-	}
-
-	public void setCreated(LocalDateTime created) {
-		this.created = created;
-	}
+	
 
 }
