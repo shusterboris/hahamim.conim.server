@@ -77,6 +77,19 @@ public class CatalogsControlImpl implements CatalogsControl {
 		 ec= new application.entities.CatItem("Goods.Category", "Напитки","RU",  "Продукты");
 		 ec.setAddValue("wine.png");
 		 serv.create(ec); 
+		 //города
+		 ec= new application.entities.CatItem("Country.Regions", "Kiriat-Yam","EN",  "Haifa");
+		 serv.create(ec);
+		 ec= new application.entities.CatItem("Country.Regions", "Кирьят-Ям","RU",  "Найфа");
+		 serv.create(ec);
+		 ec= new application.entities.CatItem("Country.Regions", "Bat-Yam","EN",  "Tel-Aviv");
+		 serv.create(ec);
+		 ec= new application.entities.CatItem("Country.Regions", "Бат-Ям","RU",  "Тель-Авив");
+		 serv.create(ec);
+		 ec=new application.entities.CatItem("Country.Regions","Naharya","EN","North");	
+		 serv.create(ec);
+		 ec=new application.entities.CatItem("Country.Regions","Нагария","RU","Север");
+		 serv.create(ec);
 		 /*
 		 * addToParentwithImage(item, "Goods.Category", "Meat", "EN","Salami.png");
 		 * addToParentwithImage(item, "Goods.Category", "Vegetables and fruits",
