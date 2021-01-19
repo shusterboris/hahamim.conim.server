@@ -38,6 +38,12 @@ public class ActionService {
 		return repoP.findByMemberAndProposal(memberId, p);
 		
 	}
-
+	public PriceProposal saveProposal(PriceProposal pe) {
+		 PriceProposal res = repoP.save(pe);
+			return res;
+		}
+	public List<Proposal> fetchProposalsByMember(Long member){
+		return repo.fetchProposals(member);
+	}
 	
 }
