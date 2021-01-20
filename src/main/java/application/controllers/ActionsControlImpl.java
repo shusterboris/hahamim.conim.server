@@ -43,13 +43,13 @@ public class ActionsControlImpl implements ActionsControl {
 			List<application.entities.Proposal> l = actionService.findActionsAll();
 			if (l.isEmpty()) return new ResponseEntity<Object>(res, HttpStatus.OK);
 			for (application.entities.Proposal pe:l) {
-			res.add(entityToProposalProxy(pe));
+				res.add(entityToProposalProxy(pe));
 			}
-			 return new ResponseEntity<Object>(res, HttpStatus.OK);
+			return new ResponseEntity<Object>(res, HttpStatus.OK);
 		} catch (Exception e) {
 			return new ResponseEntity<Object>(null, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
-		
+
 	}
 
 	private Proposal entityToProposalProxy(application.entities.Proposal p) {
@@ -64,9 +64,10 @@ public class ActionsControlImpl implements ActionsControl {
 		pp.setDueDate(p.getDueDate());
 		pp.setMeasure(p.getMeasure());
 		pp.setThreshold(p.getThreshold());
-			if (p.getSupplier()!=null) {
-		  BusinessPartner s = bpserv.findbyId(p.getSupplier());
-		   if (s!=null)	pp.setSupplier(s.getFullName());
+		if (p.getSupplier()!=null) {
+			BusinessPartner s = bpserv.findbyId(p.getSupplier());
+			if (s!=null)	
+				pp.setSupplier(s.getFullName());
 		}
 		pp.setPublicationDate(p.getPublicationDate());
 		// Set<AppImage> 
@@ -84,9 +85,9 @@ public class ActionsControlImpl implements ActionsControl {
 		pp.setName(p.getName());
 		pp.setDescription(p.getDescription());
 		pp.setBundle(p.getBundle());	
-	    Set<application.entities.PriceProposal> lp = p.getPriceProposals();
+		Set<application.entities.PriceProposal> lp = p.getPriceProposals();
 		if (lp.isEmpty()) {
-           pp.setPriceProposals(new ArrayList<PriceProposal>());
+			pp.setPriceProposals(new ArrayList<PriceProposal>());
 		} else {
 			ArrayList<PriceProposal> lpp = new ArrayList<PriceProposal>();
 			for (application.entities.PriceProposal e:lp) {
@@ -94,14 +95,15 @@ public class ActionsControlImpl implements ActionsControl {
 			}
 			pp.setPriceProposals(lpp);
 		}
-	return pp;
+		pp.setStatus(ProposalStatus.getMessageKeyByNumber(p.getStatus().intValue()));
+		return pp;
 	}
 
 	@Override
 	public ResponseEntity<Object> getAllProposals() {
-		
-			return new ResponseEntity<Object>("Server error:", HttpStatus.INTERNAL_SERVER_ERROR);
-		
+
+		return new ResponseEntity<Object>("Server error:", HttpStatus.INTERNAL_SERVER_ERROR);
+
 	}
 
 	@Override
@@ -135,19 +137,19 @@ public class ActionsControlImpl implements ActionsControl {
 		}
 	}
 
-	
+
 
 	@Override
 	public ResponseEntity<Object> getMemberPriceIntents(Long proposalId, Long memberId) {
 		try {
 			//List<PriceProposal> res = mService.getMembersPriceIntents(proposalId, memberId);
-			 List<application.entities.PriceProposal> lpp = actionService.findPriceProposals(proposalId, memberId);
-			 List<PriceProposal> res=new  ArrayList<PriceProposal>();
-			 if (!lpp.isEmpty()) {
-				 for (application.entities.PriceProposal e:lpp) {
-					 res.add(entityToPproposalProxy(e));
-				 }
-			 }
+			List<application.entities.PriceProposal> lpp = actionService.findPriceProposals(proposalId, memberId);
+			List<PriceProposal> res=new  ArrayList<PriceProposal>();
+			if (!lpp.isEmpty()) {
+				for (application.entities.PriceProposal e:lpp) {
+					res.add(entityToPproposalProxy(e));
+				}
+			}
 			return new ResponseEntity<Object>(res, HttpStatus.OK);
 		} catch (Exception e) {
 			return new ResponseEntity<Object>("Server error:".concat(e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
@@ -160,7 +162,7 @@ public class ActionsControlImpl implements ActionsControl {
 		application.entities.PriceProposal res=null;
 		try {
 			//String res = mService.saveMemberPriceIntents(prices);
-		
+
 			for (PriceProposal p:prices) {
 				if (pr==null) pr=actionService.findAction(p.getId()).get();
 				res=proxyToPproposalEntity(p,pr);
@@ -172,7 +174,7 @@ public class ActionsControlImpl implements ActionsControl {
 		}
 	}
 
-	
+
 
 	@Override
 	public ResponseEntity<Object> addAction(String json) {
@@ -222,47 +224,47 @@ public class ActionsControlImpl implements ActionsControl {
 		pe.setName("колбаса копченая");
 		pe.setDescription("нежирная, очень вкусная");
 		pe.setBundle(null);	
-	    pe.setPriceProposals(new HashSet<application.entities.PriceProposal> ());
-	  	application.entities.PriceProposal ppe=createPproposal(pe, (float) 100, (long)3, 3, 0,(float)2);
-	  	pe.getPriceProposals().add(ppe);
-	  	ppe=createPproposal(pe, (float) 80, (long)3, 3, 0,(float)5);
-	    pe.getPriceProposals().add(ppe);
-	    ppe=createPproposal(pe, (float) 60, (long)3, 3, 0,(float)10);
-	    pe.getPriceProposals().add(ppe);
+		pe.setPriceProposals(new HashSet<application.entities.PriceProposal> ());
+		application.entities.PriceProposal ppe=createPproposal(pe, (float) 100, (long)3, 3, 0,(float)2);
+		pe.getPriceProposals().add(ppe);
+		ppe=createPproposal(pe, (float) 80, (long)3, 3, 0,(float)5);
+		pe.getPriceProposals().add(ppe);
+		ppe=createPproposal(pe, (float) 60, (long)3, 3, 0,(float)10);
+		pe.getPriceProposals().add(ppe);
 		pe=actionService.save(pe);
 		//  ex2
-			 pe=new application.entities.Proposal();
-				pe.setCategory("Мясо");
-				pe.setRegion("Бат-Ям");
-				pe.setPrice((float) 100);
-				pe.setInitiator((long) 3);
-				pe.setLastPrice((float) 80);
-				pe.setDueDate(LocalDate.of(2021,2,1));
-				pe.setMeasure("шт");
-				pe.setThreshold((float) 80);
-				pe.setStatus(ProposalStatus.INIT.ordinal());
-				pe.setSupplier((long) 2);
-				pe.setPublicationDate(LocalDate.of(2021,1,1));
-				// Set<AppImage> 
-				pe.setPhotos(new HashSet<application.entities.AppImage> ());
-				 i=new application.entities.AppImage();
-				i.setImgPath("salami.png");
-				i.setProposal(pe);
-				pe.getPhotos().add(i);
-				pe.setTotal((float) 600);
-				pe.setDateOfSailStarting(LocalDate.of(2021,2,1));
-				pe.setCloseDate(LocalDate.of(2021,2,1));
-				pe.setName("кролик мороженый");
-				pe.setDescription("вес 2 кг, цена за 1 кг");
-				pe.setBundle(null);	
-			    pe.setPriceProposals(new HashSet<application.entities.PriceProposal> ());
-			  	 ppe=createPproposal(pe, (float) 100, (long)3, 3, 0,(float)2);
-			  	pe.getPriceProposals().add(ppe);
-			  	ppe=createPproposal(pe, (float) 90, (long)3, 3, 0,(float)5);
-			    pe.getPriceProposals().add(ppe);
-			    ppe=createPproposal(pe, (float) 80, (long)3, 3, 0,(float)10);
-			    pe.getPriceProposals().add(ppe);
-				pe=actionService.save(pe);
+		pe=new application.entities.Proposal();
+		pe.setCategory("Мясо");
+		pe.setRegion("Бат-Ям");
+		pe.setPrice((float) 100);
+		pe.setInitiator((long) 3);
+		pe.setLastPrice((float) 80);
+		pe.setDueDate(LocalDate.of(2021,2,1));
+		pe.setMeasure("шт");
+		pe.setThreshold((float) 80);
+		pe.setStatus(ProposalStatus.INIT.ordinal());
+		pe.setSupplier((long) 2);
+		pe.setPublicationDate(LocalDate.of(2021,1,1));
+		// Set<AppImage> 
+		pe.setPhotos(new HashSet<application.entities.AppImage> ());
+		i=new application.entities.AppImage();
+		i.setImgPath("salami.png");
+		i.setProposal(pe);
+		pe.getPhotos().add(i);
+		pe.setTotal((float) 600);
+		pe.setDateOfSailStarting(LocalDate.of(2021,2,1));
+		pe.setCloseDate(LocalDate.of(2021,2,1));
+		pe.setName("кролик мороженый");
+		pe.setDescription("вес 2 кг, цена за 1 кг");
+		pe.setBundle(null);	
+		pe.setPriceProposals(new HashSet<application.entities.PriceProposal> ());
+		ppe=createPproposal(pe, (float) 100, (long)3, 3, 0,(float)2);
+		pe.getPriceProposals().add(ppe);
+		ppe=createPproposal(pe, (float) 90, (long)3, 3, 0,(float)5);
+		pe.getPriceProposals().add(ppe);
+		ppe=createPproposal(pe, (float) 80, (long)3, 3, 0,(float)10);
+		pe.getPriceProposals().add(ppe);
+		pe=actionService.save(pe);
 		return null;
 	}
 	private application.entities.PriceProposal createPproposal(application.entities.Proposal p, float price, Long member, int plevel, int ptype,float q){
@@ -275,7 +277,7 @@ public class ActionsControlImpl implements ActionsControl {
 		ppe.setProposal(p);
 		return ppe;	
 	}
-	
+
 	private application.entities.PriceProposal proxyToPproposalEntity(PriceProposal pp, application.entities.Proposal p) {
 
 		application.entities.PriceProposal ppe = new application.entities.PriceProposal();
@@ -289,7 +291,6 @@ public class ActionsControlImpl implements ActionsControl {
 	}
 
 	private PriceProposal entityToPproposalProxy(application.entities.PriceProposal pe) {
-
 		PriceProposal pp = new PriceProposal();
 		pp.setPrice(pe.getPrice());
 		pp.setMemberId(pe.getMember());
@@ -301,7 +302,6 @@ public class ActionsControlImpl implements ActionsControl {
 	}
 
 	private application.entities.Proposal proxyToProposalEntity(Proposal pp ){
-
 		application.entities.Proposal pe=new application.entities.Proposal();
 		pe.setCategory(pp.getCategory());
 		pe.setRegion(pp.getRegion());
@@ -311,7 +311,7 @@ public class ActionsControlImpl implements ActionsControl {
 		pe.setDueDate(pp.getDueDate());
 		pe.setMeasure(pp.getMeasure());
 		pe.setThreshold(pp.getThreshold());
-		pe.setStatus(ProposalStatus.INIT.ordinal());
+		pe.setStatus(ProposalStatus.getOrdinalByMessage(pp.getStatus()));
 		pe.setSupplier(pp.getSupplierId());
 		pe.setPublicationDate(pp.getPublicationDate());
 		// Set<AppImage> 
@@ -326,10 +326,10 @@ public class ActionsControlImpl implements ActionsControl {
 		for (PriceProposal priceP:lpp) {
 			sppe.add(proxyToPproposalEntity(priceP,pe));
 		}
-		 pe.setPriceProposals(sppe);
+		pe.setPriceProposals(sppe);
 		return pe;
 	}
 
-	}
+}
 
-	
+
