@@ -54,6 +54,7 @@ public class ActionsControlImpl implements ActionsControl {
 
 	private Proposal entityToProposalProxy(application.entities.Proposal p) {
 		Proposal pp=new Proposal();
+		pp.setId(p.getId());
 		pp.setCategory(p.getCategory());
 		pp.setRegion(p.getRegion());
 		pp.setPrice(p.getPrice());
@@ -64,8 +65,10 @@ public class ActionsControlImpl implements ActionsControl {
 		pp.setDueDate(p.getDueDate());
 		pp.setMeasure(p.getMeasure());
 		pp.setThreshold(p.getThreshold());
+		pp.setThresholdmax(p.getThresholdmax());
 		if (p.getSupplier()!=null) {
 			BusinessPartner s = bpserv.findbyId(p.getSupplier());
+			pp.setSupplierId(p.getSupplier());
 			if (s!=null)	
 				pp.setSupplier(s.getFullName());
 		}
@@ -311,6 +314,7 @@ public class ActionsControlImpl implements ActionsControl {
 		pe.setDueDate(pp.getDueDate());
 		pe.setMeasure(pp.getMeasure());
 		pe.setThreshold(pp.getThreshold());
+		pe.setThresholdmax(pp.getThresholdmax());
 		pe.setStatus(ProposalStatus.getOrdinalByMessage(pp.getStatus()));
 		pe.setSupplier(pp.getSupplierId());
 		pe.setPublicationDate(pp.getPublicationDate());
@@ -327,6 +331,7 @@ public class ActionsControlImpl implements ActionsControl {
 			sppe.add(proxyToPproposalEntity(priceP,pe));
 		}
 		pe.setPriceProposals(sppe);
+		pe.setId(pp.getId());
 		return pe;
 	}
 
