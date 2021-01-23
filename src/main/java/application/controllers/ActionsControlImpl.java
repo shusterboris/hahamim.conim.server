@@ -226,13 +226,11 @@ public class ActionsControlImpl implements ActionsControl {
 		pe.setName("колбаса копченая");
 		pe.setDescription("нежирная, очень вкусная");
 		pe.setBundle(null);	
-		pe.setPriceProposals(new HashSet<application.entities.PriceProposal> ());
-		application.entities.PriceProposal ppe=createPproposal(pe, (float) 100, (long)3, 3, 0,(float)2);
-		pe.getPriceProposals().add(ppe);
-		ppe=createPproposal(pe, (float) 80, (long)3, 3, 0,(float)5);
-		pe.getPriceProposals().add(ppe);
-		ppe=createPproposal(pe, (float) 60, (long)3, 3, 0,(float)10);
-		pe.getPriceProposals().add(ppe);
+		HashSet<application.entities.PriceProposal> lpp = new HashSet<application.entities.PriceProposal> ();
+		lpp.add(createPproposal(pe, (float) 100, (long)3, 1, 0,(float)2));
+		lpp.add(createPproposal(pe, (float) 80, (long)3, 2, 0,(float)2));
+		lpp.add(createPproposal(pe, (float) 60, (long)3, 3, 0,(float)2));
+		pe.setPriceProposals(lpp);
 		pe=actionService.save(pe);
 		//  ex2
 		pe=new application.entities.Proposal();
@@ -259,13 +257,11 @@ public class ActionsControlImpl implements ActionsControl {
 		pe.setName("кролик мороженый");
 		pe.setDescription("вес 2 кг, цена за 1 кг");
 		pe.setBundle(null);	
-		pe.setPriceProposals(new HashSet<application.entities.PriceProposal> ());
-		ppe=createPproposal(pe, (float) 100, (long)3, 3, 0,(float)2);
-		pe.getPriceProposals().add(ppe);
-		ppe=createPproposal(pe, (float) 90, (long)3, 3, 0,(float)5);
-		pe.getPriceProposals().add(ppe);
-		ppe=createPproposal(pe, (float) 80, (long)3, 3, 0,(float)10);
-		pe.getPriceProposals().add(ppe);
+		lpp.clear();
+		lpp.add(createPproposal(pe, (float) 100, (long)1, 1, 0,(float)2));
+		lpp.add(createPproposal(pe, (float) 90, (long)1, 2, 0,(float)5));
+		lpp.add(createPproposal(pe, (float) 80, (long)1, 3, 0,(float)10));
+		pe.setPriceProposals(lpp);
 		pe=actionService.save(pe);
 		return null;
 	}
