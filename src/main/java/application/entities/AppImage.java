@@ -24,11 +24,21 @@ public class AppImage extends BasicEntity implements Serializable{
 	@JoinColumn(name = "proposal_id", nullable = false)
 	private Proposal proposal;
 	
+	public AppImage(String im) {
+		// TODO Auto-generated constructor stub
+	}
 	public String getImgPath() {
 		return imgPath;
 	}
-	public void setImgPath(String imgPath) {
+	
+	public AppImage() {
+		
+	}
+	
+	public AppImage(String imgPath, Proposal proposal) {
+		super();
 		this.imgPath = imgPath;
+		this.proposal = proposal;
 	}
 	
 }

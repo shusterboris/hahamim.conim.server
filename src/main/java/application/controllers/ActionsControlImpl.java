@@ -242,6 +242,7 @@ public class ActionsControlImpl implements ActionsControl {
 		pe.setDueDate(LocalDate.of(2021,2,1));
 		pe.setMeasure("шт");
 		pe.setThreshold((float) 80);
+		pe.setThresholdmax((float) 180);
 		pe.setStatus(ProposalStatus.INIT.ordinal());
 		pe.setSupplier((long) 2);
 		pe.setPublicationDate(LocalDate.of(2021,1,1));
@@ -314,8 +315,15 @@ public class ActionsControlImpl implements ActionsControl {
 		pe.setStatus(ProposalStatus.getOrdinalByMessage(pp.getStatus()));
 		pe.setSupplier(pp.getSupplierId());
 		pe.setPublicationDate(pp.getPublicationDate());
-		// Set<AppImage> 
-		pe.setTotal(pp.getTotal());
+		List<String> li = pp.getPhotos();
+		Set<AppImage> le = new HashSet<AppImage>();
+		if (li!=null) {
+			for (String im:li) {
+				le.add(new AppImage(im,pe));
+			}
+		}
+		pe.setPhotos(le);
+			pe.setTotal(pp.getTotal());
 		pe.setDateOfSailStarting(pp.getDateOfSailStarting());
 		pe.setCloseDate(pp.getCloseDate());
 		pe.setName(pp.getName());
