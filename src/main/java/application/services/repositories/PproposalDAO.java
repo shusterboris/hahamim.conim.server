@@ -14,5 +14,5 @@ import application.entities.Proposal;
 public interface PproposalDAO extends CrudRepository<PriceProposal, Long> {
 	public List<PriceProposal> findAll();
 	public Optional<PriceProposal> findById(Long id);
-	public List<PriceProposal> findByMemberAndProposal(Long m, Proposal p);
+	public List<PriceProposal> findByMemberAndProposalAndIsDeleted(Long m, Proposal p, boolean isDelete);
 }

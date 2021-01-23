@@ -35,7 +35,7 @@ public class ActionService {
 	public List<PriceProposal> findPriceProposals(Long proposalId, Long memberId) {
 		Proposal p=new Proposal();
 		p.setId(proposalId);
-		return repoP.findByMemberAndProposal(memberId, p);
+		return repoP.findByMemberAndProposalAndIsDeleted(memberId, p, false);
 		
 	}
 	public PriceProposal saveProposal(PriceProposal pe) {

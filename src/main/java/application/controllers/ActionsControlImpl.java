@@ -41,7 +41,8 @@ public class ActionsControlImpl implements ActionsControl {
 		try {
 			List<Proposal> res =new ArrayList<Proposal>();  //mService.getProposals();
 			List<application.entities.Proposal> l = actionService.findActionsAll();
-			if (l.isEmpty()) return new ResponseEntity<Object>(res, HttpStatus.OK);
+			if (l.isEmpty()) 
+				return new ResponseEntity<Object>(res, HttpStatus.OK);
 			for (application.entities.Proposal pe:l) {
 				res.add(entityToProposalProxy(pe));
 			}
@@ -145,7 +146,6 @@ public class ActionsControlImpl implements ActionsControl {
 	@Override
 	public ResponseEntity<Object> getMemberPriceIntents(Long proposalId, Long memberId) {
 		try {
-			//List<PriceProposal> res = mService.getMembersPriceIntents(proposalId, memberId);
 			List<application.entities.PriceProposal> lpp = actionService.findPriceProposals(proposalId, memberId);
 			List<PriceProposal> res=new  ArrayList<PriceProposal>();
 			if (!lpp.isEmpty()) {
@@ -164,10 +164,9 @@ public class ActionsControlImpl implements ActionsControl {
 		application.entities.Proposal pr = null;
 		application.entities.PriceProposal res=null;
 		try {
-			//String res = mService.saveMemberPriceIntents(prices);
-
-			for (PriceProposal p:prices) {
-				if (pr==null) pr=actionService.findAction(p.getId()).get();
+			for (PriceProposal p:prices) { 
+				if (pr==null) 
+					pr=actionService.findAction(p.getProposalId()).get();
 				res=proxyToPproposalEntity(p,pr);
 				res=actionService.saveProposal(res);
 			}
@@ -295,6 +294,7 @@ public class ActionsControlImpl implements ActionsControl {
 
 	private PriceProposal entityToPproposalProxy(application.entities.PriceProposal pe) {
 		PriceProposal pp = new PriceProposal();
+		pp.setId(pe.getId());
 		pp.setPrice(pe.getPrice());
 		pp.setMemberId(pe.getMember());
 		pp.setPriceLevel(pe.getPriceLevel());
