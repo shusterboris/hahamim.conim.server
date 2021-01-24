@@ -43,15 +43,15 @@ public class ClientService {
 
 	public String isUnique(Member em) {
 		Optional<Member> m = cDAO.findByLogin(em.getLogin());
-		if (m!=null) return "login exists";
+		if (m.isPresent()) return "login exists";
 		if (em.getEmail()!=null) {  
 			if (!em.getEmail().equalsIgnoreCase("")){
 			    m = cDAO.findByEmail(em.getEmail());
-				if (m!=null) return "email exists";
+				if (m.isPresent()) return "email exists";
 			}
 		}
 		m = cDAO.findByPhone(em.getPhone());
-		if (m!=null) return "phone exists";
+		if (m.isPresent()) return "phone exists";
 		return"";
 	}
 	

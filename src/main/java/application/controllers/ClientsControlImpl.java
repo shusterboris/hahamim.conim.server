@@ -47,6 +47,9 @@ public class ClientsControlImpl implements ClientsControl {
 	private Member proxyToEntity(proxies.Member pm) {
 		//пока без региона
 		Member em=new Member();
+		if (pm.getId()!=0) {
+			em.setId(pm.getId());
+		}
 		em.setFirstName(pm.getFirstName());
 		em.setLastName(pm.getLastName());
 		em.setEmail(pm.getEmail());
@@ -71,7 +74,7 @@ public class ClientsControlImpl implements ClientsControl {
 		em = cserv.createMember(em);
 		if (em!=null) {
 			pm=convertMemberToProxy(em);
-		return new ResponseEntity<Object>(pm, HttpStatus.OK);
+			return new ResponseEntity<Object>(pm, HttpStatus.OK);
 		} else
 			return new ResponseEntity<Object>("", HttpStatus.INTERNAL_SERVER_ERROR);	
 	}
