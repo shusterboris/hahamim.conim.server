@@ -1,16 +1,10 @@
 package application.entities;
 
 import java.io.Serializable;
-import java.util.Set;
-import javax.persistence.Basic;
+import java.time.LocalDate;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.Inheritance;
-import javax.persistence.InheritanceType;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import lombok.Getter;
@@ -19,10 +13,7 @@ import lombok.Setter;
 @Setter
 @Entity
 @Table(name="`member`")
-
-
-public class Member extends BasicEntity implements Serializable{
-	
+public class Member extends BasicEntity implements Serializable{	
 	private static final long serialVersionUID = 1320062617706369358L;
 
 	@Column(name="`level`", nullable=false, length=11)	
@@ -44,8 +35,7 @@ public class Member extends BasicEntity implements Serializable{
 	@Column(name="`gender`", nullable=true, length=11)
 	private Integer gender;
 	@Column(name="`birthday`", nullable=true)	
-	private java.util.Date birthday;
-	
+	private LocalDate birthday;
 	@Column(name="`phone`", nullable=true, length=255)
 	private String phone;
 	@Column(name="`email`", nullable=true, length=255)

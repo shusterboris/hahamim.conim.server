@@ -60,8 +60,18 @@ public class CatItemServices {
 	}
 	
 	public List<CatItem> getAll(String language) {
-		if (language==null)return cDAO.findAll();
+		if (language==null)
+			return cDAO.findAll();
 		return cDAO.findByLanguage(language);
+	}
+	
+	public CatItem getItemByValue(String key, String value, String language) {
+		List<CatItem> items = getAll(language);
+		return items.stream()
+				.filter((item) -> key.equals(item.getItemKey()) && value.equals(item.getValue()))
+				.findFirst().orElse(null);
+						
+		
 	}
 	
 }

@@ -1,5 +1,6 @@
 package application.controllers;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,26 +10,32 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonObject;
+import com.google.gson.GsonBuilder;
 
-import application.services.BPservice;
-import application.services.ClientService;
-import application.services.MockService;
-import exceptions.EntityNotFound;
-import application.entities.BusinessPartner;
+import Utils.LocalDateJsonAdapter;
+import application.ApplicationSettings;
+import application.entities.CatItem;
 import application.entities.Member;
-import application.entities.Person;
+import application.services.BPservice;
+import application.services.CatItemServices;
+import application.services.ClientService;
 import enums.ClientStatus;
-import enums.Gender;
 import enums.UserType;
+import exceptions.EntityNotFound;
+import lombok.Getter;
+import lombok.Setter;
 
 @RestController
+@Getter
+@Setter
 public class ClientsControlImpl implements ClientsControl {
 	//private MockService mService = new MockService();
 	@Autowired
 	private ClientService cserv;
 	@Autowired
 	private BPservice bserv;
+	@Autowired
+	private CatItemServices catService;
 	Long id = (long) 1;
 	List<proxies.Member> clients = new ArrayList<proxies.Member>();
 
@@ -60,14 +67,22 @@ public class ClientsControlImpl implements ClientsControl {
 		em.setLogin(pm.getLogin());
 		em.setPassword(pm.getPassword());
 		em.setGender(pm.getGender());
-		
+		em.setBirthday(pm.getBirthday());
+		if (pm.getRegions() != null && pm.getRegions().size() > 0) {
+			CatItem item = catService.getItemByValue("Country.Regions", pm.getRegions().get(0), null);
+			if (item != null)
+				em.setRegion(item.getId());
+		}
 		return em;
 	}
 	
 	@Override
 	public ResponseEntity<Object> createClient(String json) {
-		proxies.Member pm = new Gson().fromJson(json, proxies.Member.class);
-		Member em=proxyToEntity(pm);
+		Gson gson = new GsonBuilder()
+				.registerTypeAdapter(LocalDate.class, new LocalDateJsonAdapter())
+				.create();
+		proxies.Member pm = gson.fromJson(json, proxies.Member.class);
+		Member em = proxyToEntity(pm);
 		// проверка на логин  телефон и мейл
 		String res=cserv.isUnique(em);
 		if (!res.equalsIgnoreCase("")) return new ResponseEntity<Object>(res,HttpStatus.OK);
