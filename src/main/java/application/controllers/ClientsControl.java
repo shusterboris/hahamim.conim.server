@@ -24,7 +24,7 @@ public interface ClientsControl {
 	@GetMapping(value = "/get/{id}")
 	public ResponseEntity<Object> getClientById(@PathVariable(value = "id") Long id);
 
-	@PostMapping(value = "/add")
+	@PostMapping(value = "/add", consumes = "application/json", produces = "application/json")
 	public ResponseEntity<Object> createClient(@RequestBody String json);
 	
 
