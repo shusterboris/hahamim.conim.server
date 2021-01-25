@@ -1,7 +1,6 @@
 package application.controllers;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -19,11 +18,8 @@ import com.google.gson.GsonBuilder;
 import Utils.LocalDateJsonAdapter;
 import application.entities.AppImage;
 import application.entities.BusinessPartner;
-import application.entities.Member;
 import application.services.ActionService;
 import application.services.BPservice;
-import application.services.MockService;
-import enums.PriceProposalType;
 import enums.ProposalStatus;
 import net.minidev.json.JSONObject;
 import proxies.PriceProposal;
@@ -170,7 +166,7 @@ public class ActionsControlImpl implements ActionsControl {
 				res=proxyToPproposalEntity(p,pr);
 				res=actionService.saveProposal(res);
 			}
-			return new ResponseEntity<Object>(res, HttpStatus.OK);
+			return new ResponseEntity<Object>(res.getId(), HttpStatus.OK);
 		} catch (Exception e) {
 			return new ResponseEntity<Object>("Server error:".concat(e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
 		}
@@ -266,6 +262,7 @@ public class ActionsControlImpl implements ActionsControl {
 		pe=actionService.save(pe);
 		return null;
 	}
+
 	private application.entities.PriceProposal createPproposal(application.entities.Proposal p, float price, Long member, int plevel, int ptype,float q){
 		application.entities.PriceProposal ppe = new application.entities.PriceProposal();
 		ppe.setPrice(price);
@@ -278,7 +275,6 @@ public class ActionsControlImpl implements ActionsControl {
 	}
 
 	private application.entities.PriceProposal proxyToPproposalEntity(PriceProposal pp, application.entities.Proposal p) {
-
 		application.entities.PriceProposal ppe = new application.entities.PriceProposal();
 		ppe.setPrice(pp.getPrice());
 		ppe.setMember(pp.getMemberId());
@@ -286,6 +282,8 @@ public class ActionsControlImpl implements ActionsControl {
 		ppe.setProposalType(pp.getProposalType());
 		ppe.setQuantity(pp.getQuantity());
 		ppe.setProposal(p);
+		if (pp.getId()!=null && pp.getId()!=0)
+			ppe.setId(pp.getId());
 		return ppe;
 	}
 

@@ -21,16 +21,10 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-//@org.hibernate.annotations.Proxy(lazy=false)
 @Table(name = "priceproposals")
-
 public class PriceProposal extends BasicEntity implements Serializable{
 	private static final long serialVersionUID = 7882895218501386694L;
-	/*
-	 * @ManyToOne(fetch = FetchType.LAZY, optional = false)
-	 * 
-	 * @JoinColumn(name = "member_id", nullable = false) private Member member;
-	 */
+
 	private long member;
 	@Column(name="`priceLevel`", nullable=false, length=11)	
 	private Integer priceLevel;
@@ -43,7 +37,6 @@ public class PriceProposal extends BasicEntity implements Serializable{
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "proposal_id", nullable = false)
-	
 	private Proposal proposal ;
 
 }

@@ -6,11 +6,10 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import application.entities.Member;
+import application.entities.PriceProposal;
 import application.entities.Proposal;
 import application.services.repositories.ActionsDAO;
 import application.services.repositories.PproposalDAO;
-import application.entities.PriceProposal;
 
 @Service
 public class ActionService {
@@ -28,6 +27,7 @@ public class ActionService {
 	 Proposal res = repo.save(pe);
 		return res;
 	}
+	
 	public Optional<Proposal> findAction(Long id) {
 		return repo.findById(id);
 	}
@@ -38,10 +38,12 @@ public class ActionService {
 		return repoP.findByMemberAndProposalAndIsDeleted(memberId, p, false);
 		
 	}
+	
 	public PriceProposal saveProposal(PriceProposal pe) {
 		 PriceProposal res = repoP.save(pe);
 			return res;
-		}
+	}
+	
 	public List<Proposal> fetchProposalsByMember(Long member){
 		return repo.fetchProposals(member);
 	}

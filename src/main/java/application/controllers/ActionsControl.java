@@ -26,7 +26,6 @@ public interface ActionsControl {
 	@GetMapping("/actions/get/member/{memberId}")
 	public ResponseEntity<Object> getActionByMember(@PathVariable("memberId") Long memberId);
 	
-
 	@PostMapping("/action/add")
 	public ResponseEntity<Object> addAction(@RequestBody String json);
 

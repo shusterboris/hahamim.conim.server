@@ -23,21 +23,19 @@ public class BasicEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id", nullable = false)
 	protected long id;
-	private LocalDateTime modified;
-	private LocalDateTime created;
+	protected LocalDateTime modified;
+	protected LocalDateTime created;
 	@Version
 	private int version = 1;
+	@Column(name = "is_deleted", columnDefinition = "boolean default false")
 	private boolean isDeleted = false;
-
-	
 	
 	public String toString() {
 		return String.valueOf(getId());
 	}
 	
 	@PrePersist
-	protected void onCreate() {
-		
+	protected void onCreate() {		
 		setCreated(LocalDateTime.now());
 		modified = LocalDateTime.now();
 	}
