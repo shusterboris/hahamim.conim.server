@@ -282,7 +282,7 @@ public class ActionsControlImpl implements ActionsControl {
 		ppe.setProposalType(pp.getProposalType());
 		ppe.setQuantity(pp.getQuantity());
 		ppe.setProposal(p);
-		if (pp.getId()!=null && pp.getId()!=0)
+		if (pp.getId()!=0)
 			ppe.setId(pp.getId());
 		return ppe;
 	}

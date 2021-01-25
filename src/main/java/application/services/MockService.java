@@ -60,7 +60,7 @@ public class MockService {
 		final String lang = language;
 		List<CatItem> items = new ArrayList<CatItem>();
 		catByName.forEach((k, value) -> {
-			if (k.startsWith(key) && (value.getParentId() == 0) && lang.equalsIgnoreCase(value.getLanguage()))
+			if (k.startsWith(key) && ("".equals(value.getParentKey()) && lang.equalsIgnoreCase(value.getLanguage())))
 				items.add(value);
 		});
 		return items;
@@ -81,7 +81,7 @@ public class MockService {
 		List<CatItem> items = getCatsByCategory(key, language);
 		Long parentId = parent.getId();
 		for (CatItem item : items)
-			if (item.getParentId().equals(parentId))
+			if (item.getParentKey().equals(parentId))
 				result.add(item);
 		return result;
 
@@ -121,7 +121,7 @@ public class MockService {
 		List<CatItem> settlments = getCatsByCategory("Regions.Settlments", language);
 		Long parentId = region.getId();
 		for (CatItem item : settlments)
-			if (item.getParentId().equals(parentId))
+			if (item.getParentKey().equals(parentId))
 				result.add(item);
 		return result;
 	}
@@ -162,7 +162,7 @@ public class MockService {
 	}
 
 	private CatItem addToParent(CatItem parent, String itemKey, String itemValue, String itemLanguage) {
-		CatItem item = new CatItem(id++, itemKey, itemLanguage, itemValue, 1000, (long) 0);
+		CatItem item = new CatItem(id++, itemKey, itemLanguage, itemValue, 1000, "");
 		catByName.put(itemKey + "-" + itemValue, item);
 		catById.put(item.getId(), item);
 		return item;
@@ -441,8 +441,9 @@ public class MockService {
 		Proposal pp=new Proposal();
 		 	 pp.setId(id) ;
 		     pp.setName(name); 
-			 pp.setCategories(categories); 
-			 pp.setRegion(region); 
+		     if (categories != null && categories.size() > 0)
+		    	 pp.setCategory(categories.get(0).getValue()); 
+			 pp.setRegion(region.getValue()); 
 			 pp.setInitiator( author);
 			 pp.setPrice(price); 
 			 pp.setDueDate(dueDate); 
@@ -478,7 +479,7 @@ public class MockService {
 			p.setStatus("ProposalStatus.PUBLISHED");
 			p.setSupplier("Сеть магазинов 'Мама'");
 			p.setSupplierId((long)999);
-			p.setMeasure(measures.get(random.nextInt(measures.size()-1)));
+			p.setMeasure("кг");
 			proposals.add(p);
 		}
 	} 
@@ -593,9 +594,9 @@ public class MockService {
 		    ac.setStores(stores);
 		    ac.setThreshold((float) 0.5);
 		    if (i==3)  {
-		    	ac.setMeasure(new CatItem((long) 800+i, "Measure", "RU", "шт", 1000, (long) 0));
+		    	ac.setMeasure("шт");
 		    } else {
-		    	ac.setMeasure(new CatItem((long) 800+i, "Measure", "RU", "кг", 1000, (long) 0));
+		    	ac.setMeasure("кг");
 		    } 
 		    if (i % 2 == 0) {
 			    ac.setSupplier("Бердычевские пончики");
@@ -721,7 +722,7 @@ public class MockService {
 	}
 	
 	public void saveMemberPriceIntent(PriceProposal intent) {
-		if (intent.getId() == null || intent.getId() == 0) {
+		if (intent.getId() == 0) {
 			id++;
 			intent.setId(id);
 			intents.add(intent);
