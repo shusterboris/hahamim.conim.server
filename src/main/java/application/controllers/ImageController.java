@@ -65,6 +65,8 @@ public class ImageController {
 		String fileName = "";
 		String fullName="";
 		String fileExt = fileData.substring(0, fileData.indexOf("="));
+		if (fileExt.contains("%"))
+			fileExt = "png";
 		String encodedImage = fileData.substring(fileExt.length()+1);
 		String encodedStringImage = URLDecoder.decode(encodedImage);
 		byte[] data = Base64.getMimeDecoder().decode(encodedStringImage);

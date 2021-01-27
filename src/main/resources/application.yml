@@ -9,3 +9,6 @@ spring:
         hibernate:
             ddl-auto: update
             show-sql: true
+jwt:
+  jwt.get.token.uri: /halt
+  secret: $2y$04$mygZYT6qZ72/FSXpcvZ6tuzkJ1rF5Sd4rNtxJ13QT965CC24o6jYO 
