@@ -4,93 +4,105 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
+import application.entities.PageResponse;
 import application.services.CatItemServices;
-import application.services.MockService;
 import proxies.CatItem;
 
 @RestController
 public class CatalogsControlImpl implements CatalogsControl {
-	//private MockService mService = new MockService();
+	// private MockService mService = new MockService();
 	@Autowired
 	private CatItemServices serv;
-	
+
 	@Override
 	public ResponseEntity<Object> getAllItems(String language) {
-		//return new ResponseEntity<Object>(mService.getAllCategories(language),HttpStatus.OK);
-		 List<CatItem> res=new ArrayList<CatItem>();
-		 List<application.entities.CatItem> eAll = serv.getAll(language);
-		 if (eAll.isEmpty()) return new ResponseEntity<Object>(res, HttpStatus.OK);
-		 for (application.entities.CatItem ce:eAll)
-		 res.add(catItemToProxy(ce));
-		 return new ResponseEntity<Object>(res, HttpStatus.OK);
+		// return new
+		// ResponseEntity<Object>(mService.getAllCategories(language),HttpStatus.OK);
+		List<CatItem> res = new ArrayList<CatItem>();
+		List<application.entities.CatItem> eAll = serv.getAll(language);
+		if (eAll.isEmpty())
+			return new ResponseEntity<Object>(res, HttpStatus.OK);
+		for (application.entities.CatItem ce : eAll)
+			res.add(catItemToProxy(ce));
+		return new ResponseEntity<Object>(res, HttpStatus.OK);
 	}
 
-	
+	@SuppressWarnings("unchecked")
+	@Override
+	public ResponseEntity<Object> getAllItemsPage(int page, String language) {
+		Page<application.entities.CatItem> itemList = serv.getAllByPage(page);
+		@SuppressWarnings("rawtypes")
+		PageResponse result = new PageResponse(itemList.getContent(), itemList.getTotalPages());
+		return new ResponseEntity<Object>(result, HttpStatus.OK);
+	}
+
 	private CatItem catItemToProxy(application.entities.CatItem ce) {
-		CatItem cp=new CatItem(ce.getId(), ce.getItemKey(), ce.getLanguage(), ce.getValue()); 
+		CatItem cp = new CatItem(ce.getId(), ce.getItemKey(), ce.getLanguage(), ce.getValue());
 		cp.setAddValue(ce.getAddValue());
 		cp.setParentKey(ce.getParentKey());
 		return cp;
 	}
+
 	@Override
-	public  ResponseEntity<Object> createAll(){
-		List<application.entities.CatItem> ref=new ArrayList<application.entities.CatItem>();
-		
-		//создаем пачку верхнего уровня
-		ref.add(new application.entities.CatItem("Country.Regions","North","EN",null));
-		ref.add(new application.entities.CatItem("Country.Regions","Север","RU",null));
-		ref.add(new application.entities.CatItem("Country.Regions","Haifa","EN",null));
-		ref.add(new application.entities.CatItem("Country.Regions","Хайфа","RU",null));
-		ref.add(new application.entities.CatItem("Country.Regions","Tel-Aviv","EN",null));
-		ref.add(new application.entities.CatItem("Country.Regions","Тель-Авив","RU",null));
-		ref.add(new application.entities.CatItem("Measures", "kg","EN",  null));
-		ref.add(new application.entities.CatItem("Measures", "кг","RU",  null));
-		ref.add(new application.entities.CatItem("Measures", "piece","EN",  null));
-		ref.add(new application.entities.CatItem("Measures", "упаковка","RU",  null));
-		ref.add(new application.entities.CatItem("Measures", "liter","EN",  null));
-		ref.add(new application.entities.CatItem("Measures", "литр","RU",  null));
-		ref.add(new application.entities.CatItem("Goods.Category", "Food","EN",  null));
-		ref.add(new application.entities.CatItem("Goods.Category", "Продукты","RU",  null));
+	public ResponseEntity<Object> createAll() {
+		List<application.entities.CatItem> ref = new ArrayList<application.entities.CatItem>();
+
+		// создаем пачку верхнего уровня
+		ref.add(new application.entities.CatItem("Country.Regions", "North", "EN", null));
+		ref.add(new application.entities.CatItem("Country.Regions", "Север", "RU", null));
+		ref.add(new application.entities.CatItem("Country.Regions", "Haifa", "EN", null));
+		ref.add(new application.entities.CatItem("Country.Regions", "Хайфа", "RU", null));
+		ref.add(new application.entities.CatItem("Country.Regions", "Tel-Aviv", "EN", null));
+		ref.add(new application.entities.CatItem("Country.Regions", "Тель-Авив", "RU", null));
+		ref.add(new application.entities.CatItem("Measures", "kg", "EN", null));
+		ref.add(new application.entities.CatItem("Measures", "кг", "RU", null));
+		ref.add(new application.entities.CatItem("Measures", "piece", "EN", null));
+		ref.add(new application.entities.CatItem("Measures", "упаковка", "RU", null));
+		ref.add(new application.entities.CatItem("Measures", "liter", "EN", null));
+		ref.add(new application.entities.CatItem("Measures", "литр", "RU", null));
+		ref.add(new application.entities.CatItem("Goods.Category", "Food", "EN", null));
+		ref.add(new application.entities.CatItem("Goods.Category", "Продукты", "RU", null));
 		serv.createBundle(ref);
-		//meat
-		application.entities.CatItem ec= new application.entities.CatItem("Goods.Category", "Meat","EN",  "Food");
+		// meat
+		application.entities.CatItem ec = new application.entities.CatItem("Goods.Category", "Meat", "EN", "Food");
 		ec.setAddValue("Salami.png");
 		serv.create(ec);
-		 ec= new application.entities.CatItem("Goods.Category", "Мясо","RU",  "Продукты");
-		 ec.setAddValue("Salami.png");
+		ec = new application.entities.CatItem("Goods.Category", "Мясо", "RU", "Продукты");
+		ec.setAddValue("Salami.png");
 		serv.create(ec);
-		//delic
-		ec= new application.entities.CatItem("Goods.Category", "Delicacies","EN",  "Food");
+		// delic
+		ec = new application.entities.CatItem("Goods.Category", "Delicacies", "EN", "Food");
 		ec.setAddValue("seafoods.png");
 		serv.create(ec);
-		 ec= new application.entities.CatItem("Goods.Category", "Деликатесы","RU",  "Продукты");
-		 ec.setAddValue("seafoods.png");
+		ec = new application.entities.CatItem("Goods.Category", "Деликатесы", "RU", "Продукты");
+		ec.setAddValue("seafoods.png");
 		serv.create(ec);
-		//drinks
-		ec= new application.entities.CatItem("Goods.Category", "Drinks","EN",  "Food");
+		// drinks
+		ec = new application.entities.CatItem("Goods.Category", "Drinks", "EN", "Food");
 		ec.setAddValue("wine.png");
 		serv.create(ec);
-		 ec= new application.entities.CatItem("Goods.Category", "Напитки","RU",  "Продукты");
-		 ec.setAddValue("wine.png");
-		 serv.create(ec); 
-		 //города
-		 ec= new application.entities.CatItem("Country.Regions", "Kiriat-Yam","EN",  "Haifa");
-		 serv.create(ec);
-		 ec= new application.entities.CatItem("Country.Regions", "Кирьят-Ям","RU",  "Найфа");
-		 serv.create(ec);
-		 ec= new application.entities.CatItem("Country.Regions", "Bat-Yam","EN",  "Tel-Aviv");
-		 serv.create(ec);
-		 ec= new application.entities.CatItem("Country.Regions", "Бат-Ям","RU",  "Тель-Авив");
-		 serv.create(ec);
-		 ec=new application.entities.CatItem("Country.Regions","Naharya","EN","North");	
-		 serv.create(ec);
-		 ec=new application.entities.CatItem("Country.Regions","Нагария","RU","Север");
-		 serv.create(ec);
-		 /*
+		ec = new application.entities.CatItem("Goods.Category", "Напитки", "RU", "Продукты");
+		ec.setAddValue("wine.png");
+		serv.create(ec);
+		// города
+		ec = new application.entities.CatItem("Country.Regions", "Kiriat-Yam", "EN", "Haifa");
+		serv.create(ec);
+		ec = new application.entities.CatItem("Country.Regions", "Кирьят-Ям", "RU", "Найфа");
+		serv.create(ec);
+		ec = new application.entities.CatItem("Country.Regions", "Bat-Yam", "EN", "Tel-Aviv");
+		serv.create(ec);
+		ec = new application.entities.CatItem("Country.Regions", "Бат-Ям", "RU", "Тель-Авив");
+		serv.create(ec);
+		ec = new application.entities.CatItem("Country.Regions", "Naharya", "EN", "North");
+		serv.create(ec);
+		ec = new application.entities.CatItem("Country.Regions", "Нагария", "RU", "Север");
+		serv.create(ec);
+		/*
 		 * addToParentwithImage(item, "Goods.Category", "Meat", "EN","Salami.png");
 		 * addToParentwithImage(item, "Goods.Category", "Vegetables and fruits",
 		 * "EN","fruits.png"); addToParentwithImage(item, "Goods.Category",
@@ -129,8 +141,7 @@ public class CatalogsControlImpl implements CatalogsControl {
 	 * { return new ResponseEntity<Object>("Server error:".concat(e.getMessage()),
 	 * HttpStatus.INTERNAL_SERVER_ERROR); } }
 	 * 
-	 */	
-
+	 */
 
 	/*
 	 * @Override public ResponseEntity<Object> getItemStringByKey(String key, String
@@ -185,5 +196,5 @@ public class CatalogsControlImpl implements CatalogsControl {
 	 * new ResponseEntity<Object>("Server error:".concat(e.getMessage()),
 	 * HttpStatus.INTERNAL_SERVER_ERROR); } }
 	 * 
-	 */	
+	 */
 }
