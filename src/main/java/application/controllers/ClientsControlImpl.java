@@ -122,13 +122,11 @@ public class ClientsControlImpl implements ClientsControl {
 	 */
 
 	@Override
-	public ResponseEntity<Object> userLogin(proxies.Person user) {
+	public ResponseEntity<Object> userLogin(String user) {
 		try {
-			//proxies.Person member = mService.getUser(user.getLogin());
-	
-			Member me=cserv.getUser(user.getLogin());
- 			if (me == null)	return new ResponseEntity<Object>(new EntityNotFound(),HttpStatus.OK);
- 			if (!me.getPassword().equalsIgnoreCase(user.getPassword())) return new ResponseEntity<Object>(new EntityNotFound(),HttpStatus.OK);
+			Member me=cserv.getUser(user);
+ 			if (me == null)	return 
+ 				new ResponseEntity<Object>(new EntityNotFound(),HttpStatus.OK);
  			//сделать прокси объект
 			proxies.Member p = convertMemberToProxy(me);
 			return new ResponseEntity<Object>(p, HttpStatus.OK);

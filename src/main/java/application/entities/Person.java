@@ -1,17 +1,8 @@
  package application.entities;
 
 import java.io.Serializable;
-import java.time.LocalDate;
 
 import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Inheritance;
-import javax.persistence.InheritanceType;
-import javax.persistence.MappedSuperclass;
-import javax.persistence.Table;
-
-import enums.ClientStatus;
-import enums.UserType;
 
 
 public class Person extends BasicEntity implements Serializable{
@@ -24,7 +15,6 @@ public class Person extends BasicEntity implements Serializable{
 	private Integer gender;
 	@Column(name="`birthday`", nullable=true)	
 	private java.util.Date birthday;
-	
 	@Column(name="`phone`", nullable=true, length=255)
 	private String phone;
 	@Column(name="`email`", nullable=true, length=255)

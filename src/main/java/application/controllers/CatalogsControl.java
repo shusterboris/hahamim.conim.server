@@ -24,6 +24,9 @@ public interface CatalogsControl {
 	@GetMapping({ "/items/all/{language}", "/items/all" })
 	public ResponseEntity<Object> getAllItems(@PathVariable(name = "language", required = false) String language);
 
+	
+	@GetMapping({ "/items/page/{page}/{language}", "/items/page/{page}" })
+	public ResponseEntity<Object> getAllItemsPage(@PathVariable(name = "page") int page, @PathVariable(name = "language", required = false) String language);
 	/*
 	 * @GetMapping({"/items/child/{parentKey}/{language}",
 	 * "/items/child/{parentKey}"}) public ResponseEntity<Object>

@@ -3,28 +3,18 @@ package application.entities;
 
 import java.io.Serializable;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-
-import java.util.HashSet;
 import java.util.Set;
 
-import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinColumns;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import lombok.Getter;
 import lombok.Setter;
-
-
-
 /**
- * Тендерное предложение (предложение на совместную закупку)
+ * Тендерное предложение (предложение на совместную закупку) или акция
  * 
  * @author Одиссей
  *
