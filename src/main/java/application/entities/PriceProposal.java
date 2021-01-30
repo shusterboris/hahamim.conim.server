@@ -31,5 +31,5 @@ public class PriceProposal extends BasicEntity implements Serializable{
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "proposal_id", nullable = false)
 	private Proposal proposal ;
-
+	private String delivery;
 }

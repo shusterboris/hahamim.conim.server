@@ -20,7 +20,7 @@ public class Member extends BasicEntity implements Serializable{
 	private Integer level; //member level
 	private Long region;
 	private Long partner;
-	@Column(name="`lastname`", nullable=false, length=255)
+	@Column(name = "`lastname`", nullable = true, length = 255)
 	private String lastName;
 	@Column(name="`firstname`", nullable=false, length=255)
 	private String firstName;

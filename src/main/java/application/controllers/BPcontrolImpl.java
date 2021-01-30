@@ -2,17 +2,16 @@ package application.controllers;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
-import application.services.BPservice;
-import application.services.MockService;
-import proxies.Address;
 import application.entities.BusinessPartner;
+import application.entities.Store;
+import application.services.BPservice;
 
 
 
@@ -50,12 +49,20 @@ public class BPcontrolImpl implements BPcontrol {
 		serv.createAll();
 		return new ResponseEntity<Object>("", HttpStatus.OK);
 	}
-    private proxies.BusinessPartner convertPartnerToProxy(BusinessPartner pe){
-    	///Long id, String name, Address address, Long headQuatersId/
-		
-		  proxies.BusinessPartner p=new proxies.BusinessPartner(pe.getId(),pe.getFullName(),null,(long) 0);
-		  p.setFullName(pe.getFullName()); return p;
-		 
-    
+
+	private proxies.BusinessPartner convertPartnerToProxy(BusinessPartner pe) {
+		proxies.BusinessPartner p = new proxies.BusinessPartner();
+		p.setId(pe.getId());
+		p.setFullName(pe.getFullName());
+		p.setSupplier(pe.isSupplier());
+		Set<Store> ls = pe.getStores();
+		List<proxies.Store> lps = new ArrayList<proxies.Store>();
+		if (!ls.isEmpty()) {
+			for (Store s : ls) {
+
+			}
+		}
+		return p;
+
     }
 }

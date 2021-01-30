@@ -1,9 +1,13 @@
 package application.entities;
 
 import java.io.Serializable;
+import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import lombok.Getter;
@@ -19,11 +23,8 @@ public class BusinessPartner extends BasicEntity implements Serializable{
 	private String fullName;
 	private boolean supplier = false;
 
-	/*
-	 * @OneToMany
-	 * 
-	 * @JoinColumn(name = "id", nullable=true) private Set<Member> contacts;
-	 */
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "bp")
+	private Set<Store> stores;
 
 	private Double raiting;  //оценка поставщика
 	/*

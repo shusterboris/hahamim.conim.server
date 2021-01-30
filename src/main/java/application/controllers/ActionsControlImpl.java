@@ -284,6 +284,7 @@ public class ActionsControlImpl implements ActionsControl {
 		ppe.setProposal(p);
 		if (pp.getId()!=0)
 			ppe.setId(pp.getId());
+		ppe.setDelivery(pp.getDelivery());
 		return ppe;
 	}
 
@@ -296,6 +297,7 @@ public class ActionsControlImpl implements ActionsControl {
 		pp.setProposalType(pe.getProposalType());
 		pp.setQuantity(pe.getQuantity());
 		pp.setProposalId(pe.getProposal().getId());
+		pp.setDelivery(pe.getDelivery());
 		return pp;
 	}
 

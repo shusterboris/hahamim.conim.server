@@ -13,7 +13,6 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import Utils.LocalDateJsonAdapter;
-import application.ApplicationSettings;
 import application.entities.CatItem;
 import application.entities.Member;
 import application.services.BPservice;
@@ -210,6 +209,12 @@ public class ClientsControlImpl implements ClientsControl {
 		return new ResponseEntity<Object>(pm, HttpStatus.OK);
 		} else
 			return new ResponseEntity<Object>("", HttpStatus.INTERNAL_SERVER_ERROR);
+	}
+
+	@Override
+	public ResponseEntity<Object> getPaymentsByClient(Long id) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

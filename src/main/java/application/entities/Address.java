@@ -8,18 +8,7 @@ import javax.persistence.MappedSuperclass;
 @MappedSuperclass
 public class Address extends BasicEntity implements Serializable {
 	private static final long serialVersionUID = -6276857316780429416L;
-	public Long getSettlement() {
-		return settlement;
-	}
 
-	public void setSettlement(Long settlement) {
-		this.settlement = settlement;
-	}
-
-	//@OneToOne(targetEntity=application.entities.CatItem.class)	
-	//@org.hibernate.annotations.Cascade({org.hibernate.annotations.CascadeType.LOCK})	
-	//@JoinColumns({ @JoinColumn(name="`settlement`", referencedColumnName="`itemId`") })	
-	//@Basic(fetch=FetchType.LAZY)
 	protected Long settlement;  
 	
 	@Column(name="`streetAddress`", nullable=true, length=255)	
@@ -53,11 +42,13 @@ public class Address extends BasicEntity implements Serializable {
 		this.altitude = altitude;
 	}
 
-	@Override
-	public String toString() {
-		return settlement + ", " + streetAddress;
+	public Long getSettlement() {
+		return settlement;
+	}
+
+	public void setSettlement(Long settlement) {
+		this.settlement = settlement;
 	}
 
 	
-
 }

@@ -32,4 +32,7 @@ public interface ClientsControl {
 	
 	@GetMapping(value = "/addAll")
 	public ResponseEntity<Object> createAll();
+
+	@GetMapping(value = "/getPayments/{id}")
+	public ResponseEntity<Object> getPaymentsByClient(@PathVariable(value = "id") Long id);
 }

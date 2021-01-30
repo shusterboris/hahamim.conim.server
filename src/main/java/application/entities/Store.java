@@ -2,37 +2,34 @@ package application.entities;
 
 import java.io.Serializable;
 
-import javax.persistence.Basic;
 import javax.persistence.Column;
+import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinColumns;
-import javax.persistence.MappedSuperclass;
-import javax.persistence.OneToOne;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 
-@MappedSuperclass 
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
+@Entity
+@Table(name = "stores")
 public class Store extends Address implements Serializable{
 	private static final long serialVersionUID = 2624926622636823053L;
 	@Column(name="`name`", nullable=true, length=255)	
 	protected String name;
-	
-	@OneToOne(targetEntity=application.entities.Store.class)	
-	@org.hibernate.annotations.Cascade({org.hibernate.annotations.CascadeType.LOCK})	
-	@JoinColumns({ @JoinColumn(name="`headQuaters_Id`", referencedColumnName="`id`") })	
-	@Basic(fetch=FetchType.LAZY)		
-	protected Store headQuaters = null;
 
-	public String getName() {
-		return name;
-	}
+	protected Long headQuaters = null;
 
-	public void setName(String name) {
-		this.name = name;
-	}
+	@ManyToOne(fetch = FetchType.LAZY, optional = false)
+	@JoinColumn(name = "bp_id", nullable = false)
+	private BusinessPartner bp;
 
-	
 
-	public Store(String name, Address address, Store headQuaters) {
+
+	public Store(String name, Address address, Long headQuaters) {
 	
 		this.name = name;
 		this.settlement = address.getSettlement();
@@ -41,11 +38,11 @@ public class Store extends Address implements Serializable{
 		this.altitude= address.getAltitude();
 		this.headQuaters = headQuaters;
 	}
-	public Store(String name, String addr, Store headQuaters) {
+
+	public Store(String name, String addr, Long headQuaters) {
 		
 		this.name = name;
 		this.streetAddress= addr;
-		
 		this.headQuaters = headQuaters;
 	}
 
