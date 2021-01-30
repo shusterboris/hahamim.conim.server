@@ -37,7 +37,8 @@ public class CatalogsControlImpl implements CatalogsControl {
 	public ResponseEntity<Object> getAllItemsPage(int page, String language) {
 		Page<application.entities.CatItem> itemList = serv.getAllByPage(page);
 		@SuppressWarnings("rawtypes")
-		PageResponse result = new PageResponse(itemList.getContent(), itemList.getTotalPages());
+		PageResponse result = new PageResponse(itemList.getContent(), itemList.getTotalPages(),
+				itemList.getTotalElements());
 		return new ResponseEntity<Object>(result, HttpStatus.OK);
 	}
 

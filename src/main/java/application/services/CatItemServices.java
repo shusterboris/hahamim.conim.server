@@ -12,7 +12,7 @@ import application.services.repositories.CatItemDAO;
 
 @Service
 public class CatItemServices {
-	private int pageSize = 10;
+	private int pageSize = 15;
 
 	@Autowired
 	private CatItemDAO cDAO;
@@ -24,7 +24,6 @@ public class CatItemServices {
 	 * @return
 	 */
 	public boolean createBundle(List<CatItem> listRef) {
-
 		for (CatItem m : listRef) {
 			List<CatItem> old = cDAO.findByItemKeyAndValueAndLanguage(m.getItemKey(), m.getValue(), m.getLanguage());
 			if (old.isEmpty()) {
@@ -32,7 +31,6 @@ public class CatItemServices {
 					m = cDAO.save(m);
 					if (m == null)
 						return false;
-
 				} catch (Exception e) {
 					return false;
 				}
@@ -47,14 +45,12 @@ public class CatItemServices {
 		if (old.isEmpty()) {
 			try {
 				ec = cDAO.save(ec);
-
 			} catch (Exception e) {
 				return ec;
 			}
 		}
 
 		return ec;
-
 	}
 
 	public CatItem update(CatItem ec) {
@@ -80,7 +76,10 @@ public class CatItemServices {
 	}
 
 	public Page<CatItem> getAllByPage(int page) {
-		PageRequest request = PageRequest.of(page - 1, pageSize);
+		if (page < 0)
+			page = 0;
+		PageRequest request = PageRequest.of(page, pageSize);
 		return cDAO.findAll(request);
 	}
+
 }
