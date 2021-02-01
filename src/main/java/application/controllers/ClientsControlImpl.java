@@ -149,6 +149,7 @@ public class ClientsControlImpl implements ClientsControl {
 		p.setPhone(me.getPhone());
 		p.setLogin(me.getLogin());
 		p.setBirthday(me.getBirthday());
+		p.setRegions(catService.getValueById(me.getRegion()));
 		return p;
 	}
 

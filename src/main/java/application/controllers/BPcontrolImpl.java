@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import application.entities.BusinessPartner;
 import application.entities.Store;
 import application.services.BPservice;
+import application.services.CatItemServices;
 
 
 
@@ -20,6 +21,8 @@ public class BPcontrolImpl implements BPcontrol {
 	//private MockService mService = new MockService();
 	@Autowired
 	private BPservice serv;
+	@Autowired
+	private CatItemServices catServ;
 	@Override
 	public ResponseEntity<Object> getAllPartners() {
 		List<BusinessPartner> all = serv.findAll();
@@ -59,10 +62,30 @@ public class BPcontrolImpl implements BPcontrol {
 		List<proxies.Store> lps = new ArrayList<proxies.Store>();
 		if (!ls.isEmpty()) {
 			for (Store s : ls) {
-
+				lps.add(convertStoreToProxy(s));
 			}
 		}
+		p.setStores(lps);
 		return p;
 
     }
+
+	/*
+	 * protected Long settlement;
+	 * 
+	 * @Column(name="`streetAddress`", nullable=true, length=255) protected String
+	 * streetAddress;
+	 * 
+	 * protected Float latitude; protected Float altitude;
+	 */
+	private proxies.Store convertStoreToProxy(Store s) {
+		proxies.Store sp = new proxies.Store(s.getId(), s.getName(), null);
+		sp.setAltitude(s.getAltitude());
+		sp.setLatitude(s.getLatitude());
+		sp.setStreetAddress(s.getStreetAddress());
+		ArrayList<String> l = catServ.getValueById(s.getSettlement());
+		sp.setSettlement(l.get(1));
+		sp.setRegion(l.get(0));
+		return sp;
+	}
 }

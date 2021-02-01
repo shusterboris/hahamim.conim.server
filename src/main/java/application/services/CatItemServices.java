@@ -1,6 +1,8 @@
 package application.services;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -80,6 +82,29 @@ public class CatItemServices {
 			page = 0;
 		PageRequest request = PageRequest.of(page, pageSize);
 		return cDAO.findAll(request);
+	}
+
+//для получения адреса в формате регион, город
+	public ArrayList<String> getValueById(Long id) {
+		ArrayList<String> ls = new ArrayList<String>();
+		Optional<CatItem> ct;
+		ct = cDAO.findById(id);
+		if (ct.isPresent()) {
+
+			if (ct.get().getParentKey() != null)
+				ls.add(ct.get().getParentKey());
+			ls.add(ct.get().getValue());
+		}
+		return ls;
+		/*
+		 * do {
+		 * 
+		 * if (ct.isPresent()) { ls.add(ct.get().getValue());
+		 * ct=cDAO.findByItemKeyAndValue(ct.get().getItemKey(),
+		 * ct.get().getParentKey()); } }
+		 * 
+		 * while (ct.get().getParentKey()!=null);
+		 */
 	}
 
 }
