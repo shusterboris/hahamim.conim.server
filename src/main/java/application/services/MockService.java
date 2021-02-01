@@ -25,6 +25,7 @@ import proxies.Person;
 import proxies.PriceProposal;
 import proxies.Proposal;
 import proxies.Store;
+
 public class MockService {
 	private Long id = (long) 10000;
 	private List<CatItem> categories = new ArrayList<CatItem>();
@@ -153,6 +154,7 @@ public class MockService {
 	public List<Proposal> getProposals() {
 		return proposals;
 	}
+
 	public List<Proposal> getActions() {
 		return actions;
 	}
@@ -167,11 +169,14 @@ public class MockService {
 		catById.put(item.getId(), item);
 		return item;
 	}
-	private CatItem addToParentwithImage(CatItem parent, String itemKey, String itemValue, String itemLanguage,String image) {
-		CatItem item=addToParent(parent,itemKey,itemValue,itemLanguage);
+
+	private CatItem addToParentwithImage(CatItem parent, String itemKey, String itemValue, String itemLanguage,
+			String image) {
+		CatItem item = addToParent(parent, itemKey, itemValue, itemLanguage);
 		item.setAddValue(image);
 		return item;
 	}
+
 	public List<Member> getClubMembers() {
 		return clients.stream().filter(mbr -> mbr.getUserType() == UserType.MEMBER).collect(Collectors.toList());
 	}
@@ -182,30 +187,21 @@ public class MockService {
 						|| mbr.getUserType() == UserType.MODERATOR || mbr.getUserType() == UserType.STACKHOLDER))
 				.collect(Collectors.toList());
 	}
-	
-	
+
 	public BusinessPartner getBusinessPartnerById(long id) {
-			Optional<BusinessPartner> p = partners.stream()
-					.filter(entry -> entry.getId() == id)
-					.findFirst();
-			return p.isPresent() ? p.get() : null;
+		Optional<BusinessPartner> p = partners.stream().filter(entry -> entry.getId() == id).findFirst();
+		return p.isPresent() ? p.get() : null;
 	}
-	
+
 	public Member getPartnerStaffById(long id) {
 		Optional<Member> member = clients.stream()
-				.filter(mbr -> (mbr.getUserType() == UserType.PARTNER
-						&& mbr.getId() == id))
-				.findFirst();
+				.filter(mbr -> (mbr.getUserType() == UserType.PARTNER && mbr.getId() == id)).findFirst();
 		return member.isPresent() ? member.get() : null;
 	}
 
 	public Person getUser(String login) {
-		return clients.stream()
-				.filter(mbr -> mbr.getLogin().equals(login))
-				.findAny()
-				.orElse(null);		
+		return clients.stream().filter(mbr -> mbr.getLogin().equals(login)).findAny().orElse(null);
 	}
-	
 
 	private Member createMember(Integer id, String name, String lastName, Gender gender, UserType user, String login,
 			String... others) {
@@ -255,8 +251,8 @@ public class MockService {
 	 * 
 	 * }
 	 */
-	private Address createAddress(String region, String street,String sity) {
-		Address a=new Address();
+	private Address createAddress(String region, String street, String sity) {
+		Address a = new Address();
 		a.setRegion(region);
 		a.setStreetAddress(street);
 		a.setSettlement(sity);
@@ -366,29 +362,26 @@ public class MockService {
 	 */
 
 	public List<Member> createStaff() {
-		Address address = new Address();
-		address.setSettlement("Хайфа");
-		address.setId(id++);
-		address.setRegion("Хайфа");
-		address.setStreetAddress("ул. Ха навиим, 25");
-		club = new BusinessPartner((long) 969, "Клуб 'Коним Хахамим'", address, (long) 0);
+		Store address = new Store(id++, "Кулаки и дули", null, (long) 0);
+		club.setId(969);
+		club.setName("Клуб 'Коним Хахамим");
 		List<Contact> contacts = new ArrayList<>();
-		Member employee = createMember(1,"Борис", "Шустер", Gender.MALE, UserType.SUPERVISOR, "boris", "123");
+		Member employee = createMember(1, "Борис", "Шустер", Gender.MALE, UserType.SUPERVISOR, "boris", "123");
 		Contact c = new Contact(employee.getFirstName(), employee.getLastName(), employee.getPhone());
 		employee.setPartnerId((long) 969);
 		contacts.add(c);
 		clients.add(employee);
-		employee = createMember(2,"Инна", "Шустер", Gender.FEMALE, UserType.SUPERVISOR, "inna", "123");
+		employee = createMember(2, "Инна", "Шустер", Gender.FEMALE, UserType.SUPERVISOR, "inna", "123");
 		employee.setPartnerId((long) 969);
 		c = new Contact(employee.getFirstName(), employee.getLastName(), employee.getPhone());
 		contacts.add(c);
 		clients.add(employee);
-		employee = createMember(3,"Владимир", "Олевский", Gender.MALE, UserType.MODERATOR, "vlad", "123");
+		employee = createMember(3, "Владимир", "Олевский", Gender.MALE, UserType.MODERATOR, "vlad", "123");
 		c = new Contact(employee.getFirstName(), employee.getLastName(), employee.getPhone());
 		employee.setPartnerId((long) 969);
 		contacts.add(c);
 		clients.add(employee);
-		employee = createMember(4,"Хаим", "Шапошник", Gender.MALE, UserType.STACKHOLDER, "haim", "123");
+		employee = createMember(4, "Хаим", "Шапошник", Gender.MALE, UserType.STACKHOLDER, "haim", "123");
 		c = new Contact(employee.getFirstName(), employee.getLastName(), employee.getPhone());
 		employee.setPartnerId((long) 969);
 		contacts.add(c);
@@ -437,20 +430,21 @@ public class MockService {
 		return result;
 	}
 
-	public Proposal createProposal(Long id, String name, List<CatItem> categories, CatItem region, Member author, Float price, LocalDate dueDate) {
-		Proposal pp=new Proposal();
-		 	 pp.setId(id) ;
-		     pp.setName(name); 
-		     if (categories != null && categories.size() > 0)
-		    	 pp.setCategory(categories.get(0).getValue()); 
-			 pp.setRegion(region.getValue()); 
-			 pp.setInitiator( author);
-			 pp.setPrice(price); 
-			 pp.setDueDate(dueDate); 
-			 return pp;
-	}		  
-			  
-	 public void createProposals() {
+	public Proposal createProposal(Long id, String name, List<CatItem> categories, CatItem region, Member author,
+			Float price, LocalDate dueDate) {
+		Proposal pp = new Proposal();
+		pp.setId(id);
+		pp.setName(name);
+		if (categories != null && categories.size() > 0)
+			pp.setCategory(categories.get(0).getValue());
+		pp.setRegion(region.getValue());
+		pp.setInitiator(author);
+		pp.setPrice(price);
+		pp.setDueDate(dueDate);
+		return pp;
+	}
+
+	public void createProposals() {
 		CatItem haifaReg = getCatByValue("Хайфа", "RU");
 		CatItem telavivReg = getCatByValue("Тель-Авив", "RU");
 		CatItem foodCat = getCatByValue("Продукты питания", "RU");
@@ -469,7 +463,7 @@ public class MockService {
 			List<CatItem> cats = getRandomCategories(foodCat);
 			String[] lst = productMap.get(cats.get(1).getValue());
 			String name = lst[random.nextInt(lst.length - 1)] + " " + ajectives[random.nextInt(ajectives.length - 1)];
-			 
+
 			Proposal p = null;
 			if (i % 2 == 0)
 				p = createProposal(id++, name, cats, haifaReg, author, randomPrice, dueDate);
@@ -478,14 +472,14 @@ public class MockService {
 			p.setMaxPrice(random.nextFloat());
 			p.setStatus("ProposalStatus.PUBLISHED");
 			p.setSupplier("Сеть магазинов 'Мама'");
-			p.setSupplierId((long)999);
+			p.setSupplierId((long) 999);
 			p.setMeasure("кг");
 			proposals.add(p);
 		}
-	} 
+	}
 
-	public PriceProposal createPriceProposal(Long proposalId,Float price,Float quantity, Integer level ){
-		PriceProposal pp=new PriceProposal();
+	public PriceProposal createPriceProposal(Long proposalId, Float price, Float quantity, Integer level) {
+		PriceProposal pp = new PriceProposal();
 		pp.setProposalId(proposalId);
 		pp.setPriceLevel(level);
 		pp.setPrice(price);
@@ -502,24 +496,22 @@ public class MockService {
 	}
 
 	public Proposal getAction(long id) {
-		Optional<Proposal> found = actions.stream()
-			.filter(action -> action.getId() == id)
-			.findFirst();
+		Optional<Proposal> found = actions.stream().filter(action -> action.getId() == id).findFirst();
 		return found.isPresent() ? found.get() : null;
 	}
 
 	public Long addAction(Proposal p) {
-		Proposal last = actions.get(actions.size()-1);
-		Long id = last.getId()+1;
+		Proposal last = actions.get(actions.size() - 1);
+		Long id = last.getId() + 1;
 		p.setId(id);
 		actions.add(p);
 		return id;
 	}
-		
+
 	public boolean updateAction(Proposal p) {
 		try {
 			int ind = 0;
-			for(Proposal action : actions) {
+			for (Proposal action : actions) {
 				if (action.getId() == id) {
 					actions.set(ind, p);
 					return true;
@@ -527,115 +519,113 @@ public class MockService {
 				ind++;
 			}
 			return false;
-		}catch (Exception e){
+		} catch (Exception e) {
 			e.printStackTrace();
 			return false;
-		}		
+		}
 	}
-	
-	
-	
+
 	private void createActions() {
-		ArrayList<Address> stores=new ArrayList<Address>();
-		stores.add(createAddress("Тель-Авив","ул. Герцль 60","Бат-Ям"));
-		stores.add(createAddress("Тель-Авив","ул. Жаботински 133","Рамат-Ган"));
+		ArrayList<Address> stores = new ArrayList<Address>();
+		stores.add(createAddress("Тель-Авив", "ул. Герцль 60", "Бат-Ям"));
+		stores.add(createAddress("Тель-Авив", "ул. Жаботински 133", "Рамат-Ган"));
 		CatItem telavivReg = getCatByValue("Тель-Авив", "RU");
-		
-		CatItem[] foodcat =  new CatItem[6];
-		foodcat[0]=getCatByValue("Мясные продукты", "RU");
-		foodcat[1]=getCatByValue("Сыр", "RU");
-		foodcat[2]=getCatByValue( "Алкоголь", "RU");
-		foodcat[3]=getCatByValue("Овощи и фрукты", "RU");
-		foodcat[4]=getCatByValue( "Деликатесы", "RU");
-		foodcat[5]=getCatByValue( "Сладости", "RU");
-		
-		String[] names=new String[6];
-		names[0]="колбаса вареная";
-		names[1]="сыр моцарелла";
-		names[2]="пиво Гиннес";
-		names[3]="бананы";
-		names[4]="икра красная";
-		names[5]="шоколад ";
-		
-		String[] desc=new String[6];
-		desc[0]="индюшиная со специями";
-		desc[1]="производство Италия";
-		desc[2]="банка 500 мл";	
-		desc[3]="минимальный";
-		desc[4]="банка вес 150  гр"	;
-		desc[5]="молочный с орехами плитка 100гр";
-		Float[] prices=new Float[6];
-		prices[0]= (float) 60.0;
-		prices[1]=(float) 80.0;
-		prices[2]=(float) 7.0;
-		prices[3]=(float) 25.0;
-		prices[4]=(float) 300.0;
-		prices[5]=(float) 90.0;
-		
+
+		CatItem[] foodcat = new CatItem[6];
+		foodcat[0] = getCatByValue("Мясные продукты", "RU");
+		foodcat[1] = getCatByValue("Сыр", "RU");
+		foodcat[2] = getCatByValue("Алкоголь", "RU");
+		foodcat[3] = getCatByValue("Овощи и фрукты", "RU");
+		foodcat[4] = getCatByValue("Деликатесы", "RU");
+		foodcat[5] = getCatByValue("Сладости", "RU");
+
+		String[] names = new String[6];
+		names[0] = "колбаса вареная";
+		names[1] = "сыр моцарелла";
+		names[2] = "пиво Гиннес";
+		names[3] = "бананы";
+		names[4] = "икра красная";
+		names[5] = "шоколад ";
+
+		String[] desc = new String[6];
+		desc[0] = "индюшиная со специями";
+		desc[1] = "производство Италия";
+		desc[2] = "банка 500 мл";
+		desc[3] = "минимальный";
+		desc[4] = "банка вес 150  гр";
+		desc[5] = "молочный с орехами плитка 100гр";
+		Float[] prices = new Float[6];
+		prices[0] = (float) 60.0;
+		prices[1] = (float) 80.0;
+		prices[2] = (float) 7.0;
+		prices[3] = (float) 25.0;
+		prices[4] = (float) 300.0;
+		prices[5] = (float) 90.0;
+
 		for (int i = 0; i < names.length; i++) {
 			LocalDate dueDate = LocalDate.now();
 			dueDate.plusDays(random.nextInt(14));
 			Member author = getRandomMember();
-		    String name=names[i];
-		    Long id=(long) (100+i);
-		    ArrayList<PriceProposal> variants=new ArrayList<PriceProposal>();
-		    variants.add(createPriceProposal(id,(float) (prices[i]*0.6),new Float(10), 2 ));
-		    variants.add(createPriceProposal(id,(float) (prices[i]*0.7),new Float(5), 1 ));
-		    variants.add(createPriceProposal(id,(float) (prices[i]*0.8),new Float(3), 0 ));
-		    PriceProposal.sort(variants);
-		    ArrayList<CatItem> cats=new ArrayList<CatItem>();
-		    cats.add(getCatByValue("Продукты питания", "RU"));
-		    cats.add(foodcat[i]);
-		    Proposal ac = createProposal(id, name, cats, telavivReg, author, prices[i], dueDate);
+			String name = names[i];
+			Long id = (long) (100 + i);
+			ArrayList<PriceProposal> variants = new ArrayList<PriceProposal>();
+			variants.add(createPriceProposal(id, (float) (prices[i] * 0.6), new Float(10), 2));
+			variants.add(createPriceProposal(id, (float) (prices[i] * 0.7), new Float(5), 1));
+			variants.add(createPriceProposal(id, (float) (prices[i] * 0.8), new Float(3), 0));
+			PriceProposal.sort(variants);
+			ArrayList<CatItem> cats = new ArrayList<CatItem>();
+			cats.add(getCatByValue("Продукты питания", "RU"));
+			cats.add(foodcat[i]);
+			Proposal ac = createProposal(id, name, cats, telavivReg, author, prices[i], dueDate);
 			ac.setStatus("ProposalStatus.PUBLISHED");
-		    //ac.setLastPrice((float) (prices[i]*0.6));
+			// ac.setLastPrice((float) (prices[i]*0.6));
 			ac.setLastPrice((float) 0);
-		    ac.setPriceProposals(variants);
-		    ac.setStores(stores);
-		    ac.setThreshold((float) 0.5);
-		    if (i==3)  {
-		    	ac.setMeasure("шт");
-		    } else {
-		    	ac.setMeasure("кг");
-		    } 
-		    if (i % 2 == 0) {
-			    ac.setSupplier("Бердычевские пончики");
-			    ac.setSupplierId((long)998);
-		    }else {
-			    ac.setSupplier("Мааданей Росман");
-			    ac.setSupplierId((long)11111);
-		    }
-		  
-		    List<String> ps=new ArrayList<String>();
-		    ps.add(foodcat[i].getAddValue());
+			ac.setPriceProposals(variants);
+			ac.setStores(stores);
+			ac.setThreshold((float) 0.5);
+			if (i == 3) {
+				ac.setMeasure("шт");
+			} else {
+				ac.setMeasure("кг");
+			}
+			if (i % 2 == 0) {
+				ac.setSupplier("Бердычевские пончики");
+				ac.setSupplierId((long) 998);
+			} else {
+				ac.setSupplier("Мааданей Росман");
+				ac.setSupplierId((long) 11111);
+			}
+
+			List<String> ps = new ArrayList<String>();
+			ps.add(foodcat[i].getAddValue());
 			ac.setPhotos(ps);
 			ac.setDescription(desc[i]);
-			if (i==4)
+			if (i == 4)
 				ac.setThresholdmax((float) 11.0);
 			calculateProposalSummary(ac);
-		    actions.add(ac);
+			actions.add(ac);
 		}
-		    
+
 	}
-	
+
 	private void createPartner() {
-		partner=new BusinessPartner(id++,"",createAddress("Тель-Авив","ул. Гистадрут 20","Бней-брак"), (long) 0);
+		partner = new BusinessPartner();
 		partner.setId((long) 11111);
 		partner.setName("Мааданей Росман");
 		partner.setFullName("Сеть Мааданей Росман");
-		ArrayList<Store> stores=new ArrayList<Store>();
-		stores.add(new Store(id++,"",createAddress("Хайфа","ул. Герцль 60","Хайфа"),partner.getId()));
-		stores.add(new Store(id++,"",createAddress("Тель-Авив","ул. Жаботински 133","Рамат-Ган"),partner.getId()));
+		ArrayList<Store> stores = new ArrayList<Store>();
+		stores.add(new Store(id++, "", createAddress("Хайфа", "ул. Герцль 60", "Хайфа"), partner.getId()));
+		stores.add(new Store(id++, "", createAddress("Тель-Авив", "ул. Жаботински 133", "Рамат-Ган"), partner.getId()));
 		partner.setStores(stores);
-		ArrayList<Contact> allContacts=new ArrayList<Contact>();
-		allContacts.add(new Contact("Михаил","Коэн","050-9999-88-77"));
-		allContacts.add(new Contact("Давид","Левин", "050-9999-88-77"));
-		allContacts.add(new Contact("Арон","Беседер", "050-9999-77-77"));
+		ArrayList<Contact> allContacts = new ArrayList<Contact>();
+		allContacts.add(new Contact("Михаил", "Коэн", "050-9999-88-77"));
+		allContacts.add(new Contact("Давид", "Левин", "050-9999-88-77"));
+		allContacts.add(new Contact("Арон", "Беседер", "050-9999-77-77"));
 		partner.setContacts(allContacts);
 		partners.add(partner);
 	}
-	
-	public List<CatItem> getAllCategories(String language){
+
+	public List<CatItem> getAllCategories(String language) {
 		if (language == null)
 			language = ApplicationSettings.getDefaultLanguage();
 		final String lang = language;
@@ -647,64 +637,58 @@ public class MockService {
 		return items;
 
 	}
-	
+
 	private PriceProposal getPriceProposalById(long id) {
-		return intents.stream()
-				.filter(intent -> intent.getId() ==id)
-				.findFirst().orElse(null);
+		return intents.stream().filter(intent -> intent.getId() == id).findFirst().orElse(null);
 	}
-	
-	//считает количество во всех заказах по заявке
-	//определяет тек.цену, объем закупки - по количеству и деньгам
+
+	// считает количество во всех заказах по заявке
+	// определяет тек.цену, объем закупки - по количеству и деньгам
 	public Proposal calculateProposalSummary(Proposal proposal) {
 		List<PriceProposal> props = proposal.getPriceProposals();
-		//props.sort((a,b)->a.getPrice().compareTo(b.getPrice()));
+		// props.sort((a,b)->a.getPrice().compareTo(b.getPrice()));
 		Float qty = (float) 0;
-		//идем от верхней цены
-		for(int i=props.size()-1; i >= 0; i--) {
+		// идем от верхней цены
+		for (int i = props.size() - 1; i >= 0; i--) {
 			PriceProposal pp = props.get(i);
 			qty = getMembersPriceIntentsByLevel(proposal.getId(), pp.getPriceLevel());
 			if (qty >= pp.getQuantity()) { // этот уровень достигнут
-				//запоминаем значение текущей цены, как клубной, конец перебора
+				// запоминаем значение текущей цены, как клубной, конец перебора
 				proposal.setLastPrice(pp.getPrice());
 				proposal.setTotal(qty);
 				break;
-			}	
+			}
 			proposal.setLastPrice((float) 0);
-			proposal.setTotal(qty);			
+			proposal.setTotal(qty);
 		}
 		return proposal;
 	}
-	
-	public Float getMembersPriceIntentsByLevel(Long proposalId, Integer level){
-		Float sum = (float) 0;	
+
+	public Float getMembersPriceIntentsByLevel(Long proposalId, Integer level) {
+		Float sum = (float) 0;
 		sum = intents.stream()
-				.filter(intent -> 
-					intent.getProposalId().equals(proposalId) && 
-					intent.getPriceLevel() == level && 
-					intent.getProposalType() == 1)
-				.map(prop -> prop.getQuantity())
-				.reduce((float) 0, (a, b) -> a + b);
+				.filter(intent -> intent.getProposalId().equals(proposalId) && intent.getPriceLevel() == level
+						&& intent.getProposalType() == 1)
+				.map(prop -> prop.getQuantity()).reduce((float) 0, (a, b) -> a + b);
 		return sum;
 	}
-	
-	public List<PriceProposal> getMembersPriceIntents(Long proposalId, Long memberId){
+
+	public List<PriceProposal> getMembersPriceIntents(Long proposalId, Long memberId) {
 		List<PriceProposal> res = intents.stream()
-			.filter(intent -> intent.getProposalId().equals(proposalId) && intent.getMemberId().equals(memberId))
-			.collect(Collectors.toList());
+				.filter(intent -> intent.getProposalId().equals(proposalId) && intent.getMemberId().equals(memberId))
+				.collect(Collectors.toList());
 		if (res.isEmpty())
 			return new ArrayList<PriceProposal>();
-		res.sort(Collections.reverseOrder( (a, b) -> a.getPrice().compareTo(b.getPrice())));
+		res.sort(Collections.reverseOrder((a, b) -> a.getPrice().compareTo(b.getPrice())));
 		return res;
 	}
 
-	public List<PriceProposal> getAllMembersPriceIntents(Long memberId){
-		List<PriceProposal> res = intents.stream()
-			.filter(intent -> intent.getMemberId().equals(memberId))
-			.collect(Collectors.toList());
+	public List<PriceProposal> getAllMembersPriceIntents(Long memberId) {
+		List<PriceProposal> res = intents.stream().filter(intent -> intent.getMemberId().equals(memberId))
+				.collect(Collectors.toList());
 		if (res.isEmpty())
 			return new ArrayList<PriceProposal>();
-		res.sort(Collections.reverseOrder( (a, b) -> a.getPrice().compareTo(b.getPrice())));
+		res.sort(Collections.reverseOrder((a, b) -> a.getPrice().compareTo(b.getPrice())));
 		return res;
 	}
 
@@ -712,34 +696,32 @@ public class MockService {
 		List<PriceProposal> myIntents = getAllMembersPriceIntents(memberId);
 		List<Proposal> result = new ArrayList<>();
 		final List<Long> myActionsId = new ArrayList<>();
-		for(PriceProposal pp : myIntents)
+		for (PriceProposal pp : myIntents)
 			if (pp.getMemberId().equals(memberId) && !myActionsId.contains(pp.getProposalId()))
 				myActionsId.add(pp.getProposalId());
-		result = actions.stream()
-				.filter(action -> myActionsId.contains(action.getId()))
-				.collect(Collectors.toList());
+		result = actions.stream().filter(action -> myActionsId.contains(action.getId())).collect(Collectors.toList());
 		return result;
 	}
-	
+
 	public void saveMemberPriceIntent(PriceProposal intent) {
 		if (intent.getId() == 0) {
 			id++;
 			intent.setId(id);
 			intents.add(intent);
-		}else {
+		} else {
 			PriceProposal found = getPriceProposalById(intent.getId());
 			if (found != null) {
 				intents.remove(found);
 				intents.add(intent);
-			}else {
+			} else {
 				intents.add(intent);
 			}
 		}
 	}
-	
+
 	public String saveMemberPriceIntents(List<PriceProposal> intents) {
-		for(PriceProposal intent : intents) 
-			saveMemberPriceIntent(intent);	
+		for (PriceProposal intent : intents)
+			saveMemberPriceIntent(intent);
 		PriceProposal.sort(intents);
 		Proposal p = getAction(intents.get(0).getProposalId());
 		p = calculateProposalSummary(p);
@@ -747,9 +729,8 @@ public class MockService {
 		return "";
 	}
 
-	
 	public void createIntents() {
-		//Борис заказал
+		// Борис заказал
 		PriceProposal pp = new PriceProposal();
 		pp.setMemberId((long) 2);
 		pp.setPriceLevel(0);
@@ -758,7 +739,7 @@ public class MockService {
 		pp.setProposalType(1);
 		pp.setQuantity((float) 1);
 		saveMemberPriceIntent(pp);
-		
+
 		pp = new PriceProposal();
 		pp.setMemberId((long) 2);
 		pp.setPrice((float) 210);
@@ -767,7 +748,7 @@ public class MockService {
 		pp.setProposalType(1);
 		pp.setQuantity((float) 4);
 		saveMemberPriceIntent(pp);
-		
+
 		pp = new PriceProposal();
 		pp.setMemberId((long) 2);
 		pp.setPrice((float) 180);
@@ -776,7 +757,7 @@ public class MockService {
 		pp.setProposalType(1);
 		pp.setQuantity((float) 8);
 		saveMemberPriceIntent(pp);
-		
+
 		// Терпила
 		pp = new PriceProposal();
 		pp.setMemberId((long) 2002);
@@ -786,7 +767,7 @@ public class MockService {
 		pp.setProposalType(1);
 		pp.setQuantity((float) 1);
 		saveMemberPriceIntent(pp);
-		
+
 		pp = new PriceProposal();
 		pp.setMemberId((long) 2002);
 		pp.setPrice((float) 210);
@@ -795,7 +776,7 @@ public class MockService {
 		pp.setProposalType(1);
 		pp.setQuantity((float) 1);
 		saveMemberPriceIntent(pp);
-		
+
 		pp = new PriceProposal();
 		pp.setMemberId((long) 2002);
 		pp.setPrice((float) 180);
@@ -804,11 +785,11 @@ public class MockService {
 		pp.setProposalType(1);
 		pp.setQuantity((float) 3);
 		saveMemberPriceIntent(pp);
-		
+
 		Proposal a = getAction(104);
 		calculateProposalSummary(a);
-		
-		//************************************
+
+		// ************************************
 		pp = new PriceProposal();
 		pp.setMemberId((long) 2001);
 		pp.setPriceLevel(0);
@@ -817,7 +798,7 @@ public class MockService {
 		pp.setProposalType(1);
 		pp.setQuantity((float) 2);
 		saveMemberPriceIntent(pp);
-		
+
 		pp = new PriceProposal();
 		pp.setMemberId((long) 2001);
 		pp.setPrice((float) 42);
@@ -826,7 +807,7 @@ public class MockService {
 		pp.setProposalType(1);
 		pp.setQuantity((float) 2);
 		saveMemberPriceIntent(pp);
-		
+
 		pp = new PriceProposal();
 		pp.setMemberId((long) 2001);
 		pp.setPrice((float) 36);
@@ -835,10 +816,10 @@ public class MockService {
 		pp.setProposalType(1);
 		pp.setQuantity((float) 3);
 		saveMemberPriceIntent(pp);
-		
+
 		a = getAction(100);
 		calculateProposalSummary(a);
-		//********************************************
+		// ********************************************
 
 		pp = new PriceProposal();
 		pp.setMemberId((long) 20000);
@@ -848,7 +829,7 @@ public class MockService {
 		pp.setProposalType(1);
 		pp.setQuantity((float) 10);
 		saveMemberPriceIntent(pp);
-		
+
 		pp = new PriceProposal();
 		pp.setMemberId((long) 20001);
 		pp.setPrice((float) 56);
@@ -857,7 +838,7 @@ public class MockService {
 		pp.setProposalType(1);
 		pp.setQuantity((float) 12);
 		saveMemberPriceIntent(pp);
-		
+
 		pp = new PriceProposal();
 		pp.setMemberId((long) 20001);
 		pp.setPrice((float) 48);
@@ -866,10 +847,10 @@ public class MockService {
 		pp.setProposalType(1);
 		pp.setQuantity((float) 13);
 		saveMemberPriceIntent(pp);
-		
+
 		a = getAction(101);
 		calculateProposalSummary(a);
-		//********************************************
+		// ********************************************
 
 		pp = new PriceProposal();
 		pp.setMemberId((long) 20000);
@@ -879,7 +860,7 @@ public class MockService {
 		pp.setProposalType(1);
 		pp.setQuantity((float) 5);
 		saveMemberPriceIntent(pp);
-		
+
 		pp = new PriceProposal();
 		pp.setMemberId((long) 20001);
 		pp.setPrice((float) 4.9);
@@ -888,7 +869,7 @@ public class MockService {
 		pp.setProposalType(1);
 		pp.setQuantity((float) 5);
 		saveMemberPriceIntent(pp);
-		
+
 		pp = new PriceProposal();
 		pp.setMemberId((long) 20001);
 		pp.setPrice((float) 4.2);
@@ -897,29 +878,28 @@ public class MockService {
 		pp.setProposalType(1);
 		pp.setQuantity((float) 5);
 		saveMemberPriceIntent(pp);
-		
+
 		a = getAction(102);
 		calculateProposalSummary(a);
-		//********************************************
-		
+		// ********************************************
+
 	}
-	
+
 	public MockService() {
-		
-		//createGoodsCategory();
-	
-		//createRegions();
-		//createMeasures();
+
+		// createGoodsCategory();
+
+		// createRegions();
+		// createMeasures();
 		createSettlments();
 		createStaff();
 		createMembers();
-		
-		//createProposals();
+
+		// createProposals();
 		createActions();
 		createPartner();
 		createIntents();
-		
+
 	}
-		
 
 }

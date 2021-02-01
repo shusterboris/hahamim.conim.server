@@ -12,7 +12,7 @@ import application.entities.security.User;
 import application.services.repositories.UserDAO;
 
 @Service
-public class UserDetailsServiceImpl implements UserDetailsService{
+public class UserDetailsServiceImpl implements UserDetailsService {
 	@Autowired
 	UserDAO userDAO;
 
@@ -37,5 +37,9 @@ public class UserDetailsServiceImpl implements UserDetailsService{
 		} catch (Exception e) {
 			return "Can't save user";
 		}
+	}
+
+	public boolean userExists(String login) {
+		return userDAO.findByUsername(login) != null;
 	}
 }

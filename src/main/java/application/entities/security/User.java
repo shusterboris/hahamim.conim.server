@@ -36,16 +36,16 @@ public class User implements UserDetails, Serializable {
 	@Column(name = "PASSWORD")
 	private String password;
 
-	@Column(name = "ACCOUNT_EXPIRED")
-	private boolean accountExpired = false;
+	@Column(name = "ACCOUNT_EXPIRED", columnDefinition = "boolean default 1")
+	private boolean accountExpired = true;
 
-	@Column(name = "ACCOUNT_LOCKED")
-	private boolean accountLocked = false;
+	@Column(name = "ACCOUNT_LOCKED", columnDefinition = "boolean default 1")
+	private boolean accountLocked = true;
 
 	@Column(name = "CREDENTIALS_EXPIRED")
-	private boolean credentialsExpired = false;
+	private boolean credentialsExpired = true;
 
-	@Column(name = "ENABLED")
+	@Column(name = "ENABLED", columnDefinition = "boolean default 1")
 	private boolean enabled = true;
 
 	@ManyToMany(fetch = FetchType.EAGER)
@@ -93,9 +93,8 @@ public class User implements UserDetails, Serializable {
 		return enabled;
 	}
 
-	
 	public User() {
-		//default constructor for Spring
+		// default constructor for Spring
 	}
 
 	public User(String userName, String password) {

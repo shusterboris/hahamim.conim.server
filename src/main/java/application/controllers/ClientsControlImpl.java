@@ -28,7 +28,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class ClientsControlImpl implements ClientsControl {
-	//private MockService mService = new MockService();
+	// private MockService mService = new MockService();
 	@Autowired
 	private ClientService cserv;
 	@Autowired
@@ -41,19 +41,19 @@ public class ClientsControlImpl implements ClientsControl {
 	@Override
 	public ResponseEntity<Object> getAll() {
 		List<Member> lme = cserv.findMembersAll();
-		
-		for (Member me:lme) {
-		clients.add(convertMemberToProxy(me))	;
+
+		for (Member me : lme) {
+			clients.add(convertMemberToProxy(me));
 		}
-		
-		//clients = mService.getClients();
+
+		// clients = mService.getClients();
 		return new ResponseEntity<Object>(clients, HttpStatus.OK);
 	}
 
 	private Member proxyToEntity(proxies.Member pm) {
-		//пока без региона
-		Member em=new Member();
-		if (pm.getId()!=0) {
+		// пока без региона
+		Member em = new Member();
+		if (pm.getId() != 0) {
 			em.setId(pm.getId());
 		}
 		em.setFirstName(pm.getFirstName());
@@ -72,46 +72,45 @@ public class ClientsControlImpl implements ClientsControl {
 			if (item != null)
 				em.setRegion(item.getId());
 		}
+		if (pm.getPartnerId() != null)
+			em.setPartner(pm.getPartnerId());
 		return em;
 	}
-	
+
 	@Override
 	public ResponseEntity<Object> createClient(String json) {
-		Gson gson = new GsonBuilder()
-				.registerTypeAdapter(LocalDate.class, new LocalDateJsonAdapter())
-				.create();
+		Gson gson = new GsonBuilder().registerTypeAdapter(LocalDate.class, new LocalDateJsonAdapter()).create();
 		proxies.Member pm = gson.fromJson(json, proxies.Member.class);
 		Member em = proxyToEntity(pm);
-		// проверка на логин  телефон и мейл
-		String res=cserv.isUnique(em);
-		if (!res.equalsIgnoreCase("")) return new ResponseEntity<Object>(res,HttpStatus.OK);
+		// проверка на логин телефон и мейл
+		String res = cserv.isUnique(em);
+		if (!res.equalsIgnoreCase(""))
+			return new ResponseEntity<Object>(res, HttpStatus.OK);
 		em = cserv.createMember(em);
-		if (em!=null) {
-			pm=convertMemberToProxy(em);
+		if (em != null) {
+			pm = convertMemberToProxy(em);
 			return new ResponseEntity<Object>(pm, HttpStatus.OK);
 		} else
-			return new ResponseEntity<Object>("", HttpStatus.INTERNAL_SERVER_ERROR);	
+			return new ResponseEntity<Object>("", HttpStatus.INTERNAL_SERVER_ERROR);
 	}
-
-	
 
 	@Override
 	public ResponseEntity<Object> getClientById(Long id) {
-		Member me=cserv.getMemberById(id);
-		if (me==null)  return new ResponseEntity<Object>(null, HttpStatus.NOT_FOUND);
+		Member me = cserv.getMemberById(id);
+		if (me == null)
+			return new ResponseEntity<Object>(null, HttpStatus.NOT_FOUND);
 		proxies.Member res = convertMemberToProxy(me);
 		return new ResponseEntity<Object>(res, HttpStatus.OK);
-		
-		/*из мока
-		 * Long cId = Long.valueOf(id); for (proxies.Person p : clients) if (p.getId()
-		 * == cId) return new ResponseEntity<Object>(p, HttpStatus.OK); return new
-		 * ResponseEntity<Object>("Not found", HttpStatus.INTERNAL_SERVER_ERROR);
+
+		/*
+		 * из мока Long cId = Long.valueOf(id); for (proxies.Person p : clients) if
+		 * (p.getId() == cId) return new ResponseEntity<Object>(p, HttpStatus.OK);
+		 * return new ResponseEntity<Object>("Not found",
+		 * HttpStatus.INTERNAL_SERVER_ERROR);
 		 */
-		 
 
 	}
 
-	
 	/*
 	 * @Override public ResponseEntity<Object> getMembers() { try {
 	 * List<proxies.Member> res = mService.getClubMembers(); return new
@@ -123,21 +122,22 @@ public class ClientsControlImpl implements ClientsControl {
 	@Override
 	public ResponseEntity<Object> userLogin(String user) {
 		try {
-			Member me=cserv.getUser(user);
- 			if (me == null)	return 
- 				new ResponseEntity<Object>(new EntityNotFound(),HttpStatus.OK);
- 			//сделать прокси объект
+			Member me = cserv.getUser(user);
+			if (me == null)
+				return new ResponseEntity<Object>(new EntityNotFound(), HttpStatus.OK);
+			// сделать прокси объект
 			proxies.Member p = convertMemberToProxy(me);
 			return new ResponseEntity<Object>(p, HttpStatus.OK);
-		}catch (Exception e) {
+		} catch (Exception e) {
 			return new ResponseEntity<>("Invalid user", HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
-	
-	private proxies.Member convertMemberToProxy(Member me){
+
+	private proxies.Member convertMemberToProxy(Member me) {
 		ClientStatus[] st = ClientStatus.values();
 		UserType[] u = UserType.values();
-		//proxies.Member member = createMember(me.getId(),me.getFirstName(), me.getLastName(), g[me.getGender()], u[me.getType()], "", "");
+		// proxies.Member member = createMember(me.getId(),me.getFirstName(),
+		// me.getLastName(), g[me.getGender()], u[me.getType()], "", "");
 		proxies.Member p = new proxies.Member();
 		p.setId(me.getId());
 		p.setFirstName(me.getFirstName());
@@ -148,65 +148,66 @@ public class ClientsControlImpl implements ClientsControl {
 		p.setPartnerId(me.getPartner());
 		p.setPhone(me.getPhone());
 		p.setLogin(me.getLogin());
+		p.setBirthday(me.getBirthday());
 		return p;
 	}
-	
-	
+
 	@Override
 	public ResponseEntity<Object> createAll() {
-		Member em=new Member();
+		Member em = new Member();
 		em.setFirstName("May");
 		em.setLastName("Levi");
 		em.setPhone("+972556664444");
 		em.setLogin("may");
 		em.setPassword("123");
-		//em.setPartner(null);
+		// em.setPartner(null);
 		em.setType(0);
 		em.setStatus(2);
 		em.setLevel(0);
 		Member res = cserv.createMember(em);
-		if (res==null) return new ResponseEntity<Object>("", HttpStatus.INTERNAL_SERVER_ERROR);	
-		
-		em=new Member();
+		if (res == null)
+			return new ResponseEntity<Object>("", HttpStatus.INTERNAL_SERVER_ERROR);
+
+		em = new Member();
 		em.setFirstName("Aron");
 		em.setLastName("Kogan");
 		em.setPhone("+972556664442");
 		em.setLogin("aron");
 		em.setPassword("123");
-		//em.setPartner(null);
+		// em.setPartner(null);
 		em.setType(1);
 		em.setStatus(2);
 		em.setLevel(0);
 		res = cserv.createMember(em);
-		if (res==null) return new ResponseEntity<Object>("", HttpStatus.INTERNAL_SERVER_ERROR);	
-		
-		em=new Member();
+		if (res == null)
+			return new ResponseEntity<Object>("", HttpStatus.INTERNAL_SERVER_ERROR);
+
+		em = new Member();
 		em.setFirstName("Vladimir");
 		em.setLastName("Olevski");
 		em.setPhone("+972556664477");
 		em.setLogin("vova");
 		em.setPassword("123");
-		//em.setPartner(null);
+		// em.setPartner(null);
 		em.setType(2);
 		em.setStatus(2);
 		em.setLevel(0);
 		res = cserv.createMember(em);
-		if (res==null) return new ResponseEntity<Object>("", HttpStatus.INTERNAL_SERVER_ERROR);
+		if (res == null)
+			return new ResponseEntity<Object>("", HttpStatus.INTERNAL_SERVER_ERROR);
 		return new ResponseEntity<Object>(null, HttpStatus.OK);
 	}
-
-	
 
 	@Override
 	public ResponseEntity<Object> updateClient(String json) {
 		proxies.Member pm = new Gson().fromJson(json, proxies.Member.class);
-		Member em=proxyToEntity(pm);
+		Member em = proxyToEntity(pm);
 		em.setId(pm.getId());
-		// проверка на логин  телефон и мейл
-			em = cserv.createMember(em);
-		if (em!=null) {
-			pm=convertMemberToProxy(em);
-		return new ResponseEntity<Object>(pm, HttpStatus.OK);
+		// проверка на логин телефон и мейл
+		em = cserv.createMember(em);
+		if (em != null) {
+			pm = convertMemberToProxy(em);
+			return new ResponseEntity<Object>(pm, HttpStatus.OK);
 		} else
 			return new ResponseEntity<Object>("", HttpStatus.INTERNAL_SERVER_ERROR);
 	}
