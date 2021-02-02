@@ -24,6 +24,7 @@ import enums.ProposalStatus;
 import net.minidev.json.JSONObject;
 import proxies.PriceProposal;
 import proxies.Proposal;
+import proxies.Purchase;
 
 @RestController
 public class ActionsControlImpl implements ActionsControl {
@@ -339,6 +340,24 @@ public class ActionsControlImpl implements ActionsControl {
 		pe.setPriceProposals(sppe);
 		pe.setId(pp.getId());
 		return pe;
+	}
+
+	private Purchase entityToPurchaseProxy(application.entities.Purchase pe) {
+		Purchase p = new Purchase();
+		p.setId(pe.getId());
+		p.setCurrDate(pe.getCurrDate());
+		p.setInitiator(pe.getInitiator());
+		p.setName(pe.getName());
+		p.setState(pe.getState());
+		p.setSumOrders(sumOrders(pe.getId()));
+		return p;
+
+	}
+
+	// должна возвращать сумму всех заказов
+	private Float sumOrders(long id) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }
