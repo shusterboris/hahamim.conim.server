@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
@@ -15,6 +16,7 @@ import com.google.gson.GsonBuilder;
 import Utils.LocalDateJsonAdapter;
 import application.entities.CatItem;
 import application.entities.Member;
+import application.entities.PageResponse;
 import application.services.BPservice;
 import application.services.CatItemServices;
 import application.services.ClientService;
@@ -40,7 +42,7 @@ public class ClientsControlImpl implements ClientsControl {
 
 	@Override
 	public ResponseEntity<Object> getAll() {
-		List<Member> lme = cserv.findMembersAll();
+		Iterable<Member> lme = cserv.findMembersAll();
 
 		for (Member me : lme) {
 			clients.add(convertMemberToProxy(me));
@@ -136,8 +138,6 @@ public class ClientsControlImpl implements ClientsControl {
 	private proxies.Member convertMemberToProxy(Member me) {
 		ClientStatus[] st = ClientStatus.values();
 		UserType[] u = UserType.values();
-		// proxies.Member member = createMember(me.getId(),me.getFirstName(),
-		// me.getLastName(), g[me.getGender()], u[me.getType()], "", "");
 		proxies.Member p = new proxies.Member();
 		p.setId(me.getId());
 		p.setFirstName(me.getFirstName());
@@ -148,6 +148,9 @@ public class ClientsControlImpl implements ClientsControl {
 		p.setPartnerId(me.getPartner());
 		p.setPhone(me.getPhone());
 		p.setLogin(me.getLogin());
+		p.setEmail(me.getEmail());
+		p.setNote(me.getNote());
+		p.setLevel(me.getLevel() != null ? me.getLevel() : 0);
 		p.setBirthday(me.getBirthday());
 		p.setRegions(catService.getValueById(me.getRegion()));
 		return p;
@@ -217,6 +220,19 @@ public class ClientsControlImpl implements ClientsControl {
 	public ResponseEntity<Object> getPaymentsByClient(Long id) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public ResponseEntity<Object> getAllByPage(int pageNo, Integer pageSize) {
+		Page<Member> itemList = cserv.findMembersAllByPage(pageNo, pageSize);
+		List<proxies.Member> proxies = new ArrayList<>();
+		for (Member member : itemList.getContent()) {
+			proxies.Member proxy = convertMemberToProxy(member);
+			proxies.add(proxy);
+		}
+		@SuppressWarnings({ "rawtypes", "unchecked" })
+		PageResponse result = new PageResponse(proxies, itemList.getTotalPages(), itemList.getTotalElements());
+		return new ResponseEntity<Object>(result, HttpStatus.OK);
 	}
 
 }

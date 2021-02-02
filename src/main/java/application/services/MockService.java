@@ -362,7 +362,7 @@ public class MockService {
 	 */
 
 	public List<Member> createStaff() {
-		Store address = new Store(id++, "Кулаки и дули", null, (long) 0);
+		Store address = new Store(id++, "Кулаки и дули", (long) 0);
 		club.setId(969);
 		club.setName("Клуб 'Коним Хахамим");
 		List<Contact> contacts = new ArrayList<>();
@@ -614,8 +614,8 @@ public class MockService {
 		partner.setName("Мааданей Росман");
 		partner.setFullName("Сеть Мааданей Росман");
 		ArrayList<Store> stores = new ArrayList<Store>();
-		stores.add(new Store(id++, "", createAddress("Хайфа", "ул. Герцль 60", "Хайфа"), partner.getId()));
-		stores.add(new Store(id++, "", createAddress("Тель-Авив", "ул. Жаботински 133", "Рамат-Ган"), partner.getId()));
+		stores.add(new Store(id++, "", partner.getId()));
+		stores.add(new Store(id++, "", partner.getId()));
 		partner.setStores(stores);
 		ArrayList<Contact> allContacts = new ArrayList<Contact>();
 		allContacts.add(new Contact("Михаил", "Коэн", "050-9999-88-77"));
