@@ -18,6 +18,10 @@ public interface ClientsControl {
 	public ResponseEntity<Object> getAllByPage(@PathVariable(name = "page") int page,
 			@PathVariable(name = "pageSize", required = false) Integer pageSize);
 
+	@GetMapping(value = "/filter/{query}/page/{page}/{pageSize}")
+	public ResponseEntity<Object> fetchByStringFilterByPage(@PathVariable(name = "query") String query,
+			@PathVariable(name = "page") int page, @PathVariable(name = "pageSize", required = false) Integer pageSize);
+
 	@GetMapping(value = "/login/{user}", consumes = "application/json", produces = "application/json")
 	public ResponseEntity<Object> userLogin(@PathVariable(value = "user") String user);
 

@@ -3,6 +3,7 @@ package application.controllers;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -31,6 +32,7 @@ import lombok.Setter;
 @Setter
 public class ClientsControlImpl implements ClientsControl {
 	// private MockService mService = new MockService();
+	Pattern phoneNumPattern = Pattern.compile("\\+{0,1}\\d+");
 	@Autowired
 	private ClientService cserv;
 	@Autowired
@@ -43,12 +45,8 @@ public class ClientsControlImpl implements ClientsControl {
 	@Override
 	public ResponseEntity<Object> getAll() {
 		Iterable<Member> lme = cserv.findMembersAll();
-
-		for (Member me : lme) {
+		for (Member me : lme)
 			clients.add(convertMemberToProxy(me));
-		}
-
-		// clients = mService.getClients();
 		return new ResponseEntity<Object>(clients, HttpStatus.OK);
 	}
 
@@ -103,23 +101,7 @@ public class ClientsControlImpl implements ClientsControl {
 			return new ResponseEntity<Object>(null, HttpStatus.NOT_FOUND);
 		proxies.Member res = convertMemberToProxy(me);
 		return new ResponseEntity<Object>(res, HttpStatus.OK);
-
-		/*
-		 * из мока Long cId = Long.valueOf(id); for (proxies.Person p : clients) if
-		 * (p.getId() == cId) return new ResponseEntity<Object>(p, HttpStatus.OK);
-		 * return new ResponseEntity<Object>("Not found",
-		 * HttpStatus.INTERNAL_SERVER_ERROR);
-		 */
-
 	}
-
-	/*
-	 * @Override public ResponseEntity<Object> getMembers() { try {
-	 * List<proxies.Member> res = mService.getClubMembers(); return new
-	 * ResponseEntity<Object>(res, HttpStatus.OK); } catch (Exception e) { return
-	 * new ResponseEntity<Object>("Server error:".concat(e.getMessage()),
-	 * HttpStatus.INTERNAL_SERVER_ERROR); } }
-	 */
 
 	@Override
 	public ResponseEntity<Object> userLogin(String user) {
@@ -147,6 +129,7 @@ public class ClientsControlImpl implements ClientsControl {
 		p.setStatus(st[me.getStatus()]);
 		p.setPartnerId(me.getPartner());
 		p.setPhone(me.getPhone());
+		p.setRate(me.getRate());
 		p.setLogin(me.getLogin());
 		p.setEmail(me.getEmail());
 		p.setNote(me.getNote());
@@ -225,6 +208,23 @@ public class ClientsControlImpl implements ClientsControl {
 	@Override
 	public ResponseEntity<Object> getAllByPage(int pageNo, Integer pageSize) {
 		Page<Member> itemList = cserv.findMembersAllByPage(pageNo, pageSize);
+		List<proxies.Member> proxies = new ArrayList<>();
+		for (Member member : itemList.getContent()) {
+			proxies.Member proxy = convertMemberToProxy(member);
+			proxies.add(proxy);
+		}
+		@SuppressWarnings({ "rawtypes", "unchecked" })
+		PageResponse result = new PageResponse(proxies, itemList.getTotalPages(), itemList.getTotalElements());
+		return new ResponseEntity<Object>(result, HttpStatus.OK);
+	}
+
+	@Override
+	public ResponseEntity<Object> fetchByStringFilterByPage(String query, int page, Integer pageSize) {
+		Page<Member> itemList;
+		if (phoneNumPattern.matcher(query).lookingAt())
+			itemList = cserv.fetchByPhoneContainsByPage(query, page, pageSize);
+		else
+			itemList = cserv.fetchByStringFilterByPage(query, page, pageSize);
 		List<proxies.Member> proxies = new ArrayList<>();
 		for (Member member : itemList.getContent()) {
 			proxies.Member proxy = convertMemberToProxy(member);

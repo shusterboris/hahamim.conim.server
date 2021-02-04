@@ -5,6 +5,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -29,8 +30,23 @@ public class ClientService {
 	public Page<Member> findMembersAllByPage(int pageNo, int pageSize) {
 		if (pageNo < 0)
 			pageNo = 0;
-		PageRequest request = PageRequest.of(pageNo, pageSize);
+		PageRequest request = PageRequest.of(pageNo, pageSize, Sort.by(Sort.Direction.ASC, "id"));
 		return cDAO.findAll(request);
+	}
+
+	public Page<Member> fetchByStringFilterByPage(String queryStr, int pageNo, int pageSize) {
+		if (pageNo < 0)
+			pageNo = 0;
+		PageRequest request = PageRequest.of(pageNo, pageSize, Sort.by(Sort.Direction.ASC, "id"));
+		Page<Member> result = cDAO.findMemberContainsValue("%" + queryStr + "%", request);
+		return result;
+	}
+
+	public Page<Member> fetchByPhoneContainsByPage(String queryStr, int pageNo, int pageSize) {
+		if (pageNo < 0)
+			pageNo = 0;
+		PageRequest request = PageRequest.of(pageNo, pageSize, Sort.by(Sort.Direction.ASC, "id"));
+		return cDAO.findByPhoneContaining(queryStr, request);
 	}
 
 	@Transactional
