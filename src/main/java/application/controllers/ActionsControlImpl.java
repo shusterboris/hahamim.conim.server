@@ -354,10 +354,43 @@ public class ActionsControlImpl implements ActionsControl {
 
 	}
 
+	private application.entities.Purchase proxyToPurchaseEntity(Purchase p) {
+		application.entities.Purchase pe = new application.entities.Purchase();
+		if (p.getId() != null)
+			pe.setId(p.getId());
+		pe.setCurrDate(p.getCurrDate());
+		pe.setInitiator(p.getInitiator());
+		pe.setName(p.getName());
+		pe.setState(p.getState());
+		return pe;
+	}
+
 	// должна возвращать сумму всех заказов
 	private Float sumOrders(long id) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public ResponseEntity<Object> addPurchase(String json) {
+		try {
+			Gson gson = new GsonBuilder().registerTypeAdapter(LocalDate.class, new LocalDateJsonAdapter().nullSafe())
+					.create();
+			Purchase purchase = gson.fromJson(json, Purchase.class);
+			/*
+			 * Long id = mService.addAction(proposal); proposal.setId(id);
+			 */
+			application.entities.Purchase pe = proxyToPurchaseEntity(purchase);
+			pe = actionService.savePur(pe);
+			if (pe == null)
+				return new ResponseEntity<Object>("action not saved", HttpStatus.INTERNAL_SERVER_ERROR);
+			JSONObject ret = new JSONObject();
+			ret.put("id", String.valueOf(pe.getId()));
+			return new ResponseEntity<>(ret, HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<Object>("action not saved", HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+
 	}
 
 }
