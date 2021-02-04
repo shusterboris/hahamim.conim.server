@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+
 import proxies.PriceProposal;
 
 @RequestMapping("/")
@@ -38,4 +39,7 @@ public interface ActionsControl {
 	
 	@GetMapping("/actions/testAdd")
 	public ResponseEntity<Object> testAdd();
+
+	@PostMapping("/purchase/add")
+	public ResponseEntity<Object> addPurchase(@RequestBody String json);
 }

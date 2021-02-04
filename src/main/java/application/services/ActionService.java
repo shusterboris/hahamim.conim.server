@@ -8,8 +8,10 @@ import org.springframework.stereotype.Service;
 
 import application.entities.PriceProposal;
 import application.entities.Proposal;
+import application.entities.Purchase;
 import application.services.repositories.ActionsDAO;
 import application.services.repositories.PproposalDAO;
+import application.services.repositories.PurchaseDAO;
 
 @Service
 public class ActionService {
@@ -18,6 +20,8 @@ public class ActionService {
 	private ActionsDAO repo;
 	@Autowired
 	private PproposalDAO repoP;
+	@Autowired
+	private PurchaseDAO repoPur;
 	
 	public List<Proposal> findActionsAll(){
 		return repo.findAll();
@@ -46,6 +50,11 @@ public class ActionService {
 	
 	public List<Proposal> fetchProposalsByMember(Long member){
 		return repo.fetchProposals(member);
+	}
+
+	public Purchase savePur(Purchase pe) {
+		Purchase res = repoPur.save(pe);
+		return res;
 	}
 	
 }

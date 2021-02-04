@@ -52,7 +52,7 @@ public class ClientsControlImpl implements ClientsControl {
 		return new ResponseEntity<Object>(clients, HttpStatus.OK);
 	}
 
-	private Member proxyToEntity(proxies.Member pm) {
+	private Member memberProxyToEntity(proxies.Member pm) {
 		// пока без региона
 		Member em = new Member();
 		if (pm.getId() != 0) {
@@ -83,7 +83,7 @@ public class ClientsControlImpl implements ClientsControl {
 	public ResponseEntity<Object> createClient(String json) {
 		Gson gson = new GsonBuilder().registerTypeAdapter(LocalDate.class, new LocalDateJsonAdapter()).create();
 		proxies.Member pm = gson.fromJson(json, proxies.Member.class);
-		Member em = proxyToEntity(pm);
+		Member em = memberProxyToEntity(pm);
 		// проверка на логин телефон и мейл
 		String res = cserv.isUnique(em);
 		if (!res.equalsIgnoreCase(""))
@@ -152,7 +152,8 @@ public class ClientsControlImpl implements ClientsControl {
 		p.setNote(me.getNote());
 		p.setLevel(me.getLevel() != null ? me.getLevel() : 0);
 		p.setBirthday(me.getBirthday());
-		p.setRegions(catService.getValueById(me.getRegion()));
+		if (me.getRegion() != null)
+			p.setRegions(catService.getValueById(me.getRegion()));
 		return p;
 	}
 
@@ -205,7 +206,7 @@ public class ClientsControlImpl implements ClientsControl {
 	@Override
 	public ResponseEntity<Object> updateClient(String json) {
 		proxies.Member pm = new Gson().fromJson(json, proxies.Member.class);
-		Member em = proxyToEntity(pm);
+		Member em = memberProxyToEntity(pm);
 		em.setId(pm.getId());
 		// проверка на логин телефон и мейл
 		em = cserv.createMember(em);
