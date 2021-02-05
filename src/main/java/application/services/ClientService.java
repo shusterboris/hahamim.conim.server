@@ -30,14 +30,14 @@ public class ClientService {
 	public Page<Member> findMembersAllByPage(int pageNo, int pageSize) {
 		if (pageNo < 0)
 			pageNo = 0;
-		PageRequest request = PageRequest.of(pageNo, pageSize, Sort.by(Sort.Direction.ASC, "id"));
+		PageRequest request = PageRequest.of(pageNo, pageSize, Sort.by(Sort.Direction.DESC, "id"));
 		return cDAO.findAll(request);
 	}
 
 	public Page<Member> fetchByStringFilterByPage(String queryStr, int pageNo, int pageSize) {
 		if (pageNo < 0)
 			pageNo = 0;
-		PageRequest request = PageRequest.of(pageNo, pageSize, Sort.by(Sort.Direction.ASC, "id"));
+		PageRequest request = PageRequest.of(pageNo, pageSize, Sort.by(Sort.Direction.DESC, "id"));
 		Page<Member> result = cDAO.findMemberContainsValue("%" + queryStr + "%", request);
 		return result;
 	}
