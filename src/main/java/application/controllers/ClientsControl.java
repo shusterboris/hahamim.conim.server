@@ -31,9 +31,6 @@ public interface ClientsControl {
 	@PostMapping(value = "/add", consumes = "application/json", produces = "application/json")
 	public ResponseEntity<Object> createClient(@RequestBody String json);
 
-	// @PutMapping(value = "/update/{id}")
-	// public ResponseEntity<Object> updateClient(@PathVariable("id") Long id,
-	// @RequestBody Member p);
 	@PutMapping(value = "/update")
 	public ResponseEntity<Object> updateClient(@RequestBody String json);
 

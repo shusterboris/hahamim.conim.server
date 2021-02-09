@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import application.entities.Member;
+import application.entities.security.Authority;
 import application.entities.security.User;
 import application.services.repositories.MembersDAO;
 import application.services.repositories.UserDAO;
@@ -68,9 +69,33 @@ public class ClientService {
 		}
 	}
 
+	public Member updateMember(Member m) {
+		try {
+
+			Member nm = cDAO.save(m);
+			return nm;
+		} catch (Exception e) {
+			return null;
+		}
+	}
+
 	public Member getUser(String login) {
 		Optional<Member> res = cDAO.findByLogin(login);
-		return res.orElse(null);
+		if (!res.isPresent())
+			return null;
+		User user = userDAO.findByUsername(res.get().getLogin());
+		Member member = res.get();
+		if (user == null)
+			return null;
+		if (user.getAuthorities() != null && user.getAuthorities().size() != 0) {
+			String s = "";
+			for (Authority auth : user.getAuthorities()) {
+				s = ("".equals(s)) ? auth.toString() : (s.concat(" ").concat(auth.toString()));
+			}
+			member.setAutorityList(s);
+		} else
+			member.setAutorityList(null);
+		return member;
 	}
 
 	public Member getMemberById(Long id) {
@@ -82,23 +107,28 @@ public class ClientService {
 		}
 	}
 
+	private boolean theSameRecord(Member current, Optional<Member> foundRec) {
+		Member foundMember = foundRec.get();
+		return current.getId() == foundMember.getId();
+	}
+
 	public String isUnique(Member em) {
 		Optional<Member> m = cDAO.findByLogin(em.getLogin());
-		if (m.isPresent())
+		if (m.isPresent() && !theSameRecord(em, m))
 			return "login exists";
 		if (em.getEmail() != null) {
 			if (!em.getEmail().equalsIgnoreCase("")) {
 				m = cDAO.findByEmail(em.getEmail());
-				if (m.isPresent())
+				if (m.isPresent() && !theSameRecord(em, m))
 					return "email exists";
 			}
 		}
 		m = cDAO.findByPhone(em.getPhone());
-		if (m.isPresent())
+		if (m.isPresent() && !theSameRecord(em, m))
 			return "phone exists";
 
 		UserDetails user = userDAO.findByUsername(em.getLogin());
-		if (user != null)
+		if (user != null && !user.getUsername().equals(em.getLogin()))
 			return "login exists";
 		return "";
 	}

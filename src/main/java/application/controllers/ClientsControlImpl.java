@@ -135,6 +135,7 @@ public class ClientsControlImpl implements ClientsControl {
 		p.setNote(me.getNote());
 		p.setLevel(me.getLevel() != null ? me.getLevel() : 0);
 		p.setBirthday(me.getBirthday());
+		p.setAuthorities(me.getAutorityList());
 		if (me.getRegion() != null)
 			p.setRegions(catService.getValueById(me.getRegion()));
 		return p;
@@ -188,11 +189,17 @@ public class ClientsControlImpl implements ClientsControl {
 
 	@Override
 	public ResponseEntity<Object> updateClient(String json) {
-		proxies.Member pm = new Gson().fromJson(json, proxies.Member.class);
+		// proxies.Member pm = new Gson().fromJson(json, proxies.Member.class);
+		Gson gson = new GsonBuilder().registerTypeAdapter(LocalDate.class, new LocalDateJsonAdapter().nullSafe())
+				.create();
+		proxies.Member pm = gson.fromJson(json, proxies.Member.class);
 		Member em = memberProxyToEntity(pm);
 		em.setId(pm.getId());
 		// проверка на логин телефон и мейл
-		em = cserv.createMember(em);
+		String res = cserv.isUnique(em);
+		if (!res.equalsIgnoreCase(""))
+			return new ResponseEntity<Object>(res, HttpStatus.OK);
+		em = cserv.updateMember(em);
 		if (em != null) {
 			pm = convertMemberToProxy(em);
 			return new ResponseEntity<Object>(pm, HttpStatus.OK);

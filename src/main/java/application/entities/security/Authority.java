@@ -49,4 +49,8 @@ public class Authority implements GrantedAuthority {
 		this.name = name;
 	}
 
+	public String toString() {
+		return name != null ? name : "";
+	}
+
 }
