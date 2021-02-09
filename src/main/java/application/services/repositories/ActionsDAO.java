@@ -19,4 +19,8 @@ public interface ActionsDAO extends CrudRepository<Proposal, Long>{
 	@Query("SELECT p FROM Proposal p, PriceProposal pp WHERE pp.member=:id AND  pp.priceLevel=1 AND p=pp.proposal ")
 	//@Query("SELECT p FROM Proposal p WHERE p.initiator=:id")
     public List<Proposal> fetchProposals(@Param("id") Long id);
+
+	@Query("SELECT SUM(total*last_price) FROM Proposal p WHERE p.bundle=:id")
+	public float fetchPurchaseTotal(@Param("id") Long id);
+
 }

@@ -159,6 +159,7 @@ public class ActionsControlImpl implements ActionsControl {
 
 	@Override
 	public ResponseEntity<Object> saveMemberPriceIntents(List<PriceProposal> prices) {
+		// TODO сделать пересчет тоталов и достигнутой цены
 		application.entities.Proposal pr = null;
 		application.entities.PriceProposal res = null;
 		try {
@@ -168,11 +169,15 @@ public class ActionsControlImpl implements ActionsControl {
 				res = proxyToPproposalEntity(p, pr);
 				res = actionService.saveProposal(res);
 			}
+			pr = actionService.calcSumOrders(pr);
+			actionService.save(pr);
 			return new ResponseEntity<Object>(res.getId(), HttpStatus.OK);
 		} catch (Exception e) {
 			return new ResponseEntity<Object>("Server error:".concat(e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
+
+
 
 	@Override
 	public ResponseEntity<Object> addAction(String json) {
@@ -180,9 +185,6 @@ public class ActionsControlImpl implements ActionsControl {
 			Gson gson = new GsonBuilder().registerTypeAdapter(LocalDate.class, new LocalDateJsonAdapter().nullSafe())
 					.create();
 			Proposal proposal = gson.fromJson(json, Proposal.class);
-			/*
-			 * Long id = mService.addAction(proposal); proposal.setId(id);
-			 */
 			application.entities.Proposal pe = proxyToProposalEntity(proposal);
 			pe = actionService.save(pe);
 			if (pe == null)
@@ -367,8 +369,7 @@ public class ActionsControlImpl implements ActionsControl {
 
 	// должна возвращать сумму всех заказов
 	private Float sumOrders(long id) {
-		// TODO Auto-generated method stub
-		return null;
+		return actionService.fetchPurchaseTotal(id);
 	}
 
 	@Override
@@ -393,4 +394,63 @@ public class ActionsControlImpl implements ActionsControl {
 
 	}
 
+	@Override
+	public ResponseEntity<Object> testPurAdd() {
+		try {
+			application.entities.Purchase pe = new application.entities.Purchase();
+			pe.setInitiator((long) 3);
+			pe.setCurrDate(LocalDate.of(2021, 2, 1));
+			pe.setState(ProposalStatus.PUBLISHED);
+			pe.setName("кролики");
+			pe = actionService.savePur(pe);
+			pe = new application.entities.Purchase();
+			pe.setInitiator((long) 3);
+			pe.setCurrDate(LocalDate.of(2021, 3, 2));
+			pe.setState(ProposalStatus.PUBLISHED);
+			pe.setName("морепродукты");
+			pe = actionService.savePur(pe);
+			if (pe == null)
+				return new ResponseEntity<Object>("action not saved", HttpStatus.INTERNAL_SERVER_ERROR);
+			JSONObject ret = new JSONObject();
+			ret.put("id", String.valueOf(pe.getId()));
+			return new ResponseEntity<>(ret, HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<Object>("action not saved", HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+
+	@Override
+	public ResponseEntity<Object> getActionsByBundle(Long proposalId) {
+		List<Proposal> res = new ArrayList<Proposal>();
+		try {
+			List<application.entities.Proposal> l = actionService.findByBundle(proposalId);
+
+			if (l.isEmpty())
+				return new ResponseEntity<Object>(res, HttpStatus.OK);
+			for (application.entities.Proposal pe : l) {
+				res.add(entityToProposalProxy(pe));
+			}
+			return new ResponseEntity<Object>(res, HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<Object>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+
+	@Override
+	public ResponseEntity<Object> getAllpurchases() {
+		List<Purchase> res= new ArrayList<Purchase>();
+		try {
+			List<application.entities.Purchase> l = actionService.fetchPurcasesAll();
+			if (l.isEmpty())
+				return new ResponseEntity<Object>(res, HttpStatus.OK);
+			for (application.entities.Purchase pe : l) {
+				Purchase pr = entityToPurchaseProxy(pe);
+				pr.setSumOrders(sumOrders(pe.getId()));
+				res.add(pr);
+			}
+		} catch (Exception e) {
+			return new ResponseEntity<Object>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		return new ResponseEntity<Object>(res, HttpStatus.OK);
+	}
 }

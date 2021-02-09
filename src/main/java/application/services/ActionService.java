@@ -56,5 +56,35 @@ public class ActionService {
 		Purchase res = repoPur.save(pe);
 		return res;
 	}
-	
+
+	public List<Proposal> findByBundle(Long id) {
+		return repo.findByBundle(id);
+	}
+
+	public float fetchPurchaseTotal(Long id) {
+		return repo.fetchPurchaseTotal(id);
+	}
+
+	public List<Purchase> fetchPurcasesAll() {
+		return repoPur.findAll();
+	}
+
+	public Proposal calcSumOrders(Proposal p) {
+		// id level type
+		float sum = 0;
+		float boundary = 0;
+		List<PriceProposal> l;
+		for (int i = 3; i > 0; i--) {
+			sum = repoP.calcTotalByLevel(p.getId(), i, 1);
+			l = repoP.findByProposalAndPriceLevelAndProposalType(p, i, 0);
+			if (!l.isEmpty())
+				boundary = l.get(0).getQuantity();
+			if (sum >= boundary) {
+				p.setLastPrice(l.get(0).getPrice());
+				p.setTotal(sum);
+				return p;
+			}
+		}
+		return p;
+	}
 }

@@ -21,6 +21,9 @@ public interface ActionsControl {
 	@GetMapping("/actions/all")
 	public ResponseEntity<Object> getAllActions();
 	
+	@GetMapping("/purchases/all")
+	public ResponseEntity<Object> getAllpurchases();
+
 	@GetMapping("/actions/get/{id}")
 	public ResponseEntity<Object> getAction(@PathVariable("id") Long id);
 	
@@ -42,4 +45,12 @@ public interface ActionsControl {
 
 	@PostMapping("/purchase/add")
 	public ResponseEntity<Object> addPurchase(@RequestBody String json);
+
+	@GetMapping("/ ")
+	public ResponseEntity<Object> testPurAdd();
+
+	@GetMapping("/actions/bundle/get/{bundleId}")
+	public ResponseEntity<Object> getActionsByBundle(@PathVariable("bundleId") Long proposalId);
+	// TODO сделать пересчет тоталов и достигнутой цены
+
 }

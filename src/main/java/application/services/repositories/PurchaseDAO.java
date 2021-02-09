@@ -10,5 +10,6 @@ import application.entities.Purchase;
 public interface PurchaseDAO extends CrudRepository<Purchase, Long> {
 	public List<Purchase> findAll();
 
+	public List<Purchase> findByInitiator(Long id);
 	public Optional<Purchase> findById(Long id);
 }
