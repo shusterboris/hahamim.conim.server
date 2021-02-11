@@ -71,9 +71,15 @@ public class ClientService {
 
 	public Member updateMember(Member m) {
 		try {
-
-			Member nm = cDAO.save(m);
-			return nm;
+			Optional<Member> res = cDAO.findById(m.getId());
+			if (res.isPresent()) {
+				Member nm = res.get();
+				m.setCreated(nm.getCreated());
+				m.setModified(nm.getModified());
+				m.setVersion(nm.getVersion());
+			}
+			m = cDAO.save(m);
+			return m;
 		} catch (Exception e) {
 			return null;
 		}

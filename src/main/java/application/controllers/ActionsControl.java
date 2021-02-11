@@ -46,7 +46,7 @@ public interface ActionsControl {
 	@PostMapping("/purchase/add")
 	public ResponseEntity<Object> addPurchase(@RequestBody String json);
 
-	@GetMapping("/ ")
+	@GetMapping("/purchase/testAdd")
 	public ResponseEntity<Object> testPurAdd();
 
 	@GetMapping("/actions/bundle/get/{bundleId}")

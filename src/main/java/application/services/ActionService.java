@@ -27,11 +27,24 @@ public class ActionService {
 		return repo.findAll();
 	}
 
+//для новых
 	public Proposal save(Proposal pe) {
-	 Proposal res = repo.save(pe);
+		Proposal res = repo.save(pe);
 		return res;
 	}
 	
+	public Proposal update(Proposal pe) {
+		Optional<Proposal> res = repo.findById(pe.getId());
+		if (res.isPresent()) {
+			Proposal np = res.get();
+			pe.setCreated(np.getCreated());
+			pe.setModified(np.getModified());
+			pe.setVersion(np.getVersion());
+		}
+		pe = repo.save(pe);
+		return pe;
+	}
+
 	public Optional<Proposal> findAction(Long id) {
 		return repo.findById(id);
 	}
@@ -44,7 +57,8 @@ public class ActionService {
 	}
 	
 	public PriceProposal saveProposal(PriceProposal pe) {
-		 PriceProposal res = repoP.save(pe);
+
+		PriceProposal res = repoP.save(pe);
 			return res;
 	}
 	

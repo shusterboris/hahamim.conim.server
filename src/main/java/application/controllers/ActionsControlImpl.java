@@ -170,7 +170,7 @@ public class ActionsControlImpl implements ActionsControl {
 				res = actionService.saveProposal(res);
 			}
 			pr = actionService.calcSumOrders(pr);
-			actionService.save(pr);
+			actionService.update(pr);
 			return new ResponseEntity<Object>(res.getId(), HttpStatus.OK);
 		} catch (Exception e) {
 			return new ResponseEntity<Object>("Server error:".concat(e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
