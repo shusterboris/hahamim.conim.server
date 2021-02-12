@@ -61,6 +61,7 @@ public class ClientsControlImpl implements ClientsControl {
 		em.setEmail(pm.getEmail());
 		em.setPhone(pm.getPhone());
 		em.setLevel(0);
+		em.setRate(pm.getRate());
 		em.setStatus(pm.getStatus().ordinal());
 		em.setType(pm.getUserType().ordinal());
 		em.setLogin(pm.getLogin());
@@ -208,7 +209,7 @@ public class ClientsControlImpl implements ClientsControl {
 			pm = convertMemberToProxy(em);
 			return new ResponseEntity<Object>(pm, HttpStatus.OK);
 		} else
-			return new ResponseEntity<Object>("", HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<Object>("Can't save member, DAO error", HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 
 	@Override
