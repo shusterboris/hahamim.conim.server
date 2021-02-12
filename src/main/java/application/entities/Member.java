@@ -34,7 +34,7 @@ public class Member extends BasicEntity implements Serializable {
 	private String phone;
 	@Column(name = "`email`", nullable = true, length = 255)
 	private String email;
-	@Column(name = "`rate`", columnDefinition = "Decimal(10,2) default '5.00'")
+	@Column(name = "`rate`", columnDefinition = "Decimal(10,2) default '2.00'")
 	private Float rate;
 	@Column(name = "`note`", nullable = true, length = 255)
 	private String note;

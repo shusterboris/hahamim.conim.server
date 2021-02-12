@@ -15,7 +15,6 @@ import proxies.CatItem;
 
 @RestController
 public class CatalogsControlImpl implements CatalogsControl {
-	// private MockService mService = new MockService();
 	@Autowired
 	private CatItemServices serv;
 

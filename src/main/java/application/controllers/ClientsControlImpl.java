@@ -36,7 +36,7 @@ public class ClientsControlImpl implements ClientsControl {
 	@Autowired
 	private ClientService cserv;
 	@Autowired
-	private BPservice bserv;
+	private BPservice bseratev;
 	@Autowired
 	private CatItemServices catService;
 	Long id = (long) 1;
@@ -67,8 +67,10 @@ public class ClientsControlImpl implements ClientsControl {
 		em.setPassword(pm.getPassword());
 		em.setGender(pm.getGender());
 		em.setBirthday(pm.getBirthday());
-		if (pm.getRegions() != null && pm.getRegions().size() > 0) {
-			CatItem item = catService.getItemByValue("Country.Regions", pm.getRegions().get(0), null);
+		em.setNote(pm.getNote());
+		List<String> regionList = pm.getRegions();
+		if (regionList != null && regionList.size() > 0) {
+			CatItem item = catService.getItemByValue("Country.Regions", regionList.get(regionList.size() - 1), null);
 			if (item != null)
 				em.setRegion(item.getId());
 		}
@@ -129,6 +131,8 @@ public class ClientsControlImpl implements ClientsControl {
 		p.setStatus(st[me.getStatus()]);
 		p.setPartnerId(me.getPartner());
 		p.setPhone(me.getPhone());
+		if (me.getRate() == null)
+			me.setRate((float) 2);
 		p.setRate(me.getRate());
 		p.setLogin(me.getLogin());
 		p.setEmail(me.getEmail());

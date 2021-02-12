@@ -14,21 +14,22 @@ import application.entities.Store;
 import application.services.BPservice;
 import application.services.CatItemServices;
 
-
-
 @RestController
 public class BPcontrolImpl implements BPcontrol {
-	//private MockService mService = new MockService();
+	// private MockService mService = new MockService();
 	@Autowired
 	private BPservice serv;
 	@Autowired
 	private CatItemServices catServ;
+
 	@Override
 	public ResponseEntity<Object> getAllPartners() {
 		List<BusinessPartner> all = serv.findAll();
-		if (all==null)return new ResponseEntity<Object>(null, HttpStatus.NOT_FOUND);;
+		if (all == null)
+			return new ResponseEntity<Object>(null, HttpStatus.NOT_FOUND);
+		;
 		ArrayList<proxies.BusinessPartner> pall = new ArrayList<proxies.BusinessPartner>();
-		for (BusinessPartner p:all) {
+		for (BusinessPartner p : all) {
 			pall.add(convertPartnerToProxy(p));
 		}
 		return new ResponseEntity<Object>(pall, HttpStatus.OK);
@@ -37,16 +38,17 @@ public class BPcontrolImpl implements BPcontrol {
 	@Override
 	public ResponseEntity<Object> getPartnerById(Long id) {
 		try {
-			//BusinessPartner res = mService.getBusinessPartnerById(id);
+			// BusinessPartner res = mService.getBusinessPartnerById(id);
 			BusinessPartner pe = serv.findbyId(id);
-			if (pe==null) return new ResponseEntity<Object>(null, HttpStatus.NOT_FOUND);
-			proxies.BusinessPartner res=convertPartnerToProxy(pe);
+			if (pe == null)
+				return new ResponseEntity<Object>(null, HttpStatus.NOT_FOUND);
+			proxies.BusinessPartner res = convertPartnerToProxy(pe);
 			return new ResponseEntity<Object>(res, HttpStatus.OK);
 		} catch (Exception e) {
 			return new ResponseEntity<Object>("Server error:".concat(e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
-	
+
 	@Override
 	public ResponseEntity<Object> createAll() {
 		serv.createAll();
@@ -68,7 +70,7 @@ public class BPcontrolImpl implements BPcontrol {
 		p.setStores(lps);
 		return p;
 
-    }
+	}
 
 	/*
 	 * protected Long settlement;
@@ -87,5 +89,11 @@ public class BPcontrolImpl implements BPcontrol {
 		sp.setSettlement(l.get(1));
 		sp.setRegion(l.get(0));
 		return sp;
+	}
+
+	@Override
+	public ResponseEntity<Object> getPartnersByNameLike(String string) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }
