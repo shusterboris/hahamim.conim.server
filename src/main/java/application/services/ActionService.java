@@ -12,18 +12,19 @@ import application.entities.Purchase;
 import application.services.repositories.ActionsDAO;
 import application.services.repositories.PproposalDAO;
 import application.services.repositories.PurchaseDAO;
+import enums.ProposalStatus;
 
 @Service
 public class ActionService {
-	
+
 	@Autowired
 	private ActionsDAO repo;
 	@Autowired
 	private PproposalDAO repoP;
 	@Autowired
 	private PurchaseDAO repoPur;
-	
-	public List<Proposal> findActionsAll(){
+
+	public List<Proposal> findActionsAll() {
 		return repo.findAll();
 	}
 
@@ -32,7 +33,7 @@ public class ActionService {
 		Proposal res = repo.save(pe);
 		return res;
 	}
-	
+
 	public Proposal update(Proposal pe) {
 		Optional<Proposal> res = repo.findById(pe.getId());
 		if (res.isPresent()) {
@@ -50,19 +51,19 @@ public class ActionService {
 	}
 
 	public List<PriceProposal> findPriceProposals(Long proposalId, Long memberId) {
-		Proposal p=new Proposal();
+		Proposal p = new Proposal();
 		p.setId(proposalId);
 		return repoP.findByMemberAndProposalAndIsDeleted(memberId, p, false);
-		
+
 	}
-	
+
 	public PriceProposal saveProposal(PriceProposal pe) {
 
 		PriceProposal res = repoP.save(pe);
-			return res;
+		return res;
 	}
-	
-	public List<Proposal> fetchProposalsByMember(Long member){
+
+	public List<Proposal> fetchProposalsByMember(Long member) {
 		return repo.fetchProposals(member);
 	}
 
@@ -101,4 +102,14 @@ public class ActionService {
 		}
 		return p;
 	}
+
+	public List<Purchase> fetchPurchaseSuggestions(String name, Long initiator) {
+		return repoPur.findByInitiatorAndStateLessThanAndNameContainingIgnoreCase(initiator, ProposalStatus.ARCHIVE,
+				name);
+	}
+
+	public List<Purchase> fetchActivePurchaseSuggestionsByInitiator(Long initiator) {
+		return repoPur.findByInitiatorAndStateLessThan(initiator, ProposalStatus.ARCHIVE);
+	}
+
 }

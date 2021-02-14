@@ -177,8 +177,6 @@ public class ActionsControlImpl implements ActionsControl {
 		}
 	}
 
-
-
 	@Override
 	public ResponseEntity<Object> addAction(String json) {
 		try {
@@ -438,7 +436,7 @@ public class ActionsControlImpl implements ActionsControl {
 
 	@Override
 	public ResponseEntity<Object> getAllpurchases() {
-		List<Purchase> res= new ArrayList<Purchase>();
+		List<Purchase> res = new ArrayList<Purchase>();
 		try {
 			List<application.entities.Purchase> l = actionService.fetchPurcasesAll();
 			if (l.isEmpty())
@@ -453,4 +451,17 @@ public class ActionsControlImpl implements ActionsControl {
 		}
 		return new ResponseEntity<Object>(res, HttpStatus.OK);
 	}
+
+	@Override
+	public ResponseEntity<Object> getPurchaseSuggestions(String name, Long initiator) {
+		List<application.entities.Purchase> result = actionService.fetchPurchaseSuggestions(name, initiator);
+		return new ResponseEntity<Object>(result, HttpStatus.OK);
+	}
+
+	@Override
+	public ResponseEntity<Object> getPurchaseSuggestionsByInitiator(Long initiator) {
+		List<application.entities.Purchase> result = actionService.fetchActivePurchaseSuggestionsByInitiator(initiator);
+		return new ResponseEntity<Object>(result, HttpStatus.OK);
+	}
+
 }

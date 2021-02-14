@@ -17,34 +17,41 @@ public interface ActionsControl {
 
 	@GetMapping("/proposals/all")
 	public ResponseEntity<Object> getAllProposals();
-	
+
 	@GetMapping("/actions/all")
 	public ResponseEntity<Object> getAllActions();
-	
-	@GetMapping("/purchases/all")
+
+	@GetMapping("/purchase/all")
 	public ResponseEntity<Object> getAllpurchases();
 
 	@GetMapping("/actions/get/{id}")
 	public ResponseEntity<Object> getAction(@PathVariable("id") Long id);
-	
+
 	@GetMapping("/actions/get/member/{memberId}")
 	public ResponseEntity<Object> getActionByMember(@PathVariable("memberId") Long memberId);
-	
+
 	@PostMapping("/action/add")
 	public ResponseEntity<Object> addAction(@RequestBody String json);
 
 	@GetMapping("/actions/intents/get/{proposalId}/{memberId}")
-	public ResponseEntity<Object> getMemberPriceIntents(@PathVariable("proposalId") Long proposalId, 
-			@PathVariable("memberId") Long  memberId);
-	
-	@PutMapping(value = "/actions/intents/put", consumes = "application/json", produces = "application/json" )
+	public ResponseEntity<Object> getMemberPriceIntents(@PathVariable("proposalId") Long proposalId,
+			@PathVariable("memberId") Long memberId);
+
+	@PutMapping(value = "/actions/intents/put", consumes = "application/json", produces = "application/json")
 	public ResponseEntity<Object> saveMemberPriceIntents(@RequestBody List<PriceProposal> price);
-	
+
 	@GetMapping("/actions/testAdd")
 	public ResponseEntity<Object> testAdd();
 
 	@PostMapping("/purchase/add")
 	public ResponseEntity<Object> addPurchase(@RequestBody String json);
+
+	@GetMapping("/purchase/suggestions/{name}/{initiator}")
+	public ResponseEntity<Object> getPurchaseSuggestions(@PathVariable("name") String name,
+			@PathVariable("initiator") Long initiator);
+
+	@GetMapping("/purchase/suggestions/{initiator}")
+	public ResponseEntity<Object> getPurchaseSuggestionsByInitiator(@PathVariable("initiator") Long initiator);
 
 	@GetMapping("/purchase/testAdd")
 	public ResponseEntity<Object> testPurAdd();
