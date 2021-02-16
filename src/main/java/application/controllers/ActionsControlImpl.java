@@ -378,11 +378,8 @@ public class ActionsControlImpl implements ActionsControl {
 			Gson gson = new GsonBuilder().registerTypeAdapter(LocalDate.class, new LocalDateJsonAdapter().nullSafe())
 					.create();
 			Purchase purchase = gson.fromJson(json, Purchase.class);
-			/*
-			 * Long id = mService.addAction(proposal); proposal.setId(id);
-			 */
 			application.entities.Purchase pe = proxyToPurchaseEntity(purchase);
-			pe = actionService.savePur(pe);
+			pe = actionService.addPurchase(pe);
 			if (pe == null)
 				return new ResponseEntity<Object>("action not saved", HttpStatus.INTERNAL_SERVER_ERROR);
 			JSONObject ret = new JSONObject();
@@ -402,13 +399,13 @@ public class ActionsControlImpl implements ActionsControl {
 			pe.setCurrDate(LocalDate.of(2021, 2, 1));
 			pe.setState(ProposalStatus.PUBLISHED);
 			pe.setName("кролики");
-			pe = actionService.savePur(pe);
+			pe = actionService.addPurchase(pe);
 			pe = new application.entities.Purchase();
 			pe.setInitiator((long) 3);
 			pe.setCurrDate(LocalDate.of(2021, 3, 2));
 			pe.setState(ProposalStatus.PUBLISHED);
 			pe.setName("морепродукты");
-			pe = actionService.savePur(pe);
+			pe = actionService.addPurchase(pe);
 			if (pe == null)
 				return new ResponseEntity<Object>("action not saved", HttpStatus.INTERNAL_SERVER_ERROR);
 			JSONObject ret = new JSONObject();

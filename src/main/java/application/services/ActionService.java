@@ -67,8 +67,21 @@ public class ActionService {
 		return repo.fetchProposals(member);
 	}
 
-	public Purchase savePur(Purchase pe) {
-		Purchase res = repoPur.save(pe);
+	public Purchase addPurchase(Purchase pe) {
+		Purchase res;
+		Long initiatorId = pe.getInitiator();
+		String purchaseName = pe.getName();
+		List<Purchase> found = repoPur.findByInitiatorAndStateLessThanAndNameContainingIgnoreCase(initiatorId,
+				ProposalStatus.ARCHIVE, purchaseName);
+		if (found == null || found.size() == 0)
+			res = repoPur.save(pe);
+		else if (found.stream().noneMatch(entity -> entity.getName().equals(purchaseName)))
+			res = repoPur.save(pe);
+		else {
+			res = new Purchase();
+			res.setName("error: purchase exists");
+			res.setId((long) 0);
+		}
 		return res;
 	}
 
