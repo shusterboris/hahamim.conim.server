@@ -344,11 +344,13 @@ public class ActionsControlImpl implements ActionsControl {
 
 	private Purchase entityToPurchaseProxy(application.entities.Purchase pe) {
 		Purchase p = new Purchase();
-		// p.setId(pe.getId());
+		p.setId(pe.getId());
 		p.setCurrDate(pe.getCurrDate());
 		p.setInitiator(pe.getInitiator());
 		p.setName(pe.getName());
 		// p.setState(pe.getState());
+		// p.setState(ProposalStatus.getMessageKeyByNumber((int)pe.getState()));
+		p.setState(ProposalStatus.PUBLISHED);
 		p.setSumOrders(sumOrders(pe.getId()));
 		return p;
 
