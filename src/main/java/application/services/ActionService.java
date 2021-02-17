@@ -4,6 +4,9 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import application.entities.PriceProposal;
@@ -123,6 +126,13 @@ public class ActionService {
 
 	public List<Purchase> fetchActivePurchaseSuggestionsByInitiator(Long initiator) {
 		return repoPur.findByInitiatorAndStateLessThan(initiator, ProposalStatus.ARCHIVE);
+	}
+
+	public Page<Purchase> getAllPurchaseByPage(int pageNo, Integer pageSize) {
+		if (pageNo < 0)
+			pageNo = 0;
+		PageRequest request = PageRequest.of(pageNo, pageSize, Sort.by(Sort.Direction.DESC, "id"));
+		return repoPur.findAll(request);
 	}
 
 }

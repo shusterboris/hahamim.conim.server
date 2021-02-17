@@ -8,6 +8,7 @@ import java.util.Optional;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
@@ -18,6 +19,7 @@ import com.google.gson.GsonBuilder;
 import Utils.LocalDateJsonAdapter;
 import application.entities.AppImage;
 import application.entities.BusinessPartner;
+import application.entities.PageResponse;
 import application.services.ActionService;
 import application.services.BPservice;
 import enums.ProposalStatus;
@@ -348,9 +350,9 @@ public class ActionsControlImpl implements ActionsControl {
 		p.setCurrDate(pe.getCurrDate());
 		p.setInitiator(pe.getInitiator());
 		p.setName(pe.getName());
-		// p.setState(pe.getState());
+		p.setState(pe.getState());
 		// p.setState(ProposalStatus.getMessageKeyByNumber((int)pe.getState()));
-		p.setState(ProposalStatus.PUBLISHED);
+		// setState(ProposalStatus.PUBLISHED);
 		p.setSumOrders(sumOrders(pe.getId()));
 		return p;
 
@@ -463,4 +465,16 @@ public class ActionsControlImpl implements ActionsControl {
 		return new ResponseEntity<Object>(result, HttpStatus.OK);
 	}
 
+	@Override
+	public ResponseEntity<Object> getAllPurchaseByPage(int pageNo, Integer pageSize) {
+		Page<application.entities.Purchase> itemList = actionService.getAllPurchaseByPage(pageNo, pageSize);
+		List<proxies.Purchase> proxies = new ArrayList<>();
+		for (application.entities.Purchase pur : itemList.getContent()) {
+			proxies.Purchase proxy = entityToPurchaseProxy(pur);
+			proxies.add(proxy);
+		}
+		@SuppressWarnings({ "rawtypes", "unchecked" })
+		PageResponse result = new PageResponse(proxies, itemList.getTotalPages(), itemList.getTotalElements());
+		return new ResponseEntity<Object>(result, HttpStatus.OK);
+	}
 }

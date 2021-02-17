@@ -60,4 +60,8 @@ public interface ActionsControl {
 	public ResponseEntity<Object> getActionsByBundle(@PathVariable("bundleId") Long proposalId);
 	// TODO сделать пересчет тоталов и достигнутой цены
 
+	@GetMapping("/purchase/all/page/{page}/{pageSize}")
+	ResponseEntity<Object> getAllPurchaseByPage(@PathVariable(name = "page") int page,
+			@PathVariable(name = "pageSize", required = false) Integer pageSize);
+
 }
