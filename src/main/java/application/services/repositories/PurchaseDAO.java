@@ -3,12 +3,12 @@ package application.services.repositories;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.repository.PagingAndSortingRepository;
 
 import application.entities.Purchase;
 import enums.ProposalStatus;
 
-public interface PurchaseDAO extends CrudRepository<Purchase, Long> {
+public interface PurchaseDAO extends PagingAndSortingRepository<Purchase, Long> {
 	public List<Purchase> findAll();
 
 	public List<Purchase> findByInitiator(Long id);
