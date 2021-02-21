@@ -39,7 +39,7 @@ public class Proposal extends BasicEntity implements Serializable {
 	 * lowest price from proposals for actions and final (best price proposal)
 	 * tender's price for tender
 	 */
-	private Float lastPrice;
+	private Float lastPrice = (float) 0;
 	private String measure;
 	private Float threshold; // минимальная закупка
 	private Float thresholdmax;// верхний предел закупки

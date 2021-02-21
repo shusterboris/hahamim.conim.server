@@ -93,7 +93,8 @@ public class ActionService {
 	}
 
 	public float fetchPurchaseTotal(Long id) {
-		return repo.fetchPurchaseTotal(id);
+		Float sum = repo.fetchPurchaseTotal(id);
+		return sum != null ? sum.floatValue() : (float) 0;
 	}
 
 	public List<Purchase> fetchPurcasesAll() {
