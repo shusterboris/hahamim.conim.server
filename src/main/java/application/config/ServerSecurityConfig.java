@@ -60,7 +60,7 @@ public class ServerSecurityConfig extends WebSecurityConfigurerAdapter {
 		httpSecurity.csrf().disable()
 				// dont authenticate this particular request
 				.authorizeRequests().antMatchers("/halt", "/clients/add", "/actions/all", "/catalogs/items/all",
-						"/catalogs/items/all/*", "/image/file/*")
+						"/catalogs/items/all/*", "/image/file/*", "/actions/testAdd")
 				.permitAll().
 				// all other requests need to be authenticated
 				anyRequest().authenticated().and().

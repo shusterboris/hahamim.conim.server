@@ -28,7 +28,7 @@ public class ActionService {
 	private PurchaseDAO repoPur;
 
 	public List<Proposal> findActionsAll() {
-		return repo.findAll();
+		return repo.findAllByOrderByIdDesc();
 	}
 
 //для новых

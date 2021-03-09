@@ -12,7 +12,7 @@ import application.entities.Proposal;
 
 @Repository
 public interface ActionsDAO extends CrudRepository<Proposal, Long> {
-	public List<Proposal> findAll();
+	public List<Proposal> findAllByOrderByIdDesc();
 
 	public Optional<Proposal> findById(Long id);
 
