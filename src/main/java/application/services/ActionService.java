@@ -27,9 +27,13 @@ public class ActionService {
 	@Autowired
 	private PurchaseDAO repoPur;
 
-	public List<Proposal> findActionsAll() {
-		return repo.findAllByOrderByIdDesc();
+	public Page<Proposal> findActionsAll() {
+		return repo.findAll();
 	}
+
+	/*
+	 * public List<Proposal> findActionsAll() { return repo.findAll(); }
+	 */
 
 //для новых
 	public Proposal save(Proposal pe) {
@@ -136,4 +140,28 @@ public class ActionService {
 		return repoPur.findAll(request);
 	}
 
+//	public float fetchPurchaseSumPay(Long id) {
+//		Float sum = repoPay.fetchPaymentByPurchase(id);
+//		return sum != null ? sum.floatValue() : (float) 0;
+//	}
+//
+//	public Page<Payment> fetchPurchasePayments(Long id, int pageNo, Integer pageSize) {
+//		if (pageNo < 0)
+//			pageNo = 0;
+//		PageRequest p = PageRequest.of(pageNo, pageSize, Sort.by(Sort.Direction.DESC, "id"));
+//		return repoPay.findByPurchase(id, p);
+//	}
+//
+//	// TODO доделать новый платеж
+//	public Payment savePayment(Payment pe) {
+//		Payment res = repoPay.save(pe);
+//		return res;
+//	}
+//
+//	public Page<Proposal> getAllActionsByPage(int pageNo, Integer pageSize) {
+//		if (pageNo < 0)
+//			pageNo = 0;
+//		PageRequest request = PageRequest.of(pageNo, pageSize, Sort.by(Sort.Direction.DESC, "id"));
+//		return repo.findAll(request);
+//	}
 }

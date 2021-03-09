@@ -2,14 +2,19 @@ package application.entities;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
 import lombok.Getter;
 import lombok.Setter;
+import proxies.Delivery;
 
 @Getter
 @Setter
@@ -48,4 +53,8 @@ public class Member extends BasicEntity implements Serializable {
 	private Integer type = 0;
 	@Transient
 	private String autorityList;
+	private String telegram;
+
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "member")
+	private Set<Delivery> delivery;
 }

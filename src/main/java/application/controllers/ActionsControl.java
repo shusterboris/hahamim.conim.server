@@ -14,12 +14,14 @@ import proxies.PriceProposal;
 
 @RequestMapping("/")
 public interface ActionsControl {
-
+//не используем
 	@GetMapping("/proposals/all")
 	public ResponseEntity<Object> getAllProposals();
 
-	@GetMapping("/actions/all")
-	public ResponseEntity<Object> getAllActions();
+//используем постраничное
+	/*
+	 * @GetMapping("/actions/all") public ResponseEntity<Object> getAllActions();
+	 */
 
 	@GetMapping("/purchase/all")
 	public ResponseEntity<Object> getAllpurchases();
@@ -46,6 +48,7 @@ public interface ActionsControl {
 	@PostMapping("/purchase/add")
 	public ResponseEntity<Object> addPurchase(@RequestBody String json);
 
+	// для поиска по названию
 	@GetMapping("/purchase/suggestions/{name}/{initiator}")
 	public ResponseEntity<Object> getPurchaseSuggestions(@PathVariable("name") String name,
 			@PathVariable("initiator") Long initiator);
@@ -62,6 +65,17 @@ public interface ActionsControl {
 
 	@GetMapping("/purchase/all/page/{page}/{pageSize}")
 	ResponseEntity<Object> getAllPurchaseByPage(@PathVariable(name = "page") int page,
+			@PathVariable(name = "pageSize", required = false) Integer pageSize);
+
+	@GetMapping("/purchase/payments/id/{id}/page/{page}/{pageSize}")
+	ResponseEntity<Object> getPaymentsByPurchaseByPage(@PathVariable("id") Long purchaseId,
+			@PathVariable("page") int page, @PathVariable("pageSize") Integer pageSize);
+
+	@PostMapping("/payment/add")
+	ResponseEntity<Object> addPayment(@RequestBody String json);
+
+	@GetMapping("/actions/all/page/{page}/{pageSize}")
+	public ResponseEntity<Object> getAllActionsByPage(@PathVariable(name = "page") int page,
 			@PathVariable(name = "pageSize", required = false) Integer pageSize);
 
 }

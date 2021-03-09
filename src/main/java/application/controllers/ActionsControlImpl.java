@@ -24,6 +24,7 @@ import application.services.ActionService;
 import application.services.BPservice;
 import enums.ProposalStatus;
 import net.minidev.json.JSONObject;
+import proxies.Payment;
 import proxies.PriceProposal;
 import proxies.Proposal;
 import proxies.Purchase;
@@ -36,32 +37,25 @@ public class ActionsControlImpl implements ActionsControl {
 	@Autowired
 	private BPservice bpserv;
 
-	@Override
-	public ResponseEntity<Object> getAllActions() {
-		try {
-			List<Proposal> res = new ArrayList<Proposal>(); // mService.getProposals();
-			List<application.entities.Proposal> l = actionService.findActionsAll();
-			if (l.isEmpty())
-				return new ResponseEntity<Object>(res, HttpStatus.OK);
-			for (application.entities.Proposal pe : l) {
-				res.add(entityToProposalProxy(pe));
-			}
-			return new ResponseEntity<Object>(res, HttpStatus.OK);
-		} catch (Exception e) {
-			return new ResponseEntity<Object>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-		}
-
-	}
-
-	private Proposal entityToProposalProxy(application.entities.Proposal p) {
+	/*
+	 * @Override public ResponseEntity<Object> getAllActions() { try {
+	 * List<Proposal> res = new ArrayList<Proposal>(); // mService.getProposals();
+	 * List<application.entities.Proposal> l = actionService.findActionsAll(); if
+	 * (l.isEmpty()) return new ResponseEntity<Object>(res, HttpStatus.OK); for
+	 * (application.entities.Proposal pe : l) { res.add(entityToProposalProxy(pe,
+	 * false)); } return new ResponseEntity<Object>(res, HttpStatus.OK); } catch
+	 * (Exception e) { return new ResponseEntity<Object>(null,
+	 * HttpStatus.INTERNAL_SERVER_ERROR); }
+	 * 
+	 * }
+	 */
+	private Proposal entityToProposalProxy(application.entities.Proposal p, boolean fullInfo) {
 		Proposal pp = new Proposal();
 		pp.setId(p.getId());
 		pp.setCategory(p.getCategory());
 		pp.setRegion(p.getRegion());
 		pp.setPrice(p.getPrice());
-		proxies.Member m = new proxies.Member();
-		m.setId(p.getInitiator());
-		pp.setInitiator(m);
+		pp.setInitiator(p.getInitiator());
 		pp.setLastPrice(p.getLastPrice());
 		pp.setDueDate(p.getDueDate());
 		pp.setMeasure(p.getMeasure());
@@ -89,17 +83,20 @@ public class ActionsControlImpl implements ActionsControl {
 		pp.setName(p.getName());
 		pp.setDescription(p.getDescription());
 		pp.setBundle(p.getBundle());
-		Set<application.entities.PriceProposal> lp = p.getPriceProposals();
-		if (lp.isEmpty()) {
-			pp.setPriceProposals(new ArrayList<PriceProposal>());
-		} else {
-			ArrayList<PriceProposal> lpp = new ArrayList<PriceProposal>();
-			for (application.entities.PriceProposal e : lp) {
-				lpp.add(entityToPproposalProxy(e));
+		if (fullInfo) {
+			Set<application.entities.PriceProposal> lp = p.getPriceProposals();
+			if (lp.isEmpty()) {
+				pp.setPriceProposals(new ArrayList<PriceProposal>());
+			} else {
+				ArrayList<PriceProposal> lpp = new ArrayList<PriceProposal>();
+				for (application.entities.PriceProposal e : lp) {
+					lpp.add(entityToPproposalProxy(e));
+				}
+				pp.setPriceProposals(lpp);
 			}
-			pp.setPriceProposals(lpp);
 		}
 		pp.setStatus(ProposalStatus.getMessageKeyByNumber(p.getStatus().intValue()));
+		pp.setIntOnly(p.getIntOnly());
 		return pp;
 	}
 
@@ -117,7 +114,7 @@ public class ActionsControlImpl implements ActionsControl {
 			Optional<application.entities.Proposal> e = actionService.findAction(id);
 			if (e == null)
 				return new ResponseEntity<Object>("", HttpStatus.NOT_FOUND);
-			Proposal res = entityToProposalProxy(e.get());
+			Proposal res = entityToProposalProxy(e.get(), true);
 			return new ResponseEntity<Object>(res, HttpStatus.OK);
 		} catch (Exception e) {
 			return new ResponseEntity<Object>("Server error:".concat(e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
@@ -135,7 +132,7 @@ public class ActionsControlImpl implements ActionsControl {
 			if (le.isEmpty())
 				new ResponseEntity<Object>(res, HttpStatus.OK);
 			for (application.entities.Proposal e : le) {
-				res.add(entityToProposalProxy(e));
+				res.add(entityToProposalProxy(e, false));
 			}
 			return new ResponseEntity<Object>(res, HttpStatus.OK);
 		} catch (Exception e) {
@@ -336,7 +333,7 @@ public class ActionsControlImpl implements ActionsControl {
 		pe.setCategory(pp.getCategory());
 		pe.setRegion(pp.getRegion());
 		pe.setPrice(pp.getPrice());
-		pe.setInitiator(pp.getInitiator().getId());
+		pe.setInitiator(pp.getInitiator());
 		pe.setLastPrice(pp.getLastPrice());
 		pe.setDueDate(pp.getDueDate());
 		pe.setMeasure(pp.getMeasure());
@@ -366,6 +363,7 @@ public class ActionsControlImpl implements ActionsControl {
 		}
 		pe.setPriceProposals(sppe);
 		pe.setId(pp.getId());
+		pe.setIntOnly(pp.getIntOnly());
 		return pe;
 	}
 
@@ -452,7 +450,7 @@ public class ActionsControlImpl implements ActionsControl {
 			if (l.isEmpty())
 				return new ResponseEntity<Object>(res, HttpStatus.OK);
 			for (application.entities.Proposal pe : l) {
-				res.add(entityToProposalProxy(pe));
+				res.add(entityToProposalProxy(pe, false));
 			}
 			return new ResponseEntity<Object>(res, HttpStatus.OK);
 		} catch (Exception e) {
@@ -496,6 +494,71 @@ public class ActionsControlImpl implements ActionsControl {
 		List<proxies.Purchase> proxies = new ArrayList<>();
 		for (application.entities.Purchase pur : itemList.getContent()) {
 			proxies.Purchase proxy = entityToPurchaseProxy(pur);
+			proxies.add(proxy);
+		}
+		@SuppressWarnings({ "rawtypes", "unchecked" })
+		PageResponse result = new PageResponse(proxies, itemList.getTotalPages(), itemList.getTotalElements());
+		return new ResponseEntity<Object>(result, HttpStatus.OK);
+	}
+
+	@Override
+	public ResponseEntity<Object> getPaymentsByPurchaseByPage(Long purchaseId, int pageNo, Integer pageSize) {
+		Page<application.entities.Payment> itemList = actionService.fetchPurchasePayments(purchaseId, pageNo, pageSize);
+		List<proxies.Payment> proxies = new ArrayList<>();
+		for (application.entities.Payment pt : itemList.getContent()) {
+			proxies.Payment proxy = entityToPaymentProxy(pt);
+			proxies.add(proxy);
+		}
+		@SuppressWarnings({ "rawtypes", "unchecked" })
+		PageResponse result = new PageResponse(proxies, itemList.getTotalPages(), itemList.getTotalElements());
+		return new ResponseEntity<Object>(result, HttpStatus.OK);
+	}
+
+	@Override
+	public ResponseEntity<Object> addPayment(String json) {
+		try {
+			Gson gson = new GsonBuilder().registerTypeAdapter(LocalDate.class, new LocalDateJsonAdapter().nullSafe())
+					.create();
+			Payment p = gson.fromJson(json, Payment.class);
+			application.entities.Payment pe = proxyToPaymentEntity(p);
+			pe = actionService.savePayment(pe);
+			if (pe == null)
+				return new ResponseEntity<Object>("action not saved", HttpStatus.INTERNAL_SERVER_ERROR);
+			JSONObject ret = new JSONObject();
+			ret.put("id", String.valueOf(pe.getId()));
+			return new ResponseEntity<>(ret, HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<Object>("action not saved", HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+
+	}
+	private Payment entityToPaymentProxy(application.entities.Payment pt) {
+		Payment res = new Payment();
+		res.setDate(pt.getDate());
+		res.setDestination(pt.getDestination());
+		res.setMember(pt.getMember());
+		res.setNote(pt.getNote());
+		res.setPurchase(pt.getPurchase());
+		res.setSum(pt.getSum());
+		return res;
+	}
+
+	private application.entities.Payment proxyToPaymentEntity(Payment pr) {
+		application.entities.Payment pe = new application.entities.Payment();
+		pe.setDestination(pr.getDestination());
+		pe.setMember(pr.getMember());
+		pe.setNote(pr.getNote());
+		pe.setPurchase(pr.getPurchase());
+		pe.setSum(pr.getSum());
+		return pe;
+	}
+
+	@Override
+	public ResponseEntity<Object> getAllActionsByPage(int page, Integer pageSize) {
+		Page<application.entities.Proposal> itemList = actionService.getAllActionsByPage(page, pageSize);
+		List<proxies.Proposal> proxies = new ArrayList<>();
+		for (application.entities.Proposal pr : itemList.getContent()) {
+			proxies.Proposal proxy = entityToProposalProxy(pr, false);
 			proxies.add(proxy);
 		}
 		@SuppressWarnings({ "rawtypes", "unchecked" })

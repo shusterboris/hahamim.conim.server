@@ -3,3 +3,5 @@
 /.settings/
 .project
 .classpath
+/src/main/resources/imgStore/*.jpg
+/src/main/resources/imgStore/OliveOilTura.png

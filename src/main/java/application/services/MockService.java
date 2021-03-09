@@ -438,7 +438,7 @@ public class MockService {
 		if (categories != null && categories.size() > 0)
 			pp.setCategory(categories.get(0).getValue());
 		pp.setRegion(region.getValue());
-		pp.setInitiator(author);
+		pp.setInitiator(author.getId());
 		pp.setPrice(price);
 		pp.setDueDate(dueDate);
 		return pp;
