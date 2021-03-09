@@ -70,6 +70,7 @@ public class Proposal extends BasicEntity implements Serializable {
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "proposal")
 
 	private Set<PriceProposal> priceProposals;
+	private Boolean intOnly = true;
 	/*
 	 * @OneToMany(targetEntity=application.entities.Store.class)
 	 * 
