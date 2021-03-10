@@ -9,12 +9,10 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import application.entities.Payment;
 import application.entities.PriceProposal;
 import application.entities.Proposal;
 import application.entities.Purchase;
 import application.services.repositories.ActionsDAO;
-import application.services.repositories.PaymentDAO;
 import application.services.repositories.PproposalDAO;
 import application.services.repositories.PurchaseDAO;
 import enums.ProposalStatus;
@@ -29,8 +27,9 @@ public class ActionService {
 	@Autowired
 	private PurchaseDAO repoPur;
 
-	@Autowired
-	private PaymentDAO repoPay;
+	public Page<Proposal> findActionsAll() {
+		return repo.findAll();
+	}
 
 	/*
 	 * public List<Proposal> findActionsAll() { return repo.findAll(); }
@@ -141,28 +140,28 @@ public class ActionService {
 		return repoPur.findAll(request);
 	}
 
-	public float fetchPurchaseSumPay(Long id) {
-		Float sum = repoPay.fetchPaymentByPurchase(id);
-		return sum != null ? sum.floatValue() : (float) 0;
-	}
-
-	public Page<Payment> fetchPurchasePayments(Long id, int pageNo, Integer pageSize) {
-		if (pageNo < 0)
-			pageNo = 0;
-		PageRequest p = PageRequest.of(pageNo, pageSize, Sort.by(Sort.Direction.DESC, "id"));
-		return repoPay.findByPurchase(id, p);
-	}
-
-	// TODO доделать новый платеж
-	public Payment savePayment(Payment pe) {
-		Payment res = repoPay.save(pe);
-		return res;
-	}
-
-	public Page<Proposal> getAllActionsByPage(int pageNo, Integer pageSize) {
-		if (pageNo < 0)
-			pageNo = 0;
-		PageRequest request = PageRequest.of(pageNo, pageSize, Sort.by(Sort.Direction.DESC, "id"));
-		return repo.findAll(request);
-	}
+//	public float fetchPurchaseSumPay(Long id) {
+//		Float sum = repoPay.fetchPaymentByPurchase(id);
+//		return sum != null ? sum.floatValue() : (float) 0;
+//	}
+//
+//	public Page<Payment> fetchPurchasePayments(Long id, int pageNo, Integer pageSize) {
+//		if (pageNo < 0)
+//			pageNo = 0;
+//		PageRequest p = PageRequest.of(pageNo, pageSize, Sort.by(Sort.Direction.DESC, "id"));
+//		return repoPay.findByPurchase(id, p);
+//	}
+//
+//	// TODO доделать новый платеж
+//	public Payment savePayment(Payment pe) {
+//		Payment res = repoPay.save(pe);
+//		return res;
+//	}
+//
+//	public Page<Proposal> getAllActionsByPage(int pageNo, Integer pageSize) {
+//		if (pageNo < 0)
+//			pageNo = 0;
+//		PageRequest request = PageRequest.of(pageNo, pageSize, Sort.by(Sort.Direction.DESC, "id"));
+//		return repo.findAll(request);
+//	}
 }
