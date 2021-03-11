@@ -14,7 +14,6 @@ import javax.persistence.Transient;
 
 import lombok.Getter;
 import lombok.Setter;
-import proxies.Delivery;
 
 @Getter
 @Setter

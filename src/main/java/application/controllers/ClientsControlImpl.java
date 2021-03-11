@@ -234,9 +234,11 @@ public class ClientsControlImpl implements ClientsControl {
 	@Override
 	public ResponseEntity<Object> fetchByStringFilterByPage(String query, int page, Integer pageSize) {
 		Page<Member> itemList;
-		if (phoneNumPattern.matcher(query).lookingAt())
+		if (phoneNumPattern.matcher(query).lookingAt()) {
 			itemList = cserv.fetchByPhoneContainsByPage(query, page, pageSize);
-		else
+			if (itemList.isEmpty())
+				itemList = cserv.fetchByTelegram(query);
+		} else
 			itemList = cserv.fetchByStringFilterByPage(query, page, pageSize);
 		List<proxies.Member> proxies = new ArrayList<>();
 		for (Member member : itemList.getContent()) {

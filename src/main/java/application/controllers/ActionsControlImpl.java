@@ -197,7 +197,7 @@ public class ActionsControlImpl implements ActionsControl {
 
 	@Override
 	public ResponseEntity<Object> testAdd() {
-
+		return null;
 		// для отладки ex1
 //		application.entities.Proposal pe = new application.entities.Proposal();
 //		pe.setCategory("Мясо");
@@ -261,31 +261,6 @@ public class ActionsControlImpl implements ActionsControl {
 //		lpp.add(createPproposal(pe, (float) 80, (long) 1, 3, 0, (float) 10));
 //		pe.setPriceProposals(lpp);
 //		pe = actionService.save(pe);
-		List<application.entities.Proposal> actions = actionService.findActionsAll();
-		for (application.entities.Proposal pe : actions) {
-			Set<application.entities.PriceProposal> lpp = pe.getPriceProposals();
-			if (lpp == null || lpp.size() == 0) {
-				lpp.add(createPproposal(pe, pe.getPrice(), (long) pe.getInitiator(), 1, 0, (float) 1));
-				lpp.add(createPproposal(pe, pe.getPrice(), (long) pe.getInitiator(), 2, 0, (float) 5));
-				lpp.add(createPproposal(pe, pe.getPrice(), (long) pe.getInitiator(), 3, 0, (float) 10));
-				pe.setPriceProposals(lpp);
-				pe.setLastPrice(pe.getPrice());
-				pe = actionService.save(pe);
-			} else {
-				for (application.entities.PriceProposal ppe : pe.getPriceProposals()) {
-					if (ppe.getProposalType() == 0) {
-						ppe.setMember(pe.getInitiator());
-						ppe.setPrice(pe.getPrice());
-						ppe.setQuantity((float) 1);
-						actionService.saveProposal(ppe);
-					}
-				}
-				pe.setPriceProposals(lpp);
-				pe.setLastPrice(pe.getPrice());
-				pe = actionService.save(pe);
-			}
-		}
-		return null;
 	}
 
 	private application.entities.PriceProposal createPproposal(application.entities.Proposal p, float price,
@@ -532,6 +507,7 @@ public class ActionsControlImpl implements ActionsControl {
 		}
 
 	}
+
 	private Payment entityToPaymentProxy(application.entities.Payment pt) {
 		Payment res = new Payment();
 		res.setDate(pt.getDate());

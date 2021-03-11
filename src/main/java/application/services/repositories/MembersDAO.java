@@ -26,4 +26,6 @@ public interface MembersDAO extends PagingAndSortingRepository<Member, Long>, Qu
 
 	@Query("SELECT m FROM Member m WHERE m.firstName like ?1 or m.lastName like ?1 or m.email like ?1")
 	public Page<Member> findMemberContainsValue(String s, Pageable p);
+
+	public Page<Member> findByTelegramContaining(String id);
 }
