@@ -234,9 +234,11 @@ public class ClientsControlImpl implements ClientsControl {
 	@Override
 	public ResponseEntity<Object> fetchByStringFilterByPage(String query, int page, Integer pageSize) {
 		Page<Member> itemList;
-		if (phoneNumPattern.matcher(query).lookingAt())
+		if (phoneNumPattern.matcher(query).lookingAt()) {
 			itemList = cserv.fetchByPhoneContainsByPage(query, page, pageSize);
-		else
+			if (itemList.isEmpty())
+				itemList = cserv.fetchByTelegram(query);
+		} else
 			itemList = cserv.fetchByStringFilterByPage(query, page, pageSize);
 		List<proxies.Member> proxies = new ArrayList<>();
 		for (Member member : itemList.getContent()) {
@@ -246,6 +248,24 @@ public class ClientsControlImpl implements ClientsControl {
 		@SuppressWarnings({ "rawtypes", "unchecked" })
 		PageResponse result = new PageResponse(proxies, itemList.getTotalPages(), itemList.getTotalElements());
 		return new ResponseEntity<Object>(result, HttpStatus.OK);
+	}
+
+	// @Override
+	public ResponseEntity<Object> fetchMemberByTelegram(String query) {
+		Page<Member> itemList = null;
+		return new ResponseEntity<Object>(itemList, HttpStatus.OK);
+	}
+
+	@Override
+	public ResponseEntity<Object> getByTelegramId(String id) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public ResponseEntity<Object> getByPhone(String phone) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

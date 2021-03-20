@@ -40,6 +40,10 @@ public interface ActionsControl {
 	public ResponseEntity<Object> getMemberPriceIntents(@PathVariable("proposalId") Long proposalId,
 			@PathVariable("memberId") Long memberId);
 
+	@GetMapping("/actions/intents/get/both/{proposalId}/{memberId}/{initiatorId}")
+	public ResponseEntity<Object> getMemberPriceIntentsBoth(@PathVariable("proposalId") Long proposalId,
+			@PathVariable("memberId") Long memberId, @PathVariable("initiatorId") Long initiatorId);
+
 	@PutMapping(value = "/actions/intents/put", consumes = "application/json", produces = "application/json")
 	public ResponseEntity<Object> saveMemberPriceIntents(@RequestBody List<PriceProposal> price);
 

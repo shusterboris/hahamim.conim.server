@@ -17,6 +17,7 @@ import application.services.repositories.ActionsDAO;
 import application.services.repositories.PaymentDAO;
 import application.services.repositories.PproposalDAO;
 import application.services.repositories.PurchaseDAO;
+import enums.PriceProposalType;
 import enums.ProposalStatus;
 
 @Service
@@ -61,8 +62,21 @@ public class ActionService {
 	public List<PriceProposal> findPriceProposals(Long proposalId, Long memberId) {
 		Proposal p = new Proposal();
 		p.setId(proposalId);
-		return repoP.findByMemberAndProposalAndIsDeleted(memberId, p, false);
+		List<PriceProposal> result = repoP.findByMemberAndProposalAndProposalTypeAndIsDeleted(memberId, p,
+				PriceProposalType.MEMBERS.ordinal(), false);
+		return result;
+	}
 
+	public List<PriceProposal> findPriceProposals(Long proposalId, Long memberId, Long initiatorId) {
+		Proposal p = new Proposal();
+		p.setId(proposalId);
+		List<PriceProposal> result = repoP.findByMemberAndProposalAndProposalTypeAndIsDeleted(initiatorId, p,
+				PriceProposalType.PARTNERS.ordinal(), false);
+		List<PriceProposal> intents = repoP.findByMemberAndProposalAndProposalTypeAndIsDeleted(memberId, p,
+				PriceProposalType.MEMBERS.ordinal(), false);
+		if (intents != null && intents.size() > 0)
+			result.addAll(intents);
+		return result;
 	}
 
 	public PriceProposal saveProposal(PriceProposal pe) {

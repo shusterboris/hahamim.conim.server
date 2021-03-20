@@ -139,4 +139,9 @@ public class ClientService {
 		return "";
 	}
 
+	public Page<Member> fetchByTelegram(String query) {
+		PageRequest request = PageRequest.of(0, 5);
+		Page<Member> res = cDAO.findByTelegramContaining(query, request);
+		return res;
+	}
 }

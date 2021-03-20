@@ -39,4 +39,11 @@ public interface ClientsControl {
 
 	@GetMapping(value = "/getPayments/{id}")
 	public ResponseEntity<Object> getPaymentsByClient(@PathVariable(value = "id") Long id);
+
+	@GetMapping(value = "/get/tele/{id}")
+	public ResponseEntity<Object> getByTelegramId(@PathVariable(value = "id") String id);
+
+	@GetMapping(value = "/get/phone/{phone}")
+	public ResponseEntity<Object> getByPhone(@PathVariable(value = "phone") String phone);
+
 }

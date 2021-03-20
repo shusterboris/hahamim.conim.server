@@ -158,6 +158,23 @@ public class ActionsControlImpl implements ActionsControl {
 	}
 
 	@Override
+	public ResponseEntity<Object> getMemberPriceIntentsBoth(Long proposalId, Long memberId, Long initiatorId) {
+		try {
+			List<application.entities.PriceProposal> lpp = actionService.findPriceProposals(proposalId, memberId,
+					initiatorId);
+			List<PriceProposal> res = new ArrayList<PriceProposal>();
+			if (!lpp.isEmpty()) {
+				for (application.entities.PriceProposal e : lpp) {
+					res.add(entityToPproposalProxy(e));
+				}
+			}
+			return new ResponseEntity<Object>(res, HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<Object>("Server error:".concat(e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+
+	@Override
 	public ResponseEntity<Object> saveMemberPriceIntents(List<PriceProposal> prices) {
 		// TODO сделать пересчет тоталов и достигнутой цены
 		application.entities.Proposal pr = null;
@@ -198,70 +215,70 @@ public class ActionsControlImpl implements ActionsControl {
 
 	@Override
 	public ResponseEntity<Object> testAdd() {
-		// для отладки ex1
-		application.entities.Proposal pe = new application.entities.Proposal();
-		pe.setCategory("Мясо");
-		pe.setRegion("Хайфа");
-		pe.setPrice((float) 100);
-		pe.setInitiator((long) 3);
-		pe.setLastPrice((float) 50);
-		pe.setDueDate(LocalDate.of(2021, 2, 1));
-		pe.setMeasure("кг");
-		pe.setThreshold((float) 60);
-		pe.setStatus(ProposalStatus.INIT.ordinal());
-		pe.setSupplier((long) 2);
-		pe.setPublicationDate(LocalDate.of(2021, 1, 1));
-		// Set<AppImage>
-		pe.setPhotos(new HashSet<application.entities.AppImage>());
-		application.entities.AppImage i = new application.entities.AppImage();
-		i.setImgPath("salami.png");
-		i.setProposal(pe);
-		pe.getPhotos().add(i);
-		pe.setTotal((float) 600);
-		pe.setDateOfSailStarting(LocalDate.of(2021, 2, 1));
-		pe.setCloseDate(LocalDate.of(2021, 2, 1));
-		pe.setName("колбаса копченая");
-		pe.setDescription("нежирная, очень вкусная");
-		pe.setBundle(null);
-		HashSet<application.entities.PriceProposal> lpp = new HashSet<application.entities.PriceProposal>();
-		lpp.add(createPproposal(pe, (float) 100, (long) 3, 1, 0, (float) 2));
-		lpp.add(createPproposal(pe, (float) 80, (long) 3, 2, 0, (float) 2));
-		lpp.add(createPproposal(pe, (float) 60, (long) 3, 3, 0, (float) 2));
-		pe.setPriceProposals(lpp);
-		pe = actionService.save(pe);
-		// ex2
-		pe = new application.entities.Proposal();
-		pe.setCategory("Мясо");
-		pe.setRegion("Бат-Ям");
-		pe.setPrice((float) 100);
-		pe.setInitiator((long) 3);
-		pe.setLastPrice((float) 80);
-		pe.setDueDate(LocalDate.of(2021, 2, 1));
-		pe.setMeasure("шт");
-		pe.setThreshold((float) 80);
-		pe.setThresholdmax((float) 180);
-		pe.setStatus(ProposalStatus.INIT.ordinal());
-		pe.setSupplier((long) 2);
-		pe.setPublicationDate(LocalDate.of(2021, 1, 1));
-		// Set<AppImage>
-		pe.setPhotos(new HashSet<application.entities.AppImage>());
-		i = new application.entities.AppImage();
-		i.setImgPath("salami.png");
-		i.setProposal(pe);
-		pe.getPhotos().add(i);
-		pe.setTotal((float) 600);
-		pe.setDateOfSailStarting(LocalDate.of(2021, 2, 1));
-		pe.setCloseDate(LocalDate.of(2021, 2, 1));
-		pe.setName("кролик мороженый");
-		pe.setDescription("вес 2 кг, цена за 1 кг");
-		pe.setBundle(null);
-		lpp.clear();
-		lpp.add(createPproposal(pe, (float) 100, (long) 1, 1, 0, (float) 2));
-		lpp.add(createPproposal(pe, (float) 90, (long) 1, 2, 0, (float) 5));
-		lpp.add(createPproposal(pe, (float) 80, (long) 1, 3, 0, (float) 10));
-		pe.setPriceProposals(lpp);
-		pe = actionService.save(pe);
 		return null;
+		// для отладки ex1
+//		application.entities.Proposal pe = new application.entities.Proposal();
+//		pe.setCategory("Мясо");
+//		pe.setRegion("Хайфа");
+//		pe.setPrice((float) 100);
+//		pe.setInitiator((long) 3);
+//		pe.setLastPrice((float) 50);
+//		pe.setDueDate(LocalDate.of(2021, 2, 1));
+//		pe.setMeasure("кг");
+//		pe.setThreshold((float) 60);
+//		pe.setStatus(ProposalStatus.INIT.ordinal());
+//		pe.setSupplier((long) 2);
+//		pe.setPublicationDate(LocalDate.of(2021, 1, 1));
+//		// Set<AppImage>
+//		pe.setPhotos(new HashSet<application.entities.AppImage>());
+//		application.entities.AppImage i = new application.entities.AppImage();
+//		i.setImgPath("salami.png");
+//		i.setProposal(pe);
+//		pe.getPhotos().add(i);
+//		pe.setTotal((float) 600);
+//		pe.setDateOfSailStarting(LocalDate.of(2021, 2, 1));
+//		pe.setCloseDate(LocalDate.of(2021, 2, 1));
+//		pe.setName("колбаса копченая");
+//		pe.setDescription("нежирная, очень вкусная");
+//		pe.setBundle(null);
+//		HashSet<application.entities.PriceProposal> lpp = new HashSet<application.entities.PriceProposal>();
+//		lpp.add(createPproposal(pe, (float) 100, (long) 3, 1, 0, (float) 2));
+//		lpp.add(createPproposal(pe, (float) 80, (long) 3, 2, 0, (float) 2));
+//		lpp.add(createPproposal(pe, (float) 60, (long) 3, 3, 0, (float) 2));
+//		pe.setPriceProposals(lpp);
+//		pe = actionService.save(pe);
+//		// ex2
+//		pe = new application.entities.Proposal();
+//		pe.setCategory("Мясо");
+//		pe.setRegion("Бат-Ям");
+//		pe.setPrice((float) 100);
+//		pe.setInitiator((long) 3);
+//		pe.setLastPrice((float) 80);
+//		pe.setDueDate(LocalDate.of(2021, 2, 1));
+//		pe.setMeasure("шт");
+//		pe.setThreshold((float) 80);
+//		pe.setThresholdmax((float) 180);
+//		pe.setStatus(ProposalStatus.INIT.ordinal());
+//		pe.setSupplier((long) 2);
+//		pe.setPublicationDate(LocalDate.of(2021, 1, 1));
+//		// Set<AppImage>
+//		pe.setPhotos(new HashSet<application.entities.AppImage>());
+//		i = new application.entities.AppImage();
+//		i.setImgPath("salami.png");
+//		i.setProposal(pe);
+//		pe.getPhotos().add(i);
+//		pe.setTotal((float) 600);
+//		pe.setDateOfSailStarting(LocalDate.of(2021, 2, 1));
+//		pe.setCloseDate(LocalDate.of(2021, 2, 1));
+//		pe.setName("кролик мороженый");
+//		pe.setDescription("вес 2 кг, цена за 1 кг");
+//		pe.setBundle(null);
+//		lpp.clear();
+//		lpp.add(createPproposal(pe, (float) 100, (long) 1, 1, 0, (float) 2));
+//		lpp.add(createPproposal(pe, (float) 90, (long) 1, 2, 0, (float) 5));
+//		lpp.add(createPproposal(pe, (float) 80, (long) 1, 3, 0, (float) 10));
+//		pe.setPriceProposals(lpp);
+//		pe = actionService.save(pe);
 	}
 
 	private application.entities.PriceProposal createPproposal(application.entities.Proposal p, float price,
@@ -509,6 +526,7 @@ public class ActionsControlImpl implements ActionsControl {
 		}
 
 	}
+
 	private Payment entityToPaymentProxy(application.entities.Payment pt) {
 		Payment res = new Payment();
 		res.setDate(pt.getDate());
