@@ -29,8 +29,9 @@ public interface ActionsControl {
 	@GetMapping("/actions/get/{id}")
 	public ResponseEntity<Object> getAction(@PathVariable("id") Long id);
 
-	@GetMapping("/actions/get/member/{memberId}")
-	public ResponseEntity<Object> getActionByMember(@PathVariable("memberId") Long memberId);
+	@GetMapping("/actions/get/member/{memberId}/{page}/{pageSize} ")
+	public ResponseEntity<Object> getActionByMember(@PathVariable("memberId") Long memberId,
+			@PathVariable(name = "page") int page, @PathVariable(name = "pageSize", required = false) Integer pageSize);
 
 	@PostMapping("/action/add")
 	public ResponseEntity<Object> addAction(@RequestBody String json);
@@ -59,8 +60,9 @@ public interface ActionsControl {
 	@GetMapping("/purchase/testAdd")
 	public ResponseEntity<Object> testPurAdd();
 
-	@GetMapping("/actions/bundle/get/{bundleId}")
-	public ResponseEntity<Object> getActionsByBundle(@PathVariable("bundleId") Long proposalId);
+	@GetMapping("/actions/bundle/get/{bundleId}/{page}/{pageSize}")
+	public ResponseEntity<Object> getActionsByBundle(@PathVariable("bundleId") Long proposalId,
+			@PathVariable("page") int page, @PathVariable("pageSize") Integer pageSize);
 	// TODO сделать пересчет тоталов и достигнутой цены
 
 	@GetMapping("/purchase/all/page/{page}/{pageSize}")

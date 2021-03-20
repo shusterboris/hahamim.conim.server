@@ -71,8 +71,12 @@ public class ActionService {
 		return res;
 	}
 
-	public List<Proposal> fetchProposalsByMember(Long member) {
-		return repo.fetchProposals(member);
+	public Page<Proposal> fetchProposalsByMember(Long member, int pageNo, Integer pageSize) {
+
+		if (pageNo < 0)
+			pageNo = 0;
+		PageRequest request = PageRequest.of(pageNo, pageSize, Sort.by(Sort.Direction.DESC, "id"));
+		return repo.fetchProposals(member, request);
 	}
 
 	public Purchase addPurchase(Purchase pe) {
@@ -93,8 +97,11 @@ public class ActionService {
 		return res;
 	}
 
-	public List<Proposal> findByBundle(Long id) {
-		return repo.findByBundle(id);
+	public Page<Proposal> findByBundle(Long id, int pageNo, Integer pageSize) {
+		if (pageNo < 0)
+			pageNo = 0;
+		PageRequest request = PageRequest.of(pageNo, pageSize, Sort.by(Sort.Direction.DESC, "id"));
+		return repo.findByBundle(id, request);
 	}
 
 	public float fetchPurchaseTotal(Long id) {

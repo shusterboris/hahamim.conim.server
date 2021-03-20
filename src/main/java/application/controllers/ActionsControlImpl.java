@@ -121,20 +121,21 @@ public class ActionsControlImpl implements ActionsControl {
 		}
 	}
 
-	public ResponseEntity<Object> getActionByMember(Long memberId) {
+	public ResponseEntity<Object> getActionByMember(Long memberId, int page, Integer pageSize) {
 		// для получения своих акций берем те, по которым у меня есть заявленное
-		// количество
-		// на покупку и соответствующий статус
+		// количество на покупку и соответствующий статус
+
 		try {
-			// List<Proposal> res = mService.getAllMemberActions(memberId);
+
 			List<Proposal> res = new ArrayList<Proposal>();
-			List<application.entities.Proposal> le = actionService.fetchProposalsByMember(memberId);
+			Page<application.entities.Proposal> le = actionService.fetchProposalsByMember(memberId, page, pageSize);
 			if (le.isEmpty())
 				new ResponseEntity<Object>(res, HttpStatus.OK);
-			for (application.entities.Proposal e : le) {
+			for (application.entities.Proposal e : le.getContent()) {
 				res.add(entityToProposalProxy(e, false));
 			}
-			return new ResponseEntity<Object>(res, HttpStatus.OK);
+			PageResponse result = new PageResponse(res, le.getTotalPages(), le.getTotalElements());
+			return new ResponseEntity<Object>(result, HttpStatus.OK);
 		} catch (Exception e) {
 			return new ResponseEntity<Object>("Server error:".concat(e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
 		}
@@ -417,17 +418,18 @@ public class ActionsControlImpl implements ActionsControl {
 	}
 
 	@Override
-	public ResponseEntity<Object> getActionsByBundle(Long proposalId) {
+	public ResponseEntity<Object> getActionsByBundle(Long proposalId, int page, Integer pageSize) {
 		List<Proposal> res = new ArrayList<Proposal>();
 		try {
-			List<application.entities.Proposal> l = actionService.findByBundle(proposalId);
+			Page<application.entities.Proposal> l = actionService.findByBundle(proposalId, page, pageSize);
 
 			if (l.isEmpty())
 				return new ResponseEntity<Object>(res, HttpStatus.OK);
-			for (application.entities.Proposal pe : l) {
+			for (application.entities.Proposal pe : l.getContent()) {
 				res.add(entityToProposalProxy(pe, false));
 			}
-			return new ResponseEntity<Object>(res, HttpStatus.OK);
+			PageResponse result = new PageResponse(res, l.getTotalPages(), l.getTotalElements());
+			return new ResponseEntity<Object>(result, HttpStatus.OK);
 		} catch (Exception e) {
 			return new ResponseEntity<Object>(null, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
