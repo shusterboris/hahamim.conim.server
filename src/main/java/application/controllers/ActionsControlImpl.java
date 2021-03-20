@@ -157,6 +157,23 @@ public class ActionsControlImpl implements ActionsControl {
 	}
 
 	@Override
+	public ResponseEntity<Object> getMemberPriceIntentsBoth(Long proposalId, Long memberId, Long initiatorId) {
+		try {
+			List<application.entities.PriceProposal> lpp = actionService.findPriceProposals(proposalId, memberId,
+					initiatorId);
+			List<PriceProposal> res = new ArrayList<PriceProposal>();
+			if (!lpp.isEmpty()) {
+				for (application.entities.PriceProposal e : lpp) {
+					res.add(entityToPproposalProxy(e));
+				}
+			}
+			return new ResponseEntity<Object>(res, HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<Object>("Server error:".concat(e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+
+	@Override
 	public ResponseEntity<Object> saveMemberPriceIntents(List<PriceProposal> prices) {
 		// TODO сделать пересчет тоталов и достигнутой цены
 		application.entities.Proposal pr = null;

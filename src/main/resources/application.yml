@@ -15,7 +15,7 @@ jwt:
   
 logging:
   level:
-    root: ERROR
+    root: INFO
     org.springframework.web: ERROR
     org.hibernate: ERROR
     org.hibernate.SQL: DEBUG
