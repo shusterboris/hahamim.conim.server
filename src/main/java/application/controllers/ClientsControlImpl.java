@@ -3,6 +3,7 @@ package application.controllers;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.regex.Pattern;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,7 @@ import com.google.gson.GsonBuilder;
 
 import Utils.LocalDateJsonAdapter;
 import application.entities.CatItem;
+import application.entities.Delivery;
 import application.entities.Member;
 import application.entities.PageResponse;
 import application.services.BPservice;
@@ -146,6 +148,17 @@ public class ClientsControlImpl implements ClientsControl {
 		if (me.getRegion() != null)
 			p.setRegions(catService.getValueById(me.getRegion())); 
 		p.setTelegram(me.getTelegram());
+		Set<Delivery> dl = me.getDelivery();
+		p.setDelivery1("");
+		p.setDelivery2("");
+		if (!dl.isEmpty()) {
+			for (Delivery d : dl) {
+				if (p.getDelivery1().equalsIgnoreCase("")) {
+					p.setDelivery1(d.getStreetAddress());
+				} else if (p.getDelivery2().equalsIgnoreCase(""))
+					p.setDelivery1(d.getStreetAddress());
+			}
+		}
 		return p;
 	}
 
@@ -265,7 +278,8 @@ public class ClientsControlImpl implements ClientsControl {
 		Member member = null;
 		if (!result.isEmpty()) {
 			member = result.getContent().get(0);
-			return new ResponseEntity<>(member, HttpStatus.OK);
+			proxies.Member proxy = convertMemberToProxy(member);
+			return new ResponseEntity<>(proxy, HttpStatus.OK);
 		} else {
 			return new ResponseEntity<>(null, HttpStatus.OK);
 		}
