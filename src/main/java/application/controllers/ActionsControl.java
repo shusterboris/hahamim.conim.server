@@ -14,14 +14,6 @@ import proxies.PriceProposal;
 
 @RequestMapping("/")
 public interface ActionsControl {
-//не используем
-	@GetMapping("/proposals/all")
-	public ResponseEntity<Object> getAllProposals();
-
-//используем постраничное
-	/*
-	 * @GetMapping("/actions/all") public ResponseEntity<Object> getAllActions();
-	 */
 
 	@GetMapping("/purchase/all")
 	public ResponseEntity<Object> getAllpurchases();
@@ -35,6 +27,9 @@ public interface ActionsControl {
 
 	@PostMapping("/action/add")
 	public ResponseEntity<Object> addAction(@RequestBody String json);
+
+	@PostMapping(value = "/actions/addOrder", consumes = "application/json")
+	public ResponseEntity<Object> addOrder(@RequestBody String json);
 
 	@GetMapping("/actions/intents/get/{proposalId}/{memberId}")
 	public ResponseEntity<Object> getMemberPriceIntents(@PathVariable("proposalId") Long proposalId,

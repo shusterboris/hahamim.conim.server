@@ -146,7 +146,7 @@ public class ClientsControlImpl implements ClientsControl {
 		p.setAuthorities(me.getAutorityList());
 		p.setTelegram(me.getTelegram());
 		if (me.getRegion() != null)
-			p.setRegions(catService.getValueById(me.getRegion())); 
+			p.setRegions(catService.getValueById(me.getRegion()));
 		p.setTelegram(me.getTelegram());
 		Set<Delivery> dl = me.getDelivery();
 		p.setDelivery1("");
@@ -156,7 +156,7 @@ public class ClientsControlImpl implements ClientsControl {
 				if (p.getDelivery1().equalsIgnoreCase("")) {
 					p.setDelivery1(d.getStreetAddress());
 				} else if (p.getDelivery2().equalsIgnoreCase(""))
-					p.setDelivery1(d.getStreetAddress());
+					p.setDelivery2(d.getStreetAddress());
 			}
 		}
 		return p;

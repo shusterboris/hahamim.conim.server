@@ -37,18 +37,6 @@ public class ActionsControlImpl implements ActionsControl {
 	@Autowired
 	private BPservice bpserv;
 
-	/*
-	 * @Override public ResponseEntity<Object> getAllActions() { try {
-	 * List<Proposal> res = new ArrayList<Proposal>(); // mService.getProposals();
-	 * List<application.entities.Proposal> l = actionService.findActionsAll(); if
-	 * (l.isEmpty()) return new ResponseEntity<Object>(res, HttpStatus.OK); for
-	 * (application.entities.Proposal pe : l) { res.add(entityToProposalProxy(pe,
-	 * false)); } return new ResponseEntity<Object>(res, HttpStatus.OK); } catch
-	 * (Exception e) { return new ResponseEntity<Object>(null,
-	 * HttpStatus.INTERNAL_SERVER_ERROR); }
-	 * 
-	 * }
-	 */
 	private Proposal entityToProposalProxy(application.entities.Proposal p, boolean fullInfo) {
 		Proposal pp = new Proposal();
 		pp.setId(p.getId());
@@ -101,9 +89,9 @@ public class ActionsControlImpl implements ActionsControl {
 	}
 
 	@Override
-	public ResponseEntity<Object> getAllProposals() {
-
-		return new ResponseEntity<Object>("Server error:", HttpStatus.INTERNAL_SERVER_ERROR);
+	public ResponseEntity<Object> addOrder(String json) {
+		System.out.println(json);
+		return new ResponseEntity<Object>(HttpStatus.OK);
 
 	}
 
