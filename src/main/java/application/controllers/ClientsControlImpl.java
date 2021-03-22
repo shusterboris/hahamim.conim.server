@@ -77,6 +77,7 @@ public class ClientsControlImpl implements ClientsControl {
 		}
 		if (pm.getPartnerId() != null)
 			em.setPartner(pm.getPartnerId());
+		em.setTelegram(pm.getTelegram());
 		return em;
 	}
 
@@ -141,6 +142,7 @@ public class ClientsControlImpl implements ClientsControl {
 		p.setLevel(me.getLevel() != null ? me.getLevel() : 0);
 		p.setBirthday(me.getBirthday());
 		p.setAuthorities(me.getAutorityList());
+		p.setTelegram(me.getTelegram());
 		if (me.getRegion() != null)
 			p.setRegions(catService.getValueById(me.getRegion()));
 		return p;

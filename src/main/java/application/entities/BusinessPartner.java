@@ -1,12 +1,16 @@
 package application.entities;
 
 import java.io.Serializable;
+import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
@@ -33,5 +37,8 @@ public class BusinessPartner extends BasicEntity implements Serializable{
 	 * 
 	 * public BusinessPartner() { super( "", "", null); }
 	 */
-
+	@ManyToMany(fetch = FetchType.LAZY, cascade = { CascadeType.PERSIST, CascadeType.MERGE })
+	@JoinTable(name = "partn_memb", joinColumns = { @JoinColumn(name = "partn_id") }, inverseJoinColumns = {
+			@JoinColumn(name = "memb_id") })
+	private Set<Member> member = new HashSet<>();
 }
