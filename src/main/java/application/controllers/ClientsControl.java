@@ -43,4 +43,8 @@ public interface ClientsControl {
 	@GetMapping(value = "/get/tele/{id}")
 	public ResponseEntity<Object> getByTelegramId(@PathVariable(value = "id") String id);
 
+	@GetMapping(value = "/getByPartner/{id}/page/{page}/{pageSize}")
+	public ResponseEntity<Object> getClientsByPartner(@PathVariable(value = "id") Long id,
+			@PathVariable(name = "page") int page, @PathVariable(name = "pageSize") Integer pageSize);
+
 }

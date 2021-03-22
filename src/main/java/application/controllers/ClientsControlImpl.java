@@ -156,7 +156,7 @@ public class ClientsControlImpl implements ClientsControl {
 				if (p.getDelivery1().equalsIgnoreCase("")) {
 					p.setDelivery1(d.getStreetAddress());
 				} else if (p.getDelivery2().equalsIgnoreCase(""))
-					p.setDelivery1(d.getStreetAddress());
+					p.setDelivery2(d.getStreetAddress());
 			}
 		}
 		return p;
@@ -283,6 +283,20 @@ public class ClientsControlImpl implements ClientsControl {
 		} else {
 			return new ResponseEntity<>(null, HttpStatus.OK);
 		}
+	}
+
+	@Override
+	public ResponseEntity<Object> getClientsByPartner(Long id, int page, Integer pageSize) {
+		Set<Member> itemList = cserv.findMembersByPartner(id);
+		List<proxies.Member> proxies = new ArrayList<>();
+		for (Member member : itemList) {
+			proxies.Member proxy = convertMemberToProxy(member);
+			proxies.add(proxy);
+		}
+		@SuppressWarnings({ "rawtypes", "unchecked" })
+		int cPage = itemList.size() / pageSize;
+		PageResponse result = new PageResponse(proxies, cPage, (long) itemList.size());
+		return new ResponseEntity<Object>(result, HttpStatus.OK);
 	}
 
 }

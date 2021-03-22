@@ -1,6 +1,7 @@
 package application.services;
 
 import java.util.Optional;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -11,10 +12,12 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import application.entities.BusinessPartner;
 import application.entities.Member;
 import application.entities.security.Authority;
 import application.entities.security.User;
 import application.services.repositories.MembersDAO;
+import application.services.repositories.PartnerDAO;
 import application.services.repositories.UserDAO;
 
 @Service
@@ -23,6 +26,8 @@ public class ClientService {
 	private MembersDAO cDAO;
 	@Autowired
 	private UserDAO userDAO;
+	@Autowired
+	private PartnerDAO pDAO;
 
 	public Iterable<Member> findMembersAll() {
 		return cDAO.findAll();
@@ -143,5 +148,13 @@ public class ClientService {
 		PageRequest request = PageRequest.of(0, 5);
 		Page<Member> res = cDAO.findByTelegramContaining(query, request);
 		return res;
+	}
+
+	public Set<Member> findMembersByPartner(Long id) {
+		Optional<BusinessPartner> p = pDAO.findById(id);
+		if (p.isPresent()) {
+			return p.get().getMember();
+		}
+		return null;
 	}
 }
