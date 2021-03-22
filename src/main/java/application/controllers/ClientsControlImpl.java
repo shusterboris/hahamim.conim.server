@@ -142,7 +142,8 @@ public class ClientsControlImpl implements ClientsControl {
 		p.setBirthday(me.getBirthday());
 		p.setAuthorities(me.getAutorityList());
 		if (me.getRegion() != null)
-			p.setRegions(catService.getValueById(me.getRegion()));
+			p.setRegions(catService.getValueById(me.getRegion())); 
+		p.setTelegram(me.getTelegram());
 		return p;
 	}
 
@@ -258,14 +259,14 @@ public class ClientsControlImpl implements ClientsControl {
 
 	@Override
 	public ResponseEntity<Object> getByTelegramId(String id) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public ResponseEntity<Object> getByPhone(String phone) {
-		// TODO Auto-generated method stub
-		return null;
+		Page<Member> result = cserv.fetchByTelegram(id);
+		Member member = null;
+		if (!result.isEmpty()) {
+			member = result.getContent().get(0);
+			return new ResponseEntity<>(member, HttpStatus.OK);
+		} else {
+			return new ResponseEntity<>(null, HttpStatus.OK);
+		}
 	}
 
 }

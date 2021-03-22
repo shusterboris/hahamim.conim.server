@@ -29,7 +29,7 @@ public interface ActionsControl {
 	@GetMapping("/actions/get/{id}")
 	public ResponseEntity<Object> getAction(@PathVariable("id") Long id);
 
-	@GetMapping("/actions/get/member/{memberId}/{page}/{pageSize} ")
+	@GetMapping("/actions/get/member/{memberId}/{page}/{pageSize}")
 	public ResponseEntity<Object> getActionByMember(@PathVariable("memberId") Long memberId,
 			@PathVariable(name = "page") int page, @PathVariable(name = "pageSize", required = false) Integer pageSize);
 
