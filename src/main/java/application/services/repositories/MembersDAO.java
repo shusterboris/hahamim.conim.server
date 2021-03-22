@@ -28,4 +28,7 @@ public interface MembersDAO extends PagingAndSortingRepository<Member, Long>, Qu
 	public Page<Member> findMemberContainsValue(String s, Pageable p);
 
 	public Page<Member> findByTelegramContaining(String id, Pageable p);
+
+
+
 }

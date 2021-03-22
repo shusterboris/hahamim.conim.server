@@ -285,4 +285,18 @@ public class ClientsControlImpl implements ClientsControl {
 		}
 	}
 
+	@Override
+	public ResponseEntity<Object> getClientsByPartner(Long id, int page, Integer pageSize) {
+		Set<Member> itemList = cserv.findMembersByPartner(id);
+		List<proxies.Member> proxies = new ArrayList<>();
+		for (Member member : itemList) {
+			proxies.Member proxy = convertMemberToProxy(member);
+			proxies.add(proxy);
+		}
+		@SuppressWarnings({ "rawtypes", "unchecked" })
+		int cPage = itemList.size() / pageSize;
+		PageResponse result = new PageResponse(proxies, cPage, (long) itemList.size());
+		return new ResponseEntity<Object>(result, HttpStatus.OK);
+	}
+
 }
