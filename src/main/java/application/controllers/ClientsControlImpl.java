@@ -2,6 +2,7 @@ package application.controllers;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.regex.Pattern;
@@ -288,15 +289,31 @@ public class ClientsControlImpl implements ClientsControl {
 	@Override
 	public ResponseEntity<Object> getClientsByPartner(Long id, int page, Integer pageSize) {
 		Set<Member> itemList = cserv.findMembersByPartner(id);
+		Set<Member> curPage = getPage(itemList, page, pageSize);
 		List<proxies.Member> proxies = new ArrayList<>();
-		for (Member member : itemList) {
+
+		for (Member member : curPage) {
 			proxies.Member proxy = convertMemberToProxy(member);
 			proxies.add(proxy);
 		}
 		@SuppressWarnings({ "rawtypes", "unchecked" })
-		int cPage = itemList.size() / pageSize;
+		int cPage = itemList.size() / pageSize + 1;
+		// entity page_count entity_count
 		PageResponse result = new PageResponse(proxies, cPage, (long) itemList.size());
 		return new ResponseEntity<Object>(result, HttpStatus.OK);
 	}
 
+	private Set<Member> getPage(Set<Member> items, int numP, int pageSize) {
+		Set<Member> res = new HashSet<Member>();
+		int start = numP * pageSize;
+		int end = start + pageSize;
+		if (items.size() < end)
+			end = items.size();
+		Object[] a = items.toArray();
+		for (int i = start; i < end; i++) {
+			res.add((Member) a[i]);
+		}
+		return res;
+
+	}
 }
