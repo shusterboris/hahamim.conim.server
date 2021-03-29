@@ -19,11 +19,16 @@ import com.google.gson.GsonBuilder;
 import Utils.LocalDateJsonAdapter;
 import application.entities.AppImage;
 import application.entities.BusinessPartner;
+import application.entities.Member;
 import application.entities.PageResponse;
 import application.services.ActionService;
 import application.services.BPservice;
+import application.services.ClientService;
+import enums.PriceProposalType;
 import enums.ProposalStatus;
 import net.minidev.json.JSONObject;
+import proxies.OrderFromTelegram;
+import proxies.OrdersFromTelegram;
 import proxies.Payment;
 import proxies.PriceProposal;
 import proxies.Proposal;
@@ -36,6 +41,8 @@ public class ActionsControlImpl implements ActionsControl {
 	private ActionService actionService;
 	@Autowired
 	private BPservice bpserv;
+	@Autowired
+	private ClientService cserv;
 
 	private Proposal entityToProposalProxy(application.entities.Proposal p, boolean fullInfo) {
 		Proposal pp = new Proposal();
@@ -90,10 +97,62 @@ public class ActionsControlImpl implements ActionsControl {
 
 	@Override
 	public ResponseEntity<Object> addOrder(String json) {
-		System.out.println(json);
+		application.entities.Member m;
+		Gson gson = new Gson();
+		OrdersFromTelegram order = gson.fromJson(json, OrdersFromTelegram.class);
+		long id = order.getMember().getId();
+		if (id != 0) {
+			m = cserv.getMemberById(id);
+			// сверяем все ли правильно updateMember
+		} else {
+			// create member
+			m = new Member();
+			m = cserv.createMember(m);
+		}
+		// записать заказ. 
+		application.entities.Proposal proposal = new application.entities.Proposal();
+		proposal.setId(0);
+		// Set<application.entities.PriceProposal> ppList = new
+		// HashSet<application.entities.PriceProposal>();
+		for (OrderFromTelegram o : order.getItems()) {
+			application.entities.PriceProposal pp = telegramToPproposal(o);
+			// сохранить предыдущие
+			if (proposal.getId() != o.getId()) {
+				proposal = actionService.findAction(o.getId()).get();
+			}
+			pp.setProposal(proposal);
+			pp.setMember(m.getId());
+			pp.setDelivery(order.getMember().getAddress());
+			actionService.saveProposal(pp);
+		}
+
 		return new ResponseEntity<Object>(HttpStatus.OK);
 
 	}
+
+	private application.entities.PriceProposal telegramToPproposal(OrderFromTelegram o) {
+		application.entities.PriceProposal pp = new application.entities.PriceProposal();
+		pp.setId(o.getId());
+		pp.setPrice(o.getPrice());
+		pp.setPriceLevel(1);
+		pp.setQuantity(o.getQuantity());
+		pp.setProposalType(PriceProposalType.MEMBERS.ordinal());
+		return pp;
+	}
+	/*
+	 * {"items": [ {"id": 2, "name": "Кролик слабо замороженый", "bundle": 1,
+	 * "price": 100.0, "measure": "шт", "description": "Кролик свежемороженый, ",
+	 * "quantity": 2.0, "threshold": 2.0, "state": 0, "cost": 200.0, "photo":
+	 * "Krol.jpg", "intOnly": null}, {"id": 10, "name": "Финик в шоколаде, конфеты",
+	 * "bundle": 10, "price": 49.9, "measure": "кг", "description":
+	 * "Уникальные  украинские конфеты! ", "quantity": 2.0, "threshold": 1.0,
+	 * "state": 0, "cost": 99.8, "photo": "eco-finic.jpg", "intOnly": null} ],
+	 * "member": {"delivery": ["Бат-Ям, Правительственный квартал, 1 офис 10165",
+	 * "Наария, Цахаль, 15а кв.16"], "firstName": "Борис", "lastName": "Шустер",
+	 * "id": 35, "telegram": "1471430736", "phoneNumber": "+972559191919", "email":
+	 * "boriss@ucom.net", "address": "Наария, Цахаль, 15а кв.16",
+	 * "preferableAddress": "Наария, Цахаль, 15а кв.16"} }
+	 */
 
 	@Override
 	public ResponseEntity<Object> getAction(Long id) {
