@@ -9,6 +9,8 @@ import java.util.regex.Pattern;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
@@ -17,6 +19,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import Utils.LocalDateJsonAdapter;
+import application.entities.Address;
 import application.entities.CatItem;
 import application.entities.Delivery;
 import application.entities.Member;
@@ -24,6 +27,7 @@ import application.entities.PageResponse;
 import application.services.BPservice;
 import application.services.CatItemServices;
 import application.services.ClientService;
+import application.services.repositories.DeliveryDAO;
 import enums.ClientStatus;
 import enums.UserType;
 import exceptions.EntityNotFound;
@@ -34,12 +38,15 @@ import lombok.Setter;
 @Getter
 @Setter
 public class ClientsControlImpl implements ClientsControl {
+	private final Integer defaultPageSize = 15;
 	// private MockService mService = new MockService();
 	Pattern phoneNumPattern = Pattern.compile("\\+{0,1}\\d+");
 	@Autowired
 	private ClientService cserv;
 	@Autowired
 	private BPservice bseratev;
+	@Autowired
+	private DeliveryDAO dlvrDAO;
 	@Autowired
 	private CatItemServices catService;
 	Long id = (long) 1;
@@ -286,6 +293,7 @@ public class ClientsControlImpl implements ClientsControl {
 		}
 	}
 
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
 	public ResponseEntity<Object> getClientsByPartner(Long id, int page, Integer pageSize) {
 		Set<Member> itemList = cserv.findMembersByPartner(id);
@@ -296,7 +304,6 @@ public class ClientsControlImpl implements ClientsControl {
 			proxies.Member proxy = convertMemberToProxy(member);
 			proxies.add(proxy);
 		}
-		@SuppressWarnings({ "rawtypes", "unchecked" })
 		int cPage = itemList.size() / pageSize + 1;
 		// entity page_count entity_count
 		PageResponse result = new PageResponse(proxies, cPage, (long) itemList.size());
@@ -315,5 +322,85 @@ public class ClientsControlImpl implements ClientsControl {
 		}
 		return res;
 
+	}
+
+	private proxies.Address convertAddressToProxy(Address addr) {
+		proxies.Address res = new proxies.Address();
+		res.setId(addr.getId());
+		res.setAltitude(addr.getAltitude());
+		res.setLatitude(addr.getLatitude());
+		ArrayList<String> locations = catService.getValueById(addr.getSettlement());
+		res.setRegion(locations.get(0));
+		if (locations.size() > 1)
+			res.setSettlement(locations.get(1));
+		res.setStreetAddress(addr.getStreetAddress());
+		return res;
+	}
+
+	@Override
+	public ResponseEntity<Object> fetchAddresses(Long id, int page, Integer pageSize, String filter) {
+		List<proxies.Address> lstAddr = new ArrayList<proxies.Address>();
+		if (filter == null)
+			filter = "";
+		PageRequest request = PageRequest.of(page, pageSize, Sort.by(Sort.Direction.DESC, "id"));
+		Page<Delivery> queryResult = null;
+		if ("".equals(filter))
+			queryResult = dlvrDAO.findByMember_id(id, request);
+		else
+			queryResult = dlvrDAO.findByMember_idAndStreetAddressContaining(id, request, filter);
+		if (queryResult.getSize() > 0) {
+			for (Delivery d : queryResult.getContent()) {
+				proxies.Address proxy = convertAddressToProxy(d);
+				lstAddr.add(proxy);
+			}
+		}
+		return new ResponseEntity<>(lstAddr, HttpStatus.OK);
+	}
+
+	private proxies.Address proxyAddressToDelivery(String json) {
+		Gson gson = new GsonBuilder().registerTypeAdapter(LocalDate.class, new LocalDateJsonAdapter().nullSafe())
+				.create();
+		proxies.Address address = gson.fromJson(json, proxies.Address.class);
+		return address;
+	}
+
+	@Override
+	public ResponseEntity<Object> saveAddress(String json) {
+		// TODO Здесь, по идее запись и адресов для доставки, и магазинов БП... потом
+		try {
+			proxies.Address address = proxyAddressToDelivery(json);
+			Delivery delivery = new Delivery();
+			if (address.getId() != null)
+				delivery = dlvrDAO.findById(address.getId()).orElse(delivery);
+			delivery.setStreetAddress(address.getStreetAddress());
+			CatItem item = catService.getItemByValue("Country.Regions", address.getSettlement(), null);
+			delivery.setSettlement(item.getId());
+			Member member;
+			// если данные о покупателе уже есть - не трогаем, оставляем, как есть
+			if (!(delivery.getMember() != null && delivery.getMember().getId() > 0)) {
+				// иначе ищем в базе
+				member = cserv.findMemberById(address.getParentId());
+				delivery.setMember(member);
+			}
+			delivery = dlvrDAO.save(delivery);
+			address.setId(delivery.getId());
+			return new ResponseEntity<Object>(address, HttpStatus.OK);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new ResponseEntity<Object>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+
+	@Override
+	public ResponseEntity<String> removeAddress(Long id) {
+		try {
+			dlvrDAO.deleteById(id);
+			return new ResponseEntity<String>("ok", HttpStatus.OK);
+		} catch (Exception e) {
+			String msg = "error";
+			if (e.getMessage() != null)
+				msg = msg + e.getMessage();
+			return new ResponseEntity<String>(msg, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
 	}
 }
