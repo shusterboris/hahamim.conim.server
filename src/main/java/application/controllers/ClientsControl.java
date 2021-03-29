@@ -1,6 +1,7 @@
 package application.controllers;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -47,4 +48,14 @@ public interface ClientsControl {
 	public ResponseEntity<Object> getClientsByPartner(@PathVariable(value = "id") Long id,
 			@PathVariable(name = "page") int page, @PathVariable(name = "pageSize") Integer pageSize);
 
+	@GetMapping(value = { "/addresses/{id}/{page}/{pageSize}", "/addresses/{id}/{page}/{pageSize}/{filter}" })
+	public ResponseEntity<Object> fetchAddresses(@PathVariable(name = "id") Long id,
+			@PathVariable(name = "page") int page, @PathVariable(name = "pageSize") Integer pageSize,
+			@PathVariable(name = "filter", required = false) String filter);
+
+	@PutMapping(value = "/addresses/add")
+	public ResponseEntity<Object> saveAddress(@RequestBody String json);
+
+	@DeleteMapping(value = "/addresses/remove/{id}")
+	public ResponseEntity<String> removeAddress(@PathVariable(value = "id") Long id);
 }

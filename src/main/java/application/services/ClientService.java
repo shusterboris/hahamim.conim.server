@@ -157,4 +157,8 @@ public class ClientService {
 		}
 		return null;
 	}
+
+	public Member findMemberById(Long id) {
+		return cDAO.findById(id).orElse(null);
+	}
 }
