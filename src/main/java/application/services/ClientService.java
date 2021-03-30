@@ -1,5 +1,6 @@
 package application.services;
 
+import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import application.entities.BusinessPartner;
+import application.entities.Delivery;
 import application.entities.Member;
 import application.entities.security.Authority;
 import application.entities.security.User;
@@ -160,5 +162,35 @@ public class ClientService {
 
 	public Member findMemberById(Long id) {
 		return cDAO.findById(id).orElse(null);
+	}
+
+	public Member createMemberFromTelegram(String firstName, String lastName, String phone, String tnumber,
+			String address) {
+		Member m = new Member();
+		// m.setporder.getMember().getPreferableAddress()
+		m.setFirstName(firstName);
+		m.setLastName(lastName);
+		m.setPhone(phone);
+		m.setLogin(phone);
+		m.setPassword(firstName + lastName);
+		m.setTelegram(tnumber);
+		m.setType(1);
+		m.setStatus(2);
+		m.setLevel(0);
+		m = addDelivery(address, m);
+		m = createMember(m);
+		return m;
+	}
+
+	public Member addDelivery(String address, Member m) {
+		Set<Delivery> dd = m.getDelivery();
+		if (dd == null)
+			dd = new HashSet<Delivery>();
+		Delivery d = new Delivery();
+		d.setStreetAddress(address);
+		d.setMember(m);
+		dd.add(d);
+		m.setDelivery(dd);
+		return m;
 	}
 }

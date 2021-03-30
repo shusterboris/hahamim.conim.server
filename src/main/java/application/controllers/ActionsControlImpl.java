@@ -3,6 +3,7 @@ package application.controllers;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -19,7 +20,7 @@ import com.google.gson.GsonBuilder;
 import Utils.LocalDateJsonAdapter;
 import application.entities.AppImage;
 import application.entities.BusinessPartner;
-import application.entities.Member;
+import application.entities.Delivery;
 import application.entities.PageResponse;
 import application.services.ActionService;
 import application.services.BPservice;
@@ -101,28 +102,46 @@ public class ActionsControlImpl implements ActionsControl {
 		Gson gson = new Gson();
 		OrdersFromTelegram order = gson.fromJson(json, OrdersFromTelegram.class);
 		long id = order.getMember().getId();
+		// если member получен из базы то дописываем недостающее, иначе создаем нового
 		if (id != 0) {
+			boolean isChanged=false;
 			m = cserv.getMemberById(id);
-			// сверяем все ли правильно updateMember
+			if (m.getTelegram() == null) {
+				m.setTelegram(order.getMember().getTelegram());
+				isChanged=true;
+			}
+			if (m.getDelivery().isEmpty()) {
+				m = cserv.addDelivery(order.getMember().getPreferableAddress(), m);
+				isChanged=true;
+			}
+			else if (m.getDelivery().size() == 1) {
+				// добавить адрес если его нет
+				String s = order.getMember().getPreferableAddress();
+				Iterator<Delivery> ls = m.getDelivery().iterator();
+				if (!ls.next().getStreetAddress().equalsIgnoreCase(s)) {
+					m = cserv.addDelivery(s, m);
+					isChanged=true;
+				}
+			}
+			if (isChanged)
+				cserv.updateMember(m);
 		} else {
-			// create member
-			m = new Member();
-			m = cserv.createMember(m);
+			m = cserv.createMemberFromTelegram(order.getMember().getFirstName(), order.getMember().getLastName(),
+					order.getMember().getPhoneNumber(), order.getMember().getTelegram(),
+					order.getMember().getPreferableAddress());
 		}
 		// записать заказ. 
 		application.entities.Proposal proposal = new application.entities.Proposal();
 		proposal.setId(0);
-		// Set<application.entities.PriceProposal> ppList = new
-		// HashSet<application.entities.PriceProposal>();
 		for (OrderFromTelegram o : order.getItems()) {
 			application.entities.PriceProposal pp = telegramToPproposal(o);
-			// сохранить предыдущие
+			// загрузить акцию
 			if (proposal.getId() != o.getId()) {
 				proposal = actionService.findAction(o.getId()).get();
 			}
 			pp.setProposal(proposal);
 			pp.setMember(m.getId());
-			pp.setDelivery(order.getMember().getAddress());
+			pp.setDelivery(order.getMember().getPreferableAddress());
 			actionService.saveProposal(pp);
 		}
 
