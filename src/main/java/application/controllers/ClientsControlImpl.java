@@ -2,8 +2,10 @@ package application.controllers;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.regex.Pattern;
 
@@ -98,8 +100,11 @@ public class ClientsControlImpl implements ClientsControl {
 		Member em = memberProxyToEntity(pm);
 		// проверка на логин телефон и мейл
 		String res = cserv.isUnique(em);
-		if (!res.equalsIgnoreCase(""))
-			return new ResponseEntity<Object>(res, HttpStatus.OK);
+		if (!res.equalsIgnoreCase("")) {
+			Map<String, String> err = new HashMap<String, String>();
+			err.put("errorMessage", res);
+			return new ResponseEntity<Object>(err, HttpStatus.OK);
+		}
 		em = cserv.createMember(em);
 		if (em != null) {
 			pm = convertMemberToProxy(em);
@@ -159,7 +164,7 @@ public class ClientsControlImpl implements ClientsControl {
 		Set<Delivery> dl = me.getDelivery();
 		p.setDelivery1("");
 		p.setDelivery2("");
-		if (!dl.isEmpty()) {
+		if (dl != null && !dl.isEmpty()) {
 			for (Delivery d : dl) {
 				if (p.getDelivery1().equalsIgnoreCase("")) {
 					p.setDelivery1(d.getStreetAddress());

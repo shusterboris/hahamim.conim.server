@@ -126,21 +126,21 @@ public class ClientService {
 	public String isUnique(Member em) {
 		Optional<Member> m = cDAO.findByLogin(em.getLogin());
 		if (m.isPresent() && !theSameRecord(em, m))
-			return "login exists";
+			return "errMsg.loginIsNotUnique";
 		if (em.getEmail() != null) {
 			if (!em.getEmail().equalsIgnoreCase("")) {
 				m = cDAO.findByEmail(em.getEmail());
 				if (m.isPresent() && !theSameRecord(em, m))
-					return "email exists";
+					return "errMsg.emailIsNotUnique";
 			}
 		}
 		m = cDAO.findByPhone(em.getPhone());
 		if (m.isPresent() && !theSameRecord(em, m))
-			return "phone exists";
+			return "errMsg.phoneIsNotUnique";
 
 		UserDetails user = userDAO.findByUsername(em.getLogin());
 		if (user != null && !user.getUsername().equals(em.getLogin()))
-			return "login exists";
+			return "loginIsNotUnique";
 		return "";
 	}
 
