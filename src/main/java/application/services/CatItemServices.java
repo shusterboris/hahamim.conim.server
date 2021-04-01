@@ -97,4 +97,15 @@ public class CatItemServices {
 		return ls;
 	}
 
+	public ArrayList<String> getItemsAsStrings(String itemKey, String lang) {
+		ArrayList<String> ls = new ArrayList<String>();
+		List<CatItem> res = cDAO.findByItemKeyAndLanguage(itemKey, lang);
+		if (res.size() > 0) {
+			for (CatItem item : res)
+				if (item.getParentKey() == null || "".equals(item.getParentKey()))
+					ls.add(item.getValue());
+		}
+		return ls;
+	}
+
 }

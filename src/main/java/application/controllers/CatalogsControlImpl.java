@@ -20,8 +20,6 @@ public class CatalogsControlImpl implements CatalogsControl {
 
 	@Override
 	public ResponseEntity<Object> getAllItems(String language) {
-		// return new
-		// ResponseEntity<Object>(mService.getAllCategories(language),HttpStatus.OK);
 		List<CatItem> res = new ArrayList<CatItem>();
 		List<application.entities.CatItem> eAll = serv.getAll(language);
 		if (eAll.isEmpty())
@@ -197,4 +195,15 @@ public class CatalogsControlImpl implements CatalogsControl {
 	 * HttpStatus.INTERNAL_SERVER_ERROR); } }
 	 * 
 	 */
+
+	@Override
+	public ResponseEntity<Object> getRegionsStringList(String language) {
+		try {
+			List<String> res = serv.getItemsAsStrings("Country.Regions", language);
+			return new ResponseEntity<Object>(res, HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<Object>("Server error:".concat(e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+
 }

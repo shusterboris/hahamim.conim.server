@@ -104,23 +104,22 @@ public class ActionsControlImpl implements ActionsControl {
 		long id = order.getMember().getId();
 		// если member получен из базы то дописываем недостающее, иначе создаем нового
 		if (id != 0) {
-			boolean isChanged=false;
+			boolean isChanged = false;
 			m = cserv.getMemberById(id);
 			if (m.getTelegram() == null) {
 				m.setTelegram(order.getMember().getTelegram());
-				isChanged=true;
+				isChanged = true;
 			}
 			if (m.getDelivery().isEmpty()) {
 				m = cserv.addDelivery(order.getMember().getPreferableAddress(), m);
-				isChanged=true;
-			}
-			else if (m.getDelivery().size() == 1) {
+				isChanged = true;
+			} else if (m.getDelivery().size() == 1) {
 				// добавить адрес если его нет
 				String s = order.getMember().getPreferableAddress();
 				Iterator<Delivery> ls = m.getDelivery().iterator();
 				if (!ls.next().getStreetAddress().equalsIgnoreCase(s)) {
 					m = cserv.addDelivery(s, m);
-					isChanged=true;
+					isChanged = true;
 				}
 			}
 			if (isChanged)
@@ -130,7 +129,7 @@ public class ActionsControlImpl implements ActionsControl {
 					order.getMember().getPhoneNumber(), order.getMember().getTelegram(),
 					order.getMember().getPreferableAddress());
 		}
-		// записать заказ. 
+		// записать заказ.
 		application.entities.Proposal proposal = new application.entities.Proposal();
 		proposal.setId(0);
 		for (OrderFromTelegram o : order.getItems()) {
