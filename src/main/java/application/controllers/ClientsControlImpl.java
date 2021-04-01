@@ -35,6 +35,8 @@ import enums.UserType;
 import exceptions.EntityNotFound;
 import lombok.Getter;
 import lombok.Setter;
+import net.minidev.json.JSONObject;
+import proxies.OrdersFromTelegram;
 
 @RestController
 @Getter
@@ -408,4 +410,24 @@ public class ClientsControlImpl implements ClientsControl {
 			return new ResponseEntity<String>(msg, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
+
+	@Override
+	public ResponseEntity<Object> createClientFromTelegam(String json) {
+		application.entities.Member m;
+		try {
+			Gson gson = new Gson();
+			OrdersFromTelegram order = gson.fromJson(json, OrdersFromTelegram.class);
+			m = cserv.createMemberFromTelegram(order.getMember().getFirstName(), order.getMember().getLastName(),
+					order.getMember().getPhoneNumber(), order.getMember().getTelegram(),
+					order.getMember().getPreferableAddress());
+			if (m == null)
+				return new ResponseEntity<Object>("member not saved", HttpStatus.INTERNAL_SERVER_ERROR);
+			JSONObject ret = new JSONObject();
+			ret.put("id", String.valueOf(m.getId()));
+			return new ResponseEntity<>(ret, HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<Object>("member not saved", HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+
 }

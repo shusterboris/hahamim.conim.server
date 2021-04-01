@@ -58,4 +58,7 @@ public interface ClientsControl {
 
 	@DeleteMapping(value = "/addresses/remove/{id}")
 	public ResponseEntity<String> removeAddress(@PathVariable(value = "id") Long id);
+
+	@PostMapping(value = "/add/tele", consumes = "application/json", produces = "application/json")
+	public ResponseEntity<Object> createClientFromTelegam(@RequestBody String json);
 }

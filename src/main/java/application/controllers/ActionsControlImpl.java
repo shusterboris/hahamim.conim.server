@@ -98,54 +98,55 @@ public class ActionsControlImpl implements ActionsControl {
 
 	@Override
 	public ResponseEntity<Object> addOrder(String json) {
-		application.entities.Member m;
-		Gson gson = new Gson();
-		OrdersFromTelegram order = gson.fromJson(json, OrdersFromTelegram.class);
-		long id = order.getMember().getId();
-		// если member получен из базы то дописываем недостающее, иначе создаем нового
-		if (id != 0) {
-			boolean isChanged = false;
-			m = cserv.getMemberById(id);
-			if (m.getTelegram() == null) {
-				m.setTelegram(order.getMember().getTelegram());
-				isChanged = true;
-			}
-			if (m.getDelivery().isEmpty()) {
-				m = cserv.addDelivery(order.getMember().getPreferableAddress(), m);
-				isChanged = true;
-			} else if (m.getDelivery().size() == 1) {
-				// добавить адрес если его нет
-				String s = order.getMember().getPreferableAddress();
-				Iterator<Delivery> ls = m.getDelivery().iterator();
-				if (!ls.next().getStreetAddress().equalsIgnoreCase(s)) {
-					m = cserv.addDelivery(s, m);
+		try {
+			application.entities.Member m;
+			Gson gson = new Gson();
+			OrdersFromTelegram order = gson.fromJson(json, OrdersFromTelegram.class);
+			long memberid = order.getMember().getId();
+			// если member получен из базы то дописываем недостающее, иначе создаем нового
+			if (memberid != 0) {
+				boolean isChanged = false;
+				m = cserv.getMemberById(memberid);
+				if (m.getTelegram() == null) {
+					m.setTelegram(order.getMember().getTelegram());
 					isChanged = true;
 				}
+				if (m.getDelivery().isEmpty()) {
+					m = cserv.addDelivery(order.getMember().getPreferableAddress(), m);
+					isChanged = true;
+				} else if (m.getDelivery().size() == 1) {
+					// добавить адрес если его нет
+					String s = order.getMember().getPreferableAddress();
+					Iterator<Delivery> ls = m.getDelivery().iterator();
+					if (!ls.next().getStreetAddress().equalsIgnoreCase(s)) {
+						m = cserv.addDelivery(s, m);
+						isChanged = true;
+					}
+				}
+				if (isChanged)
+					cserv.updateMember(m);
+			} else {
+				return new ResponseEntity<Object>(HttpStatus.NOT_FOUND);
 			}
-			if (isChanged)
-				cserv.updateMember(m);
-		} else {
-			m = cserv.createMemberFromTelegram(order.getMember().getFirstName(), order.getMember().getLastName(),
-					order.getMember().getPhoneNumber(), order.getMember().getTelegram(),
-					order.getMember().getPreferableAddress());
-		}
-		// записать заказ.
-		application.entities.Proposal proposal = new application.entities.Proposal();
-		proposal.setId(0);
-		for (OrderFromTelegram o : order.getItems()) {
-			application.entities.PriceProposal pp = telegramToPproposal(o);
-			// загрузить акцию
-			if (proposal.getId() != o.getId()) {
-				proposal = actionService.findAction(o.getId()).get();
+			// записать заказ.
+			application.entities.Proposal proposal = new application.entities.Proposal();
+			proposal.setId(0);
+			for (OrderFromTelegram o : order.getItems()) {
+				application.entities.PriceProposal pp = telegramToPproposal(o);
+				// загрузить акцию
+				if (proposal.getId() != o.getId()) {
+					proposal = actionService.findAction(o.getId()).get();
+				}
+				pp.setProposal(proposal);
+				if (memberid != 0)
+					pp.setMember(memberid);
+				pp.setDelivery(order.getMember().getPreferableAddress());
+				actionService.saveProposal(pp);
 			}
-			pp.setProposal(proposal);
-			pp.setMember(m.getId());
-			pp.setDelivery(order.getMember().getPreferableAddress());
-			actionService.saveProposal(pp);
+			return new ResponseEntity<Object>(HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<Object>("action not saved", HttpStatus.INTERNAL_SERVER_ERROR);
 		}
-
-		return new ResponseEntity<Object>(HttpStatus.OK);
-
 	}
 
 	private application.entities.PriceProposal telegramToPproposal(OrderFromTelegram o) {
