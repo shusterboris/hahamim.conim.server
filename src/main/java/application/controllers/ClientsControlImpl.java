@@ -423,13 +423,13 @@ public class ClientsControlImpl implements ClientsControl {
 			if (itemList.isEmpty()) {
 
 				m = cserv.createMemberFromTelegram(order.getMember().getFirstName(), order.getMember().getLastName(),
-					order.getMember().getPhoneNumber(), order.getMember().getTelegram(),
-					order.getMember().getPreferableAddress());
+						order.getMember().getPhoneNumber(), order.getMember().getTelegram(),
+						order.getMember().getPreferableAddress());
 			} else {
 				Iterator<Member> im = itemList.getContent().iterator();
-				if (im.next() != null) {
+				if (im.hasNext()) {
 					m = im.next();
-					if (m.getTelegram().equalsIgnoreCase(""))
+					if (m.getTelegram() == null)
 						m.setTelegram(order.getMember().getTelegram());
 					m = cserv.updateMember(m);
 				}
