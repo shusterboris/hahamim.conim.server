@@ -5,6 +5,9 @@ import java.util.List;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
@@ -13,12 +16,15 @@ import application.entities.BusinessPartner;
 import application.entities.Store;
 import application.services.BPservice;
 import application.services.CatItemServices;
+import application.services.repositories.StoresDAO;
 
 @RestController
 public class BPcontrolImpl implements BPcontrol {
 	// private MockService mService = new MockService();
 	@Autowired
 	private BPservice serv;
+	@Autowired
+	private StoresDAO storesDAO;
 	@Autowired
 	private CatItemServices catServ;
 
@@ -72,14 +78,6 @@ public class BPcontrolImpl implements BPcontrol {
 
 	}
 
-	/*
-	 * protected Long settlement;
-	 * 
-	 * @Column(name="`streetAddress`", nullable=true, length=255) protected String
-	 * streetAddress;
-	 * 
-	 * protected Float latitude; protected Float altitude;
-	 */
 	private proxies.Store convertStoreToProxy(Store s) {
 		proxies.Store sp = new proxies.Store(s.getId(), s.getName(), null);
 		sp.setAltitude(s.getAltitude());
@@ -93,7 +91,36 @@ public class BPcontrolImpl implements BPcontrol {
 
 	@Override
 	public ResponseEntity<Object> getPartnersByNameLike(String string) {
-		// TODO Auto-generated method stub
-		return null;
+		try {
+			List<BusinessPartner> result = serv.findByFullNameLike(string);
+			return new ResponseEntity<Object>(result, HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<>(e, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+
 	}
+
+	@Override
+	public ResponseEntity<Object> getStores(Long id, int page, Integer pageSize, String filter) {
+		if (page < 0)
+			page = 0;
+		PageRequest request = PageRequest.of(page, pageSize, Sort.by(Sort.Direction.DESC, "settlement"));
+
+		List<proxies.Store> lstAddr = new ArrayList<proxies.Store>();
+		if (filter == null)
+			filter = "";
+		Page<Store> queryResult = null;
+		if ("".equals(filter))
+			queryResult = storesDAO.findByBp_id(id, request);
+		else
+			queryResult = storesDAO.findByBp_idAndStreetAddressContaining(id, request, filter);
+		if (queryResult.getSize() > 0) {
+			for (Store d : queryResult.getContent()) {
+				proxies.Store proxy = convertStoreToProxy(d);
+				lstAddr.add(proxy);
+			}
+		}
+		return new ResponseEntity<>(lstAddr, HttpStatus.OK);
+	}
+
 }

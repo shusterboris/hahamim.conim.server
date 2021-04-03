@@ -11,6 +11,7 @@ import application.services.repositories.PartnerDAO;
 
 @Service
 public class BPservice {
+	private final Integer pageSize = 15;
 	@Autowired
 	private PartnerDAO pDAO;
 
@@ -59,7 +60,8 @@ public class BPservice {
 		}
 	}
 
-	public List<BusinessPartner> findByNameLike(String fullName) {
+	public List<BusinessPartner> findByFullNameLike(String fullName) {
 		return pDAO.findByFullNameContaining(fullName);
 	}
+
 }
