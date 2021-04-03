@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -413,14 +414,28 @@ public class ClientsControlImpl implements ClientsControl {
 
 	@Override
 	public ResponseEntity<Object> createClientFromTelegam(String json) {
-		application.entities.Member m;
+		application.entities.Member m = new Member();
+		m.setId(0);
 		try {
 			Gson gson = new Gson();
 			OrdersFromTelegram order = gson.fromJson(json, OrdersFromTelegram.class);
-			m = cserv.createMemberFromTelegram(order.getMember().getFirstName(), order.getMember().getLastName(),
+			Page<Member> itemList = cserv.fetchByPhoneContainsByPage(order.getMember().getPhoneNumber(), 0, 100);
+			if (itemList.isEmpty()) {
+
+				m = cserv.createMemberFromTelegram(order.getMember().getFirstName(), order.getMember().getLastName(),
 					order.getMember().getPhoneNumber(), order.getMember().getTelegram(),
 					order.getMember().getPreferableAddress());
-			if (m == null)
+			} else {
+				Iterator<Member> im = itemList.getContent().iterator();
+				if (im.next() != null) {
+					m = im.next();
+					if (m.getTelegram().equalsIgnoreCase(""))
+						m.setTelegram(order.getMember().getTelegram());
+					m = cserv.updateMember(m);
+				}
+
+			}
+			if (m.getId() == 0)
 				return new ResponseEntity<Object>("member not saved", HttpStatus.INTERNAL_SERVER_ERROR);
 			JSONObject ret = new JSONObject();
 			ret.put("id", String.valueOf(m.getId()));
