@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import application.entities.BusinessPartner;
+import application.entities.CatItem;
 import application.entities.Delivery;
 import application.entities.Member;
 import application.entities.security.Authority;
@@ -30,6 +31,8 @@ public class ClientService {
 	private UserDAO userDAO;
 	@Autowired
 	private PartnerDAO pDAO;
+	@Autowired
+	private CatItemServices catServ;
 
 	public Iterable<Member> findMembersAll() {
 		return cDAO.findAll();
@@ -168,6 +171,9 @@ public class ClientService {
 			String address) {
 		Member m = new Member();
 		// m.setporder.getMember().getPreferableAddress()
+		CatItem region = catServ.getItemByValue("Country.Regions", address);
+		if (region != null)
+			m.setRegion(region.getId());
 		m.setFirstName(firstName);
 		m.setLastName(lastName);
 		m.setPhone(phone);

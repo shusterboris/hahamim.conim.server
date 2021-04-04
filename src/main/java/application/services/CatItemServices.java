@@ -25,6 +25,7 @@ public class CatItemServices {
 	 * @param listRef
 	 * @return
 	 */
+
 	public boolean createBundle(List<CatItem> listRef) {
 		for (CatItem m : listRef) {
 			List<CatItem> old = cDAO.findByItemKeyAndValueAndLanguage(m.getItemKey(), m.getValue(), m.getLanguage());
@@ -108,4 +109,10 @@ public class CatItemServices {
 		return ls;
 	}
 
+	public CatItem getItemByValue(String key, String value) {
+		CatItem res=null;
+		List<CatItem> items = cDAO.findByItemKeyAndValue(key, value);
+		if (!items.isEmpty()) res=items.get(0);
+		return res;
+	}
 }
