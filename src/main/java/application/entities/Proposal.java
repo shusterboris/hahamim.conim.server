@@ -34,7 +34,7 @@ public class Proposal extends BasicEntity implements Serializable {
 	private String category;
 	private String region;
 	private Long initiator;
-	private Float price;// розничная цена
+	private Float price = (float) 0;;// розничная цена
 	/**
 	 * lowest price from proposals for actions and final (best price proposal)
 	 * tender's price for tender
@@ -52,36 +52,14 @@ public class Proposal extends BasicEntity implements Serializable {
 	private LocalDate closeDate;
 	private Long bundle; // общая закупка
 
-	/*
-	 * @OneToOne(targetEntity=application.entities.BusinessPartner.class)
-	 * * @org.hibernate.annotations.Cascade({org.hibernate.annotations.CascadeType.
-	 * * LOCK}) * @JoinColumns({ @JoinColumn(name="`supplier`",
-	 * referencedColumnName="`Id`") }) * @Basic(fetch=FetchType.LAZY) private
-	 * BusinessPartner supplier;
-	 */
 	private Long supplier;
 
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "proposal")
 	private Set<AppImage> photos;
 
-	// @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	// @JoinColumn(name="id")
-	// private Set<Comment> comments = new HashSet<>();
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "proposal")
 
 	private Set<PriceProposal> priceProposals;
 	private Boolean intOnly = true;
-	/*
-	 * @OneToMany(targetEntity=application.entities.Store.class)
-	 * 
-	 * @org.hibernate.annotations.Cascade({org.hibernate.annotations.CascadeType.
-	 * LOCK}) //@JoinColumns({ @JoinColumn(name="`stores`",
-	 * referencedColumnName="`Id`") }) //@Basic(fetch=FetchType.LAZY)
-	 * 
-	 * @JoinColumn(name="`proposalid`", nullable=true)
-	 * 
-	 * @org.hibernate.annotations.LazyCollection(org.hibernate.annotations.
-	 * LazyCollectionOption.TRUE) private List<Store> stores;
-	 */
 
 }

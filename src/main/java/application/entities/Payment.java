@@ -16,7 +16,7 @@ import lombok.Setter;
 public class Payment extends BasicEntity implements Serializable {
 
 	private static final long serialVersionUID = -5594966190833245762L;
-	private Float sum;
+	private Float sum = (float) 0;
 	private Long member;
 	private LocalDate date;
 	private String destination;
