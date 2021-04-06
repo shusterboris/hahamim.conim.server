@@ -11,18 +11,11 @@ import application.services.repositories.PartnerDAO;
 
 @Service
 public class BPservice {
-	private final Integer pageSize = 15;
 	@Autowired
 	private PartnerDAO pDAO;
 
 	public boolean createAll() {
 		try {
-			/*
-			 * temporary BusinessPartner bp=new BusinessPartner("club",
-			 * "club Conim Hahamim", "Bat-Yam"); if (pDAO.save(bp)==null) return false;
-			 * bp=new BusinessPartner("ARDIV", "factory ARDIV", "Crayiot"); if
-			 * (pDAO.save(bp)==null) return false;
-			 */
 			BusinessPartner bp = new BusinessPartner();
 			bp.setFullName("club Conim Hahamim");
 			if (pDAO.save(bp) == null)
@@ -38,7 +31,7 @@ public class BPservice {
 		}
 	}
 
-	public BusinessPartner findbyId(Long id) {
+	public BusinessPartner findById(Long id) {
 		try {
 			Optional<BusinessPartner> b = pDAO.findById(id);
 			if (b == null)

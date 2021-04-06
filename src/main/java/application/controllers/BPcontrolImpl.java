@@ -1,5 +1,6 @@
 package application.controllers;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -12,7 +13,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
+import Utils.LocalDateJsonAdapter;
 import application.entities.BusinessPartner;
+import application.entities.CatItem;
 import application.entities.Store;
 import application.services.BPservice;
 import application.services.CatItemServices;
@@ -20,7 +26,6 @@ import application.services.repositories.StoresDAO;
 
 @RestController
 public class BPcontrolImpl implements BPcontrol {
-	// private MockService mService = new MockService();
 	@Autowired
 	private BPservice serv;
 	@Autowired
@@ -44,8 +49,7 @@ public class BPcontrolImpl implements BPcontrol {
 	@Override
 	public ResponseEntity<Object> getPartnerById(Long id) {
 		try {
-			// BusinessPartner res = mService.getBusinessPartnerById(id);
-			BusinessPartner pe = serv.findbyId(id);
+			BusinessPartner pe = serv.findById(id);
 			if (pe == null)
 				return new ResponseEntity<Object>(null, HttpStatus.NOT_FOUND);
 			proxies.BusinessPartner res = convertPartnerToProxy(pe);
@@ -121,6 +125,60 @@ public class BPcontrolImpl implements BPcontrol {
 			}
 		}
 		return new ResponseEntity<>(lstAddr, HttpStatus.OK);
+	}
+
+	@Override
+	public ResponseEntity<Object> removeStores(Long id) {
+		try {
+			storesDAO.deleteById(id);
+			return new ResponseEntity<>(HttpStatus.OK);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+
+	@Override
+	public ResponseEntity<Object> saveStore(String json) {
+		try {
+			proxies.Address address = proxyAddressToStore(json);
+			Store store = new Store();
+			if (address.getId() != null)
+				store = storesDAO.findById(address.getId()).orElse(store);
+			store.setStreetAddress(address.getStreetAddress());
+			CatItem item = catServ.getChildItemByValue("Country.Regions", address.getSettlement(), null);
+			store.setSettlement(item.getId());
+			BusinessPartner partner;
+			// если данные о партнере уже есть - не трогаем, оставляем, как есть
+			if (!(store.getBp() != null && store.getBp().getId() > 0)) {
+				// иначе ищем в базе
+				partner = serv.findById(address.getParentId());
+				store.setBp(partner);
+				;
+			}
+			if (store.getHeadQuaters() == null)
+				store.setHeadQuaters((long) 0);
+			store.setName(address.getName());
+			store = storesDAO.save(store);
+			address.setId(store.getId());
+			return new ResponseEntity<Object>(address, HttpStatus.OK);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new ResponseEntity<Object>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+
+	private proxies.Address proxyAddressToStore(String json) {
+		Gson gson = new GsonBuilder().registerTypeAdapter(LocalDate.class, new LocalDateJsonAdapter().nullSafe())
+				.create();
+		proxies.Address address = gson.fromJson(json, proxies.Address.class);
+		return address;
+	}
+
+	@Override
+	public ResponseEntity<Object> save(String json) {
+
+		return new ResponseEntity<Object>(HttpStatus.OK);
 	}
 
 }

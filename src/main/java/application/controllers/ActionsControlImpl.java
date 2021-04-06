@@ -58,7 +58,7 @@ public class ActionsControlImpl implements ActionsControl {
 		pp.setThreshold(p.getThreshold());
 		pp.setThresholdmax(p.getThresholdmax());
 		if (p.getSupplier() != null) {
-			BusinessPartner s = bpserv.findbyId(p.getSupplier());
+			BusinessPartner s = bpserv.findById(p.getSupplier());
 			pp.setSupplierId(p.getSupplier());
 			if (s != null)
 				pp.setSupplier(s.getFullName());

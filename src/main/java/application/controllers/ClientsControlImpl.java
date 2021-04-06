@@ -374,7 +374,6 @@ public class ClientsControlImpl implements ClientsControl {
 
 	@Override
 	public ResponseEntity<Object> saveAddress(String json) {
-		// TODO Здесь, по идее запись и адресов для доставки, и магазинов БП... потом
 		try {
 			proxies.Address address = proxyAddressToDelivery(json);
 			Delivery delivery = new Delivery();

@@ -386,7 +386,7 @@ public class MockService {
 		employee.setPartnerId((long) 969);
 		contacts.add(c);
 		clients.add(employee);
-		club.setContacts(contacts);
+		// club.setContacts(contacts);
 		club.setPhone("+972559195963");
 		club.setFullName(club.getName());
 		return clients;
@@ -616,12 +616,12 @@ public class MockService {
 		ArrayList<Store> stores = new ArrayList<Store>();
 		stores.add(new Store(id++, "", partner.getId()));
 		stores.add(new Store(id++, "", partner.getId()));
-		partner.setStores(stores);
+		// partner.setStores(stores);
 		ArrayList<Contact> allContacts = new ArrayList<Contact>();
 		allContacts.add(new Contact("Михаил", "Коэн", "050-9999-88-77"));
 		allContacts.add(new Contact("Давид", "Левин", "050-9999-88-77"));
 		allContacts.add(new Contact("Арон", "Беседер", "050-9999-77-77"));
-		partner.setContacts(allContacts);
+//		partner.setContacts(allContacts);
 		partners.add(partner);
 	}
 

@@ -53,7 +53,7 @@ public interface ClientsControl {
 			@PathVariable(name = "page") int page, @PathVariable(name = "pageSize") Integer pageSize,
 			@PathVariable(name = "filter", required = false) String filter);
 
-	@PutMapping(value = "/addresses/add")
+	@PutMapping(value = "/addresses/save")
 	public ResponseEntity<Object> saveAddress(@RequestBody String json);
 
 	@DeleteMapping(value = "/addresses/remove/{id}")

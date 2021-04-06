@@ -78,6 +78,22 @@ public class CatItemServices {
 
 	}
 
+	/**
+	 * Ищет поо значению запись словаря, но только для значений, имеющих предка
+	 * 
+	 * @param key
+	 * @param value
+	 * @param language
+	 * @return
+	 */
+	public CatItem getChildItemByValue(String key, String value, String language) {
+		List<CatItem> items = getAll(language);
+		return items.stream().filter(
+				(item) -> key.equals(item.getItemKey()) && item.getParentKey() != null && value.equals(item.getValue()))
+				.findFirst().orElse(null);
+
+	}
+
 	public Page<CatItem> getAllByPage(int page) {
 		if (page < 0)
 			page = 0;
@@ -110,9 +126,10 @@ public class CatItemServices {
 	}
 
 	public CatItem getItemByValue(String key, String value) {
-		CatItem res=null;
+		CatItem res = null;
 		List<CatItem> items = cDAO.findByItemKeyAndValue(key, value);
-		if (!items.isEmpty()) res=items.get(0);
+		if (!items.isEmpty())
+			res = items.get(0);
 		return res;
 	}
 }
