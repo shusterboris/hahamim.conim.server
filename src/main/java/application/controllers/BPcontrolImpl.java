@@ -2,7 +2,9 @@ package application.controllers;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -175,10 +177,31 @@ public class BPcontrolImpl implements BPcontrol {
 		return address;
 	}
 
+	private BusinessPartner parseProxyToPartner(String json) {
+		BusinessPartner bp = new BusinessPartner();
+		Gson gson = new GsonBuilder().registerTypeAdapter(LocalDate.class, new LocalDateJsonAdapter().nullSafe())
+				.create();
+		proxies.BusinessPartner proxy = gson.fromJson(json, proxies.BusinessPartner.class);
+		if (proxy.getId() > 0) {
+			bp = serv.findById(proxy.getId());
+		}
+		bp.setFullName(proxy.getFullName());
+		bp.setRaiting(proxy.getRaiting());
+		serv.save(bp);
+		return bp;
+	}
+
 	@Override
 	public ResponseEntity<Object> save(String json) {
-
-		return new ResponseEntity<Object>(HttpStatus.OK);
+		BusinessPartner partner = parseProxyToPartner(json);
+		partner = serv.save(partner);
+		Map<String, Long> result = new HashMap<String, Long>();
+		if (partner != null) {
+			result.put("id", partner.getId());
+			return new ResponseEntity<Object>(result, HttpStatus.OK);
+		} else {
+			return new ResponseEntity<Object>(result, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
 	}
 
 }

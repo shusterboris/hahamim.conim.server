@@ -28,7 +28,7 @@ public interface BPcontrol {
 			@PathVariable(value = "pageSize") Integer pageSize,
 			@PathVariable(value = "filter", required = false) String filter);
 
-	@DeleteMapping(value = "/addresses/{id}")
+	@DeleteMapping(value = "/addresses/remove/{id}")
 	public ResponseEntity<Object> removeStores(@PathVariable(value = "id") Long id);
 
 	@PutMapping(value = "/addresses/save")

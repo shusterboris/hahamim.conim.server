@@ -57,4 +57,11 @@ public class BPservice {
 		return pDAO.findByFullNameContaining(fullName);
 	}
 
+	public BusinessPartner save(BusinessPartner bp) {
+		try {
+			return pDAO.save(bp);
+		} catch (Exception e) {
+			return null;
+		}
+	}
 }

@@ -33,6 +33,8 @@ public class BusinessPartner extends BasicEntity implements Serializable {
 
 	private Double raiting; // оценка поставщика
 
+	private String telegramId;
+
 	@ManyToMany(fetch = FetchType.LAZY, cascade = { CascadeType.PERSIST, CascadeType.MERGE })
 	@JoinTable(name = "partn_memb", joinColumns = { @JoinColumn(name = "partn_id") }, inverseJoinColumns = {
 			@JoinColumn(name = "memb_id") })

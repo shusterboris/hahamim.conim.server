@@ -26,11 +26,6 @@ import lombok.Setter;
 public class Proposal extends BasicEntity implements Serializable {
 	private static final long serialVersionUID = 985468545500612436L;
 	private String name;
-	/**
-	 * base price (non actions) from proposals for actions and initial tender's
-	 * price for tender
-	 */
-	// категория товара
 	private String category;
 	private String region;
 	private Long initiator;
@@ -45,6 +40,7 @@ public class Proposal extends BasicEntity implements Serializable {
 	private Float thresholdmax;// верхний предел закупки
 	private Integer status; // Из набора TenderStatus
 	private Float total = (float) 0.0;
+	private Float quantity = (float) 0.0;
 	private String description;
 	private LocalDate dueDate;// срок окончания приема заявок
 	private LocalDate publicationDate;
