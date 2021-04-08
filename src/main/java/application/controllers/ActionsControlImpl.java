@@ -192,7 +192,6 @@ public class ActionsControlImpl implements ActionsControl {
 		// количество на покупку и соответствующий статус
 
 		try {
-
 			List<Proposal> res = new ArrayList<Proposal>();
 			Page<application.entities.Proposal> le = actionService.fetchProposalsByMember(memberId, page, pageSize);
 			if (le.isEmpty())

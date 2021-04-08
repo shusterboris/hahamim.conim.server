@@ -21,7 +21,7 @@ public class PriceProposal extends BasicEntity implements Serializable {
 
 	private long member;
 	@Column(name = "`priceLevel`", nullable = false, length = 11)
-	private Integer priceLevel;
+	private Integer priceLevel = 1;
 	@Column(name = "`quantity`", nullable = false, length = 11)
 	private Float quantity = (float) 0;
 	@Column(name = "`price`", nullable = false, length = 11)
@@ -33,4 +33,7 @@ public class PriceProposal extends BasicEntity implements Serializable {
 	@JoinColumn(name = "proposal_id", nullable = false)
 	private Proposal proposal;
 	private String delivery;
+	@Column(length = 25)
+	private String orderId;
+	private boolean sent;
 }

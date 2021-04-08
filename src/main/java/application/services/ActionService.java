@@ -86,7 +86,6 @@ public class ActionService {
 	}
 
 	public Page<Proposal> fetchProposalsByMember(Long member, int pageNo, Integer pageSize) {
-
 		if (pageNo < 0)
 			pageNo = 0;
 		PageRequest request = PageRequest.of(pageNo, pageSize, Sort.by(Sort.Direction.DESC, "id"));
