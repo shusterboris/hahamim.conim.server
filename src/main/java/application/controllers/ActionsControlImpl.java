@@ -241,7 +241,6 @@ public class ActionsControlImpl implements ActionsControl {
 
 	@Override
 	public ResponseEntity<Object> saveMemberPriceIntents(List<PriceProposal> prices) {
-		// TODO сделать пересчет тоталов и достигнутой цены
 		application.entities.Proposal pr = null;
 		application.entities.PriceProposal res = null;
 		try {
