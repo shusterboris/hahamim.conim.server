@@ -55,6 +55,18 @@ public class ActionService {
 		return pe;
 	}
 
+	public PriceProposal updateP(PriceProposal pe) {
+		Optional<PriceProposal> res = repoP.findById(pe.getId());
+		if (res.isPresent()) {
+			PriceProposal np = res.get();
+			pe.setCreated(np.getCreated());
+			pe.setModified(np.getModified());
+			pe.setVersion(np.getVersion());
+		}
+		pe = repoP.save(pe);
+		return pe;
+	}
+
 	public Optional<Proposal> findAction(Long id) {
 		return repo.findById(id);
 	}
@@ -80,8 +92,7 @@ public class ActionService {
 	}
 
 	public PriceProposal saveProposal(PriceProposal pe) {
-
-		PriceProposal res = repoP.save(pe);
+		PriceProposal res = updateP(pe);
 		return res;
 	}
 
