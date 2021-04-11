@@ -1,5 +1,6 @@
 package application.services.repositories;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.domain.Page;
@@ -14,7 +15,6 @@ import application.entities.Proposal;
 @Repository
 public interface ActionsDAO extends PagingAndSortingRepository<Proposal, Long> {
 
-
 	public Optional<Proposal> findById(Long id);
 
 	public Page<Proposal> findByBundle(Long bundle, Pageable p);
@@ -27,5 +27,11 @@ public interface ActionsDAO extends PagingAndSortingRepository<Proposal, Long> {
 	public Float fetchPurchaseTotal(@Param("id") Long id);
 
 	public Page<Proposal> findAll();
+
+//	@Query("SELECT prop.id FROM PriceProposal prop JOIN Proposal act ON prop.proposal = act.id and act.status = 3 JOIN delivery d ON d.street_address = prop.delivery JOIN CatItem ci ON d.settlement = ci.id  JOIN Member mem ON prop.member = mem.id WHERE prop.proposalType = 1 and prop.priceLevel = 1 and act.supplier = ?1")
+//	public List<Object[]> createReport(@Param("supplier") Long supplier);
+
+	@Query("SELECT prop.id FROM PriceProposal prop JOIN Proposal act ON prop.proposal = act.id and act.status = 3  WHERE prop.proposalType = 1 and prop.priceLevel = 1 and act.supplier = ?1")
+	public List<Object[]> createOrderReport(@Param("supplier") Long supplier);
 
 }
