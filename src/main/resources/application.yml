@@ -18,4 +18,4 @@ logging:
     root: INFO
     org.springframework.web: ERROR
     org.hibernate: ERROR
-    org.hibernate.SQL: DEBUG
+    org.hibernate.SQL: ERROR
