@@ -19,7 +19,7 @@ public interface ActionsDAO extends PagingAndSortingRepository<Proposal, Long> {
 
 	public Page<Proposal> findByBundle(Long bundle, Pageable p);
 
-	@Query("SELECT p FROM Proposal p, PriceProposal pp WHERE pp.member=:id AND  pp.priceLevel=1 AND p=pp.proposal ")
+	@Query("SELECT p FROM Proposal p, PriceProposal pp WHERE pp.member=:id AND  pp.priceLevel=1 AND pp.proposalType=1   AND p=pp.proposal ")
 	// @Query("SELECT p FROM Proposal p WHERE p.initiator=:id")
 	public Page<Proposal> fetchProposals(@Param("id") Long id, Pageable p);
 
@@ -33,5 +33,7 @@ public interface ActionsDAO extends PagingAndSortingRepository<Proposal, Long> {
 
 	@Query("SELECT prop.id FROM PriceProposal prop JOIN Proposal act ON prop.proposal = act.id and act.status = 3  WHERE prop.proposalType = 1 and prop.priceLevel = 1 and act.supplier = ?1")
 	public List<Object[]> createOrderReport(@Param("supplier") Long supplier);
+
+	public Page<Proposal> findByStatus(@Param("status") int status, Pageable p);
 
 }
