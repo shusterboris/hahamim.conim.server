@@ -627,4 +627,19 @@ public class ActionsControlImpl implements ActionsControl {
 		PageResponse result = new PageResponse(proxies, itemList.getTotalPages(), itemList.getTotalElements());
 		return new ResponseEntity<Object>(result, HttpStatus.OK);
 	}
+
+	@Override
+	public ResponseEntity<Object> getActionsByState(int state, int page, Integer pageSize) {
+		Page<application.entities.Proposal> itemList = actionService.findByStatus(state,page, pageSize);
+		List<proxies.Proposal> proxies = new ArrayList<>();
+		for (application.entities.Proposal pr : itemList.getContent()) {
+			proxies.Proposal proxy = entityToProposalProxy(pr, false);
+			proxies.add(proxy);
+		}
+		@SuppressWarnings({ "rawtypes", "unchecked" })
+		PageResponse result = new PageResponse(proxies, itemList.getTotalPages(), itemList.getTotalElements());
+		return new ResponseEntity<Object>(result, HttpStatus.OK);
+	}
+
+
 }

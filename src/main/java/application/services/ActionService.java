@@ -196,4 +196,11 @@ public class ActionService {
 		PageRequest request = PageRequest.of(pageNo, pageSize, Sort.by(Sort.Direction.DESC, "id"));
 		return repo.findAll(request);
 	}
+
+	public Page<Proposal> findByStatus(int status, int pageNo, Integer pageSize) {
+		if (pageNo < 0)
+			pageNo = 0;
+		PageRequest p = PageRequest.of(pageNo, pageSize, Sort.by(Sort.Direction.DESC, "id"));
+		return repo.findByStatus(status, p);
+	}
 }
