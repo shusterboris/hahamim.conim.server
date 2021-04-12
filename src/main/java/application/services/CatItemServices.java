@@ -79,7 +79,7 @@ public class CatItemServices {
 	}
 
 	/**
-	 * Ищет поо значению запись словаря, но только для значений, имеющих предка
+	 * Ищет по значению запись словаря, но только для значений, имеющих предка
 	 * 
 	 * @param key
 	 * @param value
@@ -90,6 +90,22 @@ public class CatItemServices {
 		List<CatItem> items = getAll(language);
 		return items.stream().filter(
 				(item) -> key.equals(item.getItemKey()) && item.getParentKey() != null && value.equals(item.getValue()))
+				.findFirst().orElse(null);
+
+	}
+
+	/**
+	 * Ищет по значению запись словаря, но только для значений, имеющих предка
+	 * 
+	 * @param key
+	 * @param value
+	 * @param language
+	 * @return
+	 */
+	public CatItem getParentItemByValue(String key, String value, String language) {
+		List<CatItem> items = getAll(language);
+		return items.stream().filter(
+				(item) -> key.equals(item.getItemKey()) && item.getParentKey() == null && value.equals(item.getValue()))
 				.findFirst().orElse(null);
 
 	}
