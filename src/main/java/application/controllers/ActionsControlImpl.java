@@ -252,8 +252,9 @@ public class ActionsControlImpl implements ActionsControl {
 				res = proxyToPproposalEntity(p, pr);
 				res = actionService.saveProposal(res);
 			}
-			pr = actionService.calcSumOrders(pr);
-			actionService.update(pr);
+			// pr = actionService.calcSumOrders(pr);
+			// actionService.update(pr);
+			// сумму теперь считает триггер
 			return new ResponseEntity<Object>(res.getId(), HttpStatus.OK);
 		} catch (Exception e) {
 			return new ResponseEntity<Object>("Server error:".concat(e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
@@ -368,7 +369,7 @@ public class ActionsControlImpl implements ActionsControl {
 		ppe.setProposalType(pp.getProposalType());
 		ppe.setQuantity(pp.getQuantity());
 		ppe.setProposal(p);
-		if (pp.getId() != 0)
+		if (pp.getId() != null)
 			ppe.setId(pp.getId());
 		ppe.setDelivery(pp.getDelivery());
 		return ppe;

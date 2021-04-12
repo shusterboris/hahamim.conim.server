@@ -25,6 +25,7 @@ public interface PproposalDAO extends CrudRepository<PriceProposal, Long> {
 	public List<PriceProposal> findByProposalAndPriceLevelAndProposalType(Proposal p, int priceLevel, int proposalType);
 
 // сколько собрано заявок по уровню цен
-	@Query("SELECT SUM(quantity) FROM PriceProposal p WHERE p.priceLevel=:level AND p.proposal=:id AND p.proposalType=:type")
-	public float calcTotalByLevel(@Param("id") Long id, @Param("level") int level, @Param("type") int type);
+	@Query("SELECT SUM(quantity) FROM PriceProposal p WHERE p.priceLevel=:level AND p.proposal=:proposal AND p.proposalType=:type")
+	public float calcTotalByLevel(@Param("proposal") Proposal proposal, @Param("level") int level,
+			@Param("type") int type);
 }

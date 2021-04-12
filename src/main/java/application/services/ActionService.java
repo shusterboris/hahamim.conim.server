@@ -143,7 +143,7 @@ public class ActionService {
 		float boundary = 0;
 		List<PriceProposal> l;
 		for (int i = 3; i > 0; i--) {
-			sum = repoP.calcTotalByLevel(p.getId(), i, 1);
+			sum = repoP.calcTotalByLevel(p, i, 1);
 			l = repoP.findByProposalAndPriceLevelAndProposalType(p, i, 0);
 			if (!l.isEmpty())
 				boundary = l.get(0).getQuantity();
