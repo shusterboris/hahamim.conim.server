@@ -20,7 +20,6 @@ public interface ActionsDAO extends PagingAndSortingRepository<Proposal, Long> {
 	public Page<Proposal> findByBundle(Long bundle, Pageable p);
 
 	@Query("SELECT p FROM Proposal p, PriceProposal pp WHERE pp.member=:id AND  pp.priceLevel=1 AND pp.proposalType=1   AND p=pp.proposal ")
-	// @Query("SELECT p FROM Proposal p WHERE p.initiator=:id")
 	public Page<Proposal> fetchProposals(@Param("id") Long id, Pageable p);
 
 	@Query("SELECT SUM(total*last_price) FROM Proposal p WHERE p.bundle=:id")
@@ -28,12 +27,14 @@ public interface ActionsDAO extends PagingAndSortingRepository<Proposal, Long> {
 
 	public Page<Proposal> findAll();
 
-//	@Query("SELECT prop.id FROM PriceProposal prop JOIN Proposal act ON prop.proposal = act.id and act.status = 3 JOIN delivery d ON d.street_address = prop.delivery JOIN CatItem ci ON d.settlement = ci.id  JOIN Member mem ON prop.member = mem.id WHERE prop.proposalType = 1 and prop.priceLevel = 1 and act.supplier = ?1")
-//	public List<Object[]> createReport(@Param("supplier") Long supplier);
-
 	@Query("SELECT prop.id FROM PriceProposal prop JOIN Proposal act ON prop.proposal = act.id and act.status = 3  WHERE prop.proposalType = 1 and prop.priceLevel = 1 and act.supplier = ?1")
 	public List<Object[]> createOrderReport(@Param("supplier") Long supplier);
 
 	public Page<Proposal> findByStatus(@Param("status") int status, Pageable p);
 
+	@Query(nativeQuery = true, value = "SELECT * FROM actions_report WHERE supplier_id = :supplierId")
+	public List<Object[]> createSummaryActionsReportBySupplier(@Param("supplierId") Long supplierId);
+
+	@Query(nativeQuery = true, value = "SELECT * FROM actions_report WHERE proposal_id = :proposalId")
+	public List<Object[]> createSummaryActionsReportByGoods(@Param("proposalId") Long proposalId);
 }

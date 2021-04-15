@@ -29,6 +29,7 @@ import application.services.ClientService;
 import enums.PriceProposalType;
 import enums.ProposalStatus;
 import net.minidev.json.JSONObject;
+import proxies.ActionsSummaryInfo;
 import proxies.OrderFromTelegram;
 import proxies.OrdersFromTelegram;
 import proxies.Payment;
@@ -143,6 +144,8 @@ public class ActionsControlImpl implements ActionsControl {
 				if (memberid != 0)
 					pp.setMember(memberid);
 				pp.setDelivery(order.getMember().getPreferableAddress());
+				pp.setOrderId(order.getOrderId());
+				pp.setSent(true);
 				actionService.saveProposal(pp);
 			}
 			return new ResponseEntity<Object>(HttpStatus.OK);
@@ -630,7 +633,7 @@ public class ActionsControlImpl implements ActionsControl {
 
 	@Override
 	public ResponseEntity<Object> getActionsByState(int state, int page, Integer pageSize) {
-		Page<application.entities.Proposal> itemList = actionService.findByStatus(state,page, pageSize);
+		Page<application.entities.Proposal> itemList = actionService.findByStatus(state, page, pageSize);
 		List<proxies.Proposal> proxies = new ArrayList<>();
 		for (application.entities.Proposal pr : itemList.getContent()) {
 			proxies.Proposal proxy = entityToProposalProxy(pr, false);
@@ -641,5 +644,24 @@ public class ActionsControlImpl implements ActionsControl {
 		return new ResponseEntity<Object>(result, HttpStatus.OK);
 	}
 
+	public ResponseEntity<Object> createReportBuyersBySupplier(Long id) {
+		List<Object[]> answer = actionService.getRepo().createSummaryActionsReportBySupplier(id);
+		List<ActionsSummaryInfo> result = new ArrayList<>();
+		for (Object[] obj : answer) {
+			ActionsSummaryInfo ai = ActionsSummaryInfo.getInstanse(obj);
+			result.add(ai);
+		}
+		return new ResponseEntity<Object>(result, HttpStatus.OK);
+	}
+
+	public ResponseEntity<Object> createReportBuyersByGoods(Long id) {
+		List<Object[]> answer = actionService.getRepo().createSummaryActionsReportByGoods(id);
+		List<ActionsSummaryInfo> result = new ArrayList<>();
+		for (Object[] obj : answer) {
+			ActionsSummaryInfo ai = ActionsSummaryInfo.getInstanse(obj);
+			result.add(ai);
+		}
+		return new ResponseEntity<Object>(result, HttpStatus.OK);
+	}
 
 }

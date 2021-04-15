@@ -203,4 +203,12 @@ public class ActionService {
 		PageRequest p = PageRequest.of(pageNo, pageSize, Sort.by(Sort.Direction.DESC, "id"));
 		return repo.findByStatus(status, p);
 	}
+
+	public ActionsDAO getRepo() {
+		return repo;
+	}
+
+	public void setRepo(ActionsDAO repo) {
+		this.repo = repo;
+	}
 }

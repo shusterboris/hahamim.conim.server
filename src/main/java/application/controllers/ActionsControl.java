@@ -21,7 +21,7 @@ public interface ActionsControl {
 	@GetMapping("/actions/get/{id}")
 	public ResponseEntity<Object> getAction(@PathVariable("id") Long id);
 
-//для мембера
+	// для мембера
 	@GetMapping("/actions/get/member/{memberId}/{page}/{pageSize}")
 	public ResponseEntity<Object> getActionByMember(@PathVariable("memberId") Long memberId,
 			@PathVariable(name = "page") int page, @PathVariable(name = "pageSize", required = false) Integer pageSize);
@@ -84,4 +84,9 @@ public interface ActionsControl {
 	public ResponseEntity<Object> getActionsByState(@PathVariable("state") int state,
 			@PathVariable(name = "page") int page, @PathVariable(name = "pageSize", required = false) Integer pageSize);
 
+	@GetMapping("/actions/report/1/{id}")
+	public ResponseEntity<Object> createReportBuyersBySupplier(@PathVariable(name = "id") Long id);
+
+	@GetMapping("/actions/report/2/{id}")
+	public ResponseEntity<Object> createReportBuyersByGoods(@PathVariable(name = "id") Long id);
 }
