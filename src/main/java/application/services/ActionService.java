@@ -1,5 +1,6 @@
 package application.services;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -19,6 +20,7 @@ import application.services.repositories.PproposalDAO;
 import application.services.repositories.PurchaseDAO;
 import enums.PriceProposalType;
 import enums.ProposalStatus;
+import proxies.ActionsSummaryInfo;
 
 @Service
 public class ActionService {
@@ -33,11 +35,7 @@ public class ActionService {
 	@Autowired
 	private PaymentDAO repoPay;
 
-	/*
-	 * public List<Proposal> findActionsAll() { return repo.findAll(); }
-	 */
-
-//для новых
+	// для новых
 	public Proposal save(Proposal pe) {
 		Proposal res = repo.save(pe);
 		return res;
@@ -202,6 +200,16 @@ public class ActionService {
 			pageNo = 0;
 		PageRequest p = PageRequest.of(pageNo, pageSize, Sort.by(Sort.Direction.DESC, "id"));
 		return repo.findByStatus(status, p);
+	}
+
+	public List<ActionsSummaryInfo> fetchReportDeliveryData(Long supplierId) {
+		List<Object[]> answer = getRepo().createSummaryDeliveryReport(supplierId);
+		List<ActionsSummaryInfo> result = new ArrayList<>();
+		for (Object[] obj : answer) {
+			ActionsSummaryInfo ai = ActionsSummaryInfo.getInstanse(obj);
+			result.add(ai);
+		}
+		return result;
 	}
 
 	public ActionsDAO getRepo() {

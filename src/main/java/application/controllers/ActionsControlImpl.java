@@ -664,4 +664,16 @@ public class ActionsControlImpl implements ActionsControl {
 		return new ResponseEntity<Object>(result, HttpStatus.OK);
 	}
 
+	@Override
+	public ResponseEntity<Object> createReportDelivery(Long supplierId) {
+		List<ActionsSummaryInfo> result = actionService.fetchReportDeliveryData(supplierId);
+		return new ResponseEntity<Object>(result, HttpStatus.OK);
+	}
+
+//	@Override
+//	public ResponseEntity<Object> createAndDownloadReportDelivery(Long supplierId) {
+//		List<ActionsSummaryInfo> result = actionService.fetchReportDeliveryData(supplierId);
+//		return new ResponseEntity<Object>(result, HttpStatus.OK);
+//	}
+
 }

@@ -63,7 +63,6 @@ public interface ActionsControl {
 	@GetMapping("/actions/bundle/get/{bundleId}/{page}/{pageSize}")
 	public ResponseEntity<Object> getActionsByBundle(@PathVariable("bundleId") Long proposalId,
 			@PathVariable("page") int page, @PathVariable("pageSize") Integer pageSize);
-	// TODO сделать пересчет тоталов и достигнутой цены
 
 	@GetMapping("/purchase/all/page/{page}/{pageSize}")
 	ResponseEntity<Object> getAllPurchaseByPage(@PathVariable(name = "page") int page,
@@ -89,4 +88,8 @@ public interface ActionsControl {
 
 	@GetMapping("/actions/report/2/{id}")
 	public ResponseEntity<Object> createReportBuyersByGoods(@PathVariable(name = "id") Long id);
+
+	@GetMapping({ "/actions/report/3/{supplierId}", "/actions/report/3/{supplierId}/download" })
+	public ResponseEntity<Object> createReportDelivery(@PathVariable(name = "supplierId") Long supplierId);
+
 }

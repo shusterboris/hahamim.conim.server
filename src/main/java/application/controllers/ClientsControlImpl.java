@@ -234,8 +234,11 @@ public class ClientsControlImpl implements ClientsControl {
 		em.setId(pm.getId());
 		// проверка на логин телефон и мейл
 		String res = cserv.isUnique(em);
-		if (!res.equalsIgnoreCase(""))
-			return new ResponseEntity<Object>(res, HttpStatus.OK);
+		if (!res.equalsIgnoreCase("")) {
+			Map<String, String> err = new HashMap<String, String>();
+			err.put("errorMessage", res);
+			return new ResponseEntity<Object>(err, HttpStatus.OK);
+		}
 		em = cserv.updateMember(em);
 		if (em != null) {
 			pm = convertMemberToProxy(em);
