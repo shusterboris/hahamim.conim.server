@@ -77,6 +77,7 @@ public class ActionsControlImpl implements ActionsControl {
 		}
 		pp.setPhotos(pi);
 		pp.setTotal(p.getTotal());
+		pp.setTotalQuantity(p.getTotalQuantity());
 		pp.setDateOfSailStarting(p.getDateOfSailStarting());
 		pp.setCloseDate(p.getCloseDate());
 		pp.setName(p.getName());
@@ -95,7 +96,7 @@ public class ActionsControlImpl implements ActionsControl {
 			}
 		}
 		pp.setStatus(ProposalStatus.getMessageKeyByNumber(p.getStatus().intValue()));
-		pp.setIntOnly(p.getIntOnly());
+		pp.setIntOnly((p.getIntOnly() != null) ? p.getIntOnly() : false);
 		return pp;
 	}
 
@@ -204,6 +205,7 @@ public class ActionsControlImpl implements ActionsControl {
 			for (application.entities.Proposal e : le.getContent()) {
 				res.add(entityToProposalProxy(e, false));
 			}
+			@SuppressWarnings({ "rawtypes", "unchecked" })
 			PageResponse result = new PageResponse(res, le.getTotalPages(), le.getTotalElements());
 			return new ResponseEntity<Object>(result, HttpStatus.OK);
 		} catch (Exception e) {
@@ -404,6 +406,7 @@ public class ActionsControlImpl implements ActionsControl {
 		pe.setThresholdmax(pp.getThresholdmax());
 		pe.setStatus(ProposalStatus.getOrdinalByMessage(pp.getStatus()));
 		pe.setSupplier(pp.getSupplierId());
+		pe.setTotalQuantity(pp.getTotalQuantity());
 		pe.setPublicationDate(pp.getPublicationDate());
 		List<String> li = pp.getPhotos();
 		Set<AppImage> le = new HashSet<AppImage>();

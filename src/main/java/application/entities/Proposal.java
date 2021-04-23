@@ -14,7 +14,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 /**
- * Тендерное предложение (предложение на совместную закупку) или акция
+ * Акция
  * 
  * @author Одиссей
  *
@@ -30,10 +30,6 @@ public class Proposal extends BasicEntity implements Serializable {
 	private String region;
 	private Long initiator;
 	private Float price = (float) 0;;// розничная цена
-	/**
-	 * lowest price from proposals for actions and final (best price proposal)
-	 * tender's price for tender
-	 */
 	private Float lastPrice = (float) 0;
 	private String measure;
 	private Float threshold; // минимальная закупка
@@ -41,6 +37,7 @@ public class Proposal extends BasicEntity implements Serializable {
 	private Integer status; // Из набора TenderStatus
 	private Float total = (float) 0.0;
 	private Float quantity = (float) 0.0;
+	private Float totalQuantity = (float) 0.0;
 	private String description;
 	private LocalDate dueDate;// срок окончания приема заявок
 	private LocalDate publicationDate;

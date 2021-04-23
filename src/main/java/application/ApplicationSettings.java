@@ -20,6 +20,7 @@ public class ApplicationSettings {
 	private static final String fsepar = FileSystems.getDefault().getSeparator();
 	public final static String appPath = getAppFolder();
 	public final static String imgStorePath = getAppFolder().concat("imgStore").concat(fsepar);
+	public final static String dataStorePath = getAppFolder().concat("data").concat(fsepar);
 	public static final Logger log = LoggerFactory.getLogger(Starter.class);
 	private static String defaultLanguage = "RU";
 
