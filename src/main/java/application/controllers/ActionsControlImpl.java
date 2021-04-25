@@ -103,6 +103,7 @@ public class ActionsControlImpl implements ActionsControl {
 	@Override
 	public ResponseEntity<Object> addOrder(String json) {
 		try {
+			boolean withDelivery = false;
 			application.entities.Member m;
 			Gson gson = new Gson();
 			OrdersFromTelegram order = gson.fromJson(json, OrdersFromTelegram.class);
@@ -121,10 +122,13 @@ public class ActionsControlImpl implements ActionsControl {
 				} else if (m.getDelivery().size() == 1) {
 					// добавить адрес если его нет
 					String s = order.getMember().getPreferableAddress();
-					Iterator<Delivery> ls = m.getDelivery().iterator();
-					if (!ls.next().getStreetAddress().equalsIgnoreCase(s)) {
-						m = cserv.addDelivery(s, m);
-						isChanged = true;
+					if (!s.endsWith("не нужна доставка")) {
+						withDelivery = true;
+						Iterator<Delivery> ls = m.getDelivery().iterator();
+						if (!ls.next().getStreetAddress().equalsIgnoreCase(s)) {
+							m = cserv.addDelivery(s, m);
+							isChanged = true;
+						}
 					}
 				}
 				if (isChanged)
@@ -144,7 +148,8 @@ public class ActionsControlImpl implements ActionsControl {
 				pp.setProposal(proposal);
 				if (memberid != 0)
 					pp.setMember(memberid);
-				pp.setDelivery(order.getMember().getPreferableAddress());
+				if (withDelivery)
+					pp.setDelivery(order.getMember().getPreferableAddress());
 				pp.setOrderId(order.getOrderId());
 				pp.setSent(true);
 				actionService.saveProposal(pp);

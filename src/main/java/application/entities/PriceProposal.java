@@ -36,4 +36,6 @@ public class PriceProposal extends BasicEntity implements Serializable {
 	@Column(length = 25)
 	private String orderId;
 	private boolean sent;
+	private Float amount = (float) 0;
+	private Integer status = 0; // 0 - комплектуется, 9 - получена
 }

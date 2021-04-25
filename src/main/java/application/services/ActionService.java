@@ -37,6 +37,10 @@ public class ActionService {
 
 	// для новых
 	public Proposal save(Proposal pe) {
+		if (pe.getTotal() == 0)
+			pe.setTotal((float) 0);
+		if (pe.getTotalQuantity() == null)
+			pe.setTotalQuantity((float) 0);
 		Proposal res = repo.save(pe);
 		return res;
 	}
@@ -60,6 +64,8 @@ public class ActionService {
 			pe.setCreated(np.getCreated());
 			pe.setModified(np.getModified());
 			pe.setVersion(np.getVersion());
+			pe.setAmount(pe.getProposalType() == 0 || pe.getPrice() == null || pe.getQuantity() == null ? (float) 0
+					: pe.getPrice() * pe.getQuantity());
 		}
 		pe = repoP.save(pe);
 		return pe;
