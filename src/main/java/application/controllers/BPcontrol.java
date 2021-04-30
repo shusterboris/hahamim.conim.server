@@ -36,4 +36,7 @@ public interface BPcontrol {
 
 	@GetMapping("/addAll")
 	public ResponseEntity<Object> createAll();
+
+	@GetMapping("/addActions/{fileName}")
+	public String addActionsFromFile(@PathVariable(value = "fileName") String fileName);
 }

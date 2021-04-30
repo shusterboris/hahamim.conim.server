@@ -1,10 +1,16 @@
 package application.controllers;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Scanner;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +25,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import Utils.LocalDateJsonAdapter;
+import application.ApplicationSettings;
 import application.entities.BusinessPartner;
 import application.entities.CatItem;
 import application.entities.Store;
@@ -204,4 +211,29 @@ public class BPcontrolImpl implements BPcontrol {
 		}
 	}
 
+	@Override
+	public String addActionsFromFile(String fileName) {
+		String fullPath = ApplicationSettings.dataStorePath.concat(fileName);
+		int count = 0;
+		int lines = 0;
+		try {
+			URL fileURL = Paths.get(fullPath).toUri().toURL();
+			Scanner myReader = new Scanner(new File(fullPath));
+
+			while (myReader.hasNextLine()) {
+				String line = myReader.nextLine();
+				lines = lines + 1;
+				if (lines == 1)
+					continue;
+				String[] data = line.split(";", 8);
+				System.out.println(data[0]);
+				count = count + 1;
+			}
+			myReader.close();
+		} catch (FileNotFoundException | MalformedURLException e) {
+			System.out.println("An error occurred.");
+			e.printStackTrace();
+		}
+		return "обработано " + String.valueOf(count);
+	}
 }
