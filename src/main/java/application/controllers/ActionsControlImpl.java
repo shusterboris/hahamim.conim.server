@@ -169,25 +169,10 @@ public class ActionsControlImpl implements ActionsControl {
 		pp.setProposalType(PriceProposalType.MEMBERS.ordinal());
 		return pp;
 	}
-	/*
-	 * {"items": [ {"id": 2, "name": "Кролик слабо замороженый", "bundle": 1,
-	 * "price": 100.0, "measure": "шт", "description": "Кролик свежемороженый, ",
-	 * "quantity": 2.0, "threshold": 2.0, "state": 0, "cost": 200.0, "photo":
-	 * "Krol.jpg", "intOnly": null}, {"id": 10, "name": "Финик в шоколаде, конфеты",
-	 * "bundle": 10, "price": 49.9, "measure": "кг", "description":
-	 * "Уникальные  украинские конфеты! ", "quantity": 2.0, "threshold": 1.0,
-	 * "state": 0, "cost": 99.8, "photo": "eco-finic.jpg", "intOnly": null} ],
-	 * "member": {"delivery": ["Бат-Ям, Правительственный квартал, 1 офис 10165",
-	 * "Наария, Цахаль, 15а кв.16"], "firstName": "Борис", "lastName": "Шустер",
-	 * "id": 35, "telegram": "1471430736", "phoneNumber": "+972559191919", "email":
-	 * "boriss@ucom.net", "address": "Наария, Цахаль, 15а кв.16",
-	 * "preferableAddress": "Наария, Цахаль, 15а кв.16"} }
-	 */
 
 	@Override
 	public ResponseEntity<Object> getAction(Long id) {
 		try {
-			// Proposal res = mService.getAction(id);
 			Optional<application.entities.Proposal> e = actionService.findAction(id);
 			if (e == null)
 				return new ResponseEntity<Object>("", HttpStatus.NOT_FOUND);
@@ -201,7 +186,6 @@ public class ActionsControlImpl implements ActionsControl {
 	public ResponseEntity<Object> getActionByMember(Long memberId, int page, Integer pageSize) {
 		// для получения своих акций берем те, по которым у меня есть заявленное
 		// количество на покупку и соответствующий статус
-
 		try {
 			List<Proposal> res = new ArrayList<Proposal>();
 			Page<application.entities.Proposal> le = actionService.fetchProposalsByMember(memberId, page, pageSize);
@@ -269,6 +253,25 @@ public class ActionsControlImpl implements ActionsControl {
 		} catch (Exception e) {
 			return new ResponseEntity<Object>("Server error:".concat(e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
 		}
+	}
+
+	@Override
+	public ResponseEntity<Object> saveAction(String json) {
+		try {
+			Gson gson = new GsonBuilder().registerTypeAdapter(LocalDate.class, new LocalDateJsonAdapter().nullSafe())
+					.create();
+			Proposal proposal = gson.fromJson(json, Proposal.class);
+			application.entities.Proposal pe = updateProxyFromProposalEntity(proposal);
+			pe = actionService.save(pe);
+			if (pe == null)
+				return new ResponseEntity<Object>("action not saved", HttpStatus.INTERNAL_SERVER_ERROR);
+			JSONObject ret = new JSONObject();
+			ret.put("id", String.valueOf(pe.getId()));
+			return new ResponseEntity<>(ret, HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<Object>("action not saved", HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+
 	}
 
 	@Override
@@ -396,6 +399,44 @@ public class ActionsControlImpl implements ActionsControl {
 		pp.setProposalId(pe.getProposal().getId());
 		pp.setDelivery(pe.getDelivery());
 		return pp;
+	}
+
+	private application.entities.Proposal updateProxyFromProposalEntity(Proposal pp) {
+		application.entities.Proposal pe = new application.entities.Proposal();
+		pe.setCategory(pp.getCategory());
+		pe.setRegion(pp.getRegion());
+		pe.setPrice(pp.getPrice());
+		pe.setInitiator(pp.getInitiator());
+		pe.setLastPrice(pp.getLastPrice());
+		pe.setDueDate(pp.getDueDate());
+		pe.setMeasure(pp.getMeasure());
+		pe.setThreshold(pp.getThreshold());
+		pe.setThresholdmax(pp.getThresholdmax());
+		pe.setStatus(ProposalStatus.getOrdinalByMessage(pp.getStatus()));
+		pe.setSupplier(pp.getSupplierId());
+		pe.setTotalQuantity(pp.getTotalQuantity());
+		pe.setPublicationDate(pp.getPublicationDate());
+		List<String> li = pp.getPhotos();
+		Set<AppImage> le = new HashSet<AppImage>();
+		if (li != null) {
+			for (String im : li) {
+				le.add(new AppImage(im, pe));
+			}
+		}
+		pe.setPhotos(le);
+		pe.setTotal(pp.getTotal());
+		pe.setDateOfSailStarting(pp.getDateOfSailStarting());
+		pe.setCloseDate(pp.getCloseDate());
+		pe.setName(pp.getName());
+		pe.setDescription(pp.getDescription());
+		pe.setBundle(pp.getBundle());
+		List<PriceProposal> lpp = pp.getPriceProposals();
+		Set<application.entities.PriceProposal> sppe = new HashSet<application.entities.PriceProposal>();
+		pe.setPriceProposals(sppe);
+		pe.setId(pp.getId());
+		pe.setIntOnly(pp.getIntOnly());
+		return pe;
+
 	}
 
 	private application.entities.Proposal proxyToProposalEntity(Proposal pp) {
@@ -678,10 +719,10 @@ public class ActionsControlImpl implements ActionsControl {
 		return new ResponseEntity<Object>(result, HttpStatus.OK);
 	}
 
-//	@Override
-//	public ResponseEntity<Object> createAndDownloadReportDelivery(Long supplierId) {
-//		List<ActionsSummaryInfo> result = actionService.fetchReportDeliveryData(supplierId);
-//		return new ResponseEntity<Object>(result, HttpStatus.OK);
-//	}
+	@Override
+	public ResponseEntity<Object> fetchMembersCart(Long memberId) {
+		List<ActionsSummaryInfo> result = actionService.fetchMembersCart(memberId);
+		return new ResponseEntity<Object>(result, HttpStatus.OK);
+	}
 
 }

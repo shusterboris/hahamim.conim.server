@@ -41,4 +41,7 @@ public interface ActionsDAO extends PagingAndSortingRepository<Proposal, Long> {
 	@Query(nativeQuery = true, value = "SELECT *,sum(quantity),sum(quantity * price) FROM actions_report WHERE supplier_id = :supplierId GROUP BY region, settlement, name")
 	public List<Object[]> createSummaryDeliveryReport(@Param("supplierId") Long supplierId);
 
+	@Query(nativeQuery = true, value = "SELECT * FROM actions_report WHERE status = 0 AND member = :memberId")
+	public List<Object[]> fetchMembersCart(@Param("memberId") Long memberId);
+
 }

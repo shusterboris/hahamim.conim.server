@@ -218,6 +218,16 @@ public class ActionService {
 		return result;
 	}
 
+	public List<ActionsSummaryInfo> fetchMembersCart(Long memberId) {
+		List<Object[]> answer = getRepo().fetchMembersCart(memberId);
+		List<ActionsSummaryInfo> result = new ArrayList<>();
+		for (Object[] obj : answer) {
+			ActionsSummaryInfo ai = ActionsSummaryInfo.getInstanse(obj);
+			result.add(ai);
+		}
+		return result;
+	}
+
 	public ActionsDAO getRepo() {
 		return repo;
 	}
