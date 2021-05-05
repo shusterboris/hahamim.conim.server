@@ -3,6 +3,7 @@ package application.controllers;
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -45,6 +46,9 @@ public interface ActionsControl {
 
 	@PutMapping(value = "/actions/intents/put", consumes = "application/json", produces = "application/json")
 	public ResponseEntity<Object> saveMemberPriceIntents(@RequestBody List<PriceProposal> price);
+
+	@DeleteMapping("/actions/intents/delete/{intentId}")
+	public ResponseEntity<Object> removePriceIntent(@PathVariable("intentId") Long intentId);
 
 
 	/*
