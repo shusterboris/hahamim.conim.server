@@ -2,9 +2,11 @@ package application.controllers;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
@@ -26,6 +28,7 @@ import application.entities.PageResponse;
 import application.services.ActionService;
 import application.services.BPservice;
 import application.services.ClientService;
+import application.services.repositories.PproposalDAO;
 import enums.PriceProposalType;
 import enums.ProposalStatus;
 import net.minidev.json.JSONObject;
@@ -38,7 +41,7 @@ import proxies.Proposal;
 import proxies.Purchase;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = { "http://localhost:3000", "http://127.0.0.1:3000" })
 public class ActionsControlImpl implements ActionsControl {
 	// private MockService mService = new MockService();
 	@Autowired
@@ -47,6 +50,8 @@ public class ActionsControlImpl implements ActionsControl {
 	private BPservice bpserv;
 	@Autowired
 	private ClientService cserv;
+	@Autowired
+	private PproposalDAO ppDAO;
 
 	private Proposal entityToProposalProxy(application.entities.Proposal p, boolean fullInfo) {
 		Proposal pp = new Proposal();
@@ -722,6 +727,17 @@ public class ActionsControlImpl implements ActionsControl {
 	@Override
 	public ResponseEntity<Object> fetchMembersCart(Long memberId) {
 		List<ActionsSummaryInfo> result = actionService.fetchMembersCart(memberId);
+		return new ResponseEntity<Object>(result, HttpStatus.OK);
+	}
+
+	@Override
+	public ResponseEntity<Object> removePriceIntent(Long intentId) {
+		Map<String, String> result = new HashMap<String, String>();
+		if (actionService.removePriceIntent(intentId)) {
+			result.put("result", "Ok");
+		} else {
+			result.put("result", "Failure");
+		}
 		return new ResponseEntity<Object>(result, HttpStatus.OK);
 	}
 

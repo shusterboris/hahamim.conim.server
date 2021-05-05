@@ -31,7 +31,6 @@ public class ActionService {
 	private PproposalDAO repoP;
 	@Autowired
 	private PurchaseDAO repoPur;
-
 	@Autowired
 	private PaymentDAO repoPay;
 
@@ -226,6 +225,16 @@ public class ActionService {
 			result.add(ai);
 		}
 		return result;
+	}
+
+	public boolean removePriceIntent(Long intentId) {
+		try {
+			repoP.deleteById(intentId);
+			return true;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
 	}
 
 	public ActionsDAO getRepo() {
