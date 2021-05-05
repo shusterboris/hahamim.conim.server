@@ -29,6 +29,9 @@ public interface ActionsControl {
 	@PostMapping("/action/add")
 	public ResponseEntity<Object> addAction(@RequestBody String json);
 
+	@PostMapping("/action/save")
+	public ResponseEntity<Object> saveAction(@RequestBody String json);
+
 	@PostMapping(value = "/actions/addOrder", consumes = "application/json")
 	public ResponseEntity<Object> addOrder(@RequestBody String json);
 
@@ -43,8 +46,11 @@ public interface ActionsControl {
 	@PutMapping(value = "/actions/intents/put", consumes = "application/json", produces = "application/json")
 	public ResponseEntity<Object> saveMemberPriceIntents(@RequestBody List<PriceProposal> price);
 
-	@GetMapping("/actions/testAdd")
-	public ResponseEntity<Object> testAdd();
+
+	/*
+	 * @GetMapping("/actions/testAdd") public ResponseEntity<Object> testAdd();
+	 */
+
 
 	@PostMapping("/purchase/add")
 	public ResponseEntity<Object> addPurchase(@RequestBody String json);
@@ -92,4 +98,6 @@ public interface ActionsControl {
 	@GetMapping({ "/actions/report/3/{supplierId}", "/actions/report/3/{supplierId}/download" })
 	public ResponseEntity<Object> createReportDelivery(@PathVariable(name = "supplierId") Long supplierId);
 
+	@GetMapping("/actions/cart/get/{memberId}")
+	public ResponseEntity<Object> fetchMembersCart(@PathVariable(name = "memberId") Long memberId);
 }

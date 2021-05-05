@@ -169,25 +169,10 @@ public class ActionsControlImpl implements ActionsControl {
 		pp.setProposalType(PriceProposalType.MEMBERS.ordinal());
 		return pp;
 	}
-	/*
-	 * {"items": [ {"id": 2, "name": "Кролик слабо замороженый", "bundle": 1,
-	 * "price": 100.0, "measure": "шт", "description": "Кролик свежемороженый, ",
-	 * "quantity": 2.0, "threshold": 2.0, "state": 0, "cost": 200.0, "photo":
-	 * "Krol.jpg", "intOnly": null}, {"id": 10, "name": "Финик в шоколаде, конфеты",
-	 * "bundle": 10, "price": 49.9, "measure": "кг", "description":
-	 * "Уникальные  украинские конфеты! ", "quantity": 2.0, "threshold": 1.0,
-	 * "state": 0, "cost": 99.8, "photo": "eco-finic.jpg", "intOnly": null} ],
-	 * "member": {"delivery": ["Бат-Ям, Правительственный квартал, 1 офис 10165",
-	 * "Наария, Цахаль, 15а кв.16"], "firstName": "Борис", "lastName": "Шустер",
-	 * "id": 35, "telegram": "1471430736", "phoneNumber": "+972559191919", "email":
-	 * "boriss@ucom.net", "address": "Наария, Цахаль, 15а кв.16",
-	 * "preferableAddress": "Наария, Цахаль, 15а кв.16"} }
-	 */
 
 	@Override
 	public ResponseEntity<Object> getAction(Long id) {
 		try {
-			// Proposal res = mService.getAction(id);
 			Optional<application.entities.Proposal> e = actionService.findAction(id);
 			if (e == null)
 				return new ResponseEntity<Object>("", HttpStatus.NOT_FOUND);
@@ -201,7 +186,6 @@ public class ActionsControlImpl implements ActionsControl {
 	public ResponseEntity<Object> getActionByMember(Long memberId, int page, Integer pageSize) {
 		// для получения своих акций берем те, по которым у меня есть заявленное
 		// количество на покупку и соответствующий статус
-
 		try {
 			List<Proposal> res = new ArrayList<Proposal>();
 			Page<application.entities.Proposal> le = actionService.fetchProposalsByMember(memberId, page, pageSize);
@@ -272,6 +256,25 @@ public class ActionsControlImpl implements ActionsControl {
 	}
 
 	@Override
+	public ResponseEntity<Object> saveAction(String json) {
+		try {
+			Gson gson = new GsonBuilder().registerTypeAdapter(LocalDate.class, new LocalDateJsonAdapter().nullSafe())
+					.create();
+			Proposal proposal = gson.fromJson(json, Proposal.class);
+			application.entities.Proposal pe = updateProxyFromProposalEntity(proposal);
+			pe = actionService.save(pe);
+			if (pe == null)
+				return new ResponseEntity<Object>("action not saved", HttpStatus.INTERNAL_SERVER_ERROR);
+			JSONObject ret = new JSONObject();
+			ret.put("id", String.valueOf(pe.getId()));
+			return new ResponseEntity<>(ret, HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<Object>("action not saved", HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+
+	}
+
+	@Override
 	public ResponseEntity<Object> addAction(String json) {
 		try {
 			Gson gson = new GsonBuilder().registerTypeAdapter(LocalDate.class, new LocalDateJsonAdapter().nullSafe())
@@ -290,73 +293,6 @@ public class ActionsControlImpl implements ActionsControl {
 
 	}
 
-	@Override
-	public ResponseEntity<Object> testAdd() {
-		return null;
-		// для отладки ex1
-//		application.entities.Proposal pe = new application.entities.Proposal();
-//		pe.setCategory("Мясо");
-//		pe.setRegion("Хайфа");
-//		pe.setPrice((float) 100);
-//		pe.setInitiator((long) 3);
-//		pe.setLastPrice((float) 50);
-//		pe.setDueDate(LocalDate.of(2021, 2, 1));
-//		pe.setMeasure("кг");
-//		pe.setThreshold((float) 60);
-//		pe.setStatus(ProposalStatus.INIT.ordinal());
-//		pe.setSupplier((long) 2);
-//		pe.setPublicationDate(LocalDate.of(2021, 1, 1));
-//		// Set<AppImage>
-//		pe.setPhotos(new HashSet<application.entities.AppImage>());
-//		application.entities.AppImage i = new application.entities.AppImage();
-//		i.setImgPath("salami.png");
-//		i.setProposal(pe);
-//		pe.getPhotos().add(i);
-//		pe.setTotal((float) 600);
-//		pe.setDateOfSailStarting(LocalDate.of(2021, 2, 1));
-//		pe.setCloseDate(LocalDate.of(2021, 2, 1));
-//		pe.setName("колбаса копченая");
-//		pe.setDescription("нежирная, очень вкусная");
-//		pe.setBundle(null);
-//		HashSet<application.entities.PriceProposal> lpp = new HashSet<application.entities.PriceProposal>();
-//		lpp.add(createPproposal(pe, (float) 100, (long) 3, 1, 0, (float) 2));
-//		lpp.add(createPproposal(pe, (float) 80, (long) 3, 2, 0, (float) 2));
-//		lpp.add(createPproposal(pe, (float) 60, (long) 3, 3, 0, (float) 2));
-//		pe.setPriceProposals(lpp);
-//		pe = actionService.save(pe);
-//		// ex2
-//		pe = new application.entities.Proposal();
-//		pe.setCategory("Мясо");
-//		pe.setRegion("Бат-Ям");
-//		pe.setPrice((float) 100);
-//		pe.setInitiator((long) 3);
-//		pe.setLastPrice((float) 80);
-//		pe.setDueDate(LocalDate.of(2021, 2, 1));
-//		pe.setMeasure("шт");
-//		pe.setThreshold((float) 80);
-//		pe.setThresholdmax((float) 180);
-//		pe.setStatus(ProposalStatus.INIT.ordinal());
-//		pe.setSupplier((long) 2);
-//		pe.setPublicationDate(LocalDate.of(2021, 1, 1));
-//		// Set<AppImage>
-//		pe.setPhotos(new HashSet<application.entities.AppImage>());
-//		i = new application.entities.AppImage();
-//		i.setImgPath("salami.png");
-//		i.setProposal(pe);
-//		pe.getPhotos().add(i);
-//		pe.setTotal((float) 600);
-//		pe.setDateOfSailStarting(LocalDate.of(2021, 2, 1));
-//		pe.setCloseDate(LocalDate.of(2021, 2, 1));
-//		pe.setName("кролик мороженый");
-//		pe.setDescription("вес 2 кг, цена за 1 кг");
-//		pe.setBundle(null);
-//		lpp.clear();
-//		lpp.add(createPproposal(pe, (float) 100, (long) 1, 1, 0, (float) 2));
-//		lpp.add(createPproposal(pe, (float) 90, (long) 1, 2, 0, (float) 5));
-//		lpp.add(createPproposal(pe, (float) 80, (long) 1, 3, 0, (float) 10));
-//		pe.setPriceProposals(lpp);
-//		pe = actionService.save(pe);
-	}
 
 	private application.entities.PriceProposal createPproposal(application.entities.Proposal p, float price,
 			Long member, int plevel, int ptype, float q) {
@@ -396,6 +332,44 @@ public class ActionsControlImpl implements ActionsControl {
 		pp.setProposalId(pe.getProposal().getId());
 		pp.setDelivery(pe.getDelivery());
 		return pp;
+	}
+
+	private application.entities.Proposal updateProxyFromProposalEntity(Proposal pp) {
+		application.entities.Proposal pe = new application.entities.Proposal();
+		pe.setCategory(pp.getCategory());
+		pe.setRegion(pp.getRegion());
+		pe.setPrice(pp.getPrice());
+		pe.setInitiator(pp.getInitiator());
+		pe.setLastPrice(pp.getLastPrice());
+		pe.setDueDate(pp.getDueDate());
+		pe.setMeasure(pp.getMeasure());
+		pe.setThreshold(pp.getThreshold());
+		pe.setThresholdmax(pp.getThresholdmax());
+		pe.setStatus(ProposalStatus.getOrdinalByMessage(pp.getStatus()));
+		pe.setSupplier(pp.getSupplierId());
+		pe.setTotalQuantity(pp.getTotalQuantity());
+		pe.setPublicationDate(pp.getPublicationDate());
+		List<String> li = pp.getPhotos();
+		Set<AppImage> le = new HashSet<AppImage>();
+		if (li != null) {
+			for (String im : li) {
+				le.add(new AppImage(im, pe));
+			}
+		}
+		pe.setPhotos(le);
+		pe.setTotal(pp.getTotal());
+		pe.setDateOfSailStarting(pp.getDateOfSailStarting());
+		pe.setCloseDate(pp.getCloseDate());
+		pe.setName(pp.getName());
+		pe.setDescription(pp.getDescription());
+		pe.setBundle(pp.getBundle());
+		List<PriceProposal> lpp = pp.getPriceProposals();
+		Set<application.entities.PriceProposal> sppe = new HashSet<application.entities.PriceProposal>();
+		pe.setPriceProposals(sppe);
+		pe.setId(pp.getId());
+		pe.setIntOnly(pp.getIntOnly());
+		return pe;
+
 	}
 
 	private application.entities.Proposal proxyToProposalEntity(Proposal pp) {
@@ -678,11 +652,11 @@ public class ActionsControlImpl implements ActionsControl {
 		return new ResponseEntity<Object>(result, HttpStatus.OK);
 	}
 
-//	@Override
-//	public ResponseEntity<Object> createAndDownloadReportDelivery(Long supplierId) {
-//		List<ActionsSummaryInfo> result = actionService.fetchReportDeliveryData(supplierId);
-//		return new ResponseEntity<Object>(result, HttpStatus.OK); }
-
+	@Override
+	public ResponseEntity<Object> fetchMembersCart(Long memberId) {
+		List<ActionsSummaryInfo> result = actionService.fetchMembersCart(memberId);
+		return new ResponseEntity<Object>(result, HttpStatus.OK);
+	}
 
 
 }
