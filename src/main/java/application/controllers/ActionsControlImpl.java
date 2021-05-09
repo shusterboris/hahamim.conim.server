@@ -298,7 +298,6 @@ public class ActionsControlImpl implements ActionsControl {
 
 	}
 
-
 	private application.entities.PriceProposal createPproposal(application.entities.Proposal p, float price,
 			Long member, int plevel, int ptype, float q) {
 		application.entities.PriceProposal ppe = new application.entities.PriceProposal();
@@ -663,7 +662,6 @@ public class ActionsControlImpl implements ActionsControl {
 		return new ResponseEntity<Object>(result, HttpStatus.OK);
 	}
 
-
 	@Override
 	public ResponseEntity<Object> removePriceIntent(Long intentId) {
 		Map<String, String> result = new HashMap<String, String>();
@@ -673,6 +671,16 @@ public class ActionsControlImpl implements ActionsControl {
 			result.put("result", "Failure");
 		}
 		return new ResponseEntity<Object>(result, HttpStatus.OK);
+	}
+
+	@Override
+	public ResponseEntity<Object> createOrder(Long memberId, String deliveryAddress, Long supplier) {
+		// Размещает заказ из корзины путем изменения статуса заявки о покупке и
+		// записывая адрес доставки
+		// если ид поставщика не задан - то для всех заказов корзины, если задан -
+		// только данного поставщика
+		// т.к. у другого поставщика может быть задан другой адрес доставки
+		return null;
 	}
 
 }

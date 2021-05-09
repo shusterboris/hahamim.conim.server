@@ -50,12 +50,6 @@ public interface ActionsControl {
 	@DeleteMapping("/actions/intents/delete/{intentId}")
 	public ResponseEntity<Object> removePriceIntent(@PathVariable("intentId") Long intentId);
 
-
-	/*
-	 * @GetMapping("/actions/testAdd") public ResponseEntity<Object> testAdd();
-	 */
-
-
 	@PostMapping("/purchase/add")
 	public ResponseEntity<Object> addPurchase(@RequestBody String json);
 
@@ -104,4 +98,11 @@ public interface ActionsControl {
 
 	@GetMapping("/actions/cart/get/{memberId}")
 	public ResponseEntity<Object> fetchMembersCart(@PathVariable(name = "memberId") Long memberId);
+
+	@GetMapping({ "/actions/cart/put/{memberId}/{deliveryAddress}",
+			"/actions/cart/put/{memberId}/{deliveryAddress}/{supplierId}" })
+	public ResponseEntity<Object> createOrder(@PathVariable(name = "memberId") Long memberId,
+			@PathVariable(name = "deliveryAddress") String deliveryAddress,
+			@PathVariable(name = "supplierId", required = false) Long supplier);
+
 }
