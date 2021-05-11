@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.SortedMap;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -674,13 +675,34 @@ public class ActionsControlImpl implements ActionsControl {
 	}
 
 	@Override
-	public ResponseEntity<Object> createOrder(Long memberId, String deliveryAddress, Long supplier) {
+	public ResponseEntity<Object> createOrder(Integer addressType, String deliveryAddress,
+			SortedMap<Long, List<Long>> data) {
 		// Размещает заказ из корзины путем изменения статуса заявки о покупке и
-		// записывая адрес доставки
-		// если ид поставщика не задан - то для всех заказов корзины, если задан -
-		// только данного поставщика
-		// т.к. у другого поставщика может быть задан другой адрес доставки
-		return null;
+		// записывая адрес доставки. addressType 1 - если домой, 0 - самовывоз
+		// в data Map по поставщикам, и для каждого поставщика список заявое на покупку.
+		// результат: 1 - выполнено полностью, 0 - выполнено частично (по первому из
+		// поставщиков), -1 - ошибка
+		Map<String, Integer> result = new HashMap<>();
+		try {
+			if (data.size() == 1 || addressType == 1) {
+				// доставка домой или весь заказ от одного поставщика
+				result.put("result", 1);
+				List<Long> allGoods = new ArrayList<>();
+				for (List<Long> goods : data.values()) {
+					allGoods.addAll(goods);
+				}
+				ppDAO.createOrdersFromCart(deliveryAddress, allGoods);
+			} else {
+				//
+				result.put("result", 0);
+				ppDAO.createOrdersFromCart(deliveryAddress, data.get(data.firstKey()));
+			}
+			return new ResponseEntity<Object>(result, HttpStatus.OK);
+		} catch (Exception e) {
+			result.put("result", -1);
+			return new ResponseEntity<Object>(result, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+
 	}
 
 }

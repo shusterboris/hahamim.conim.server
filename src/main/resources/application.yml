@@ -1,5 +1,11 @@
-
 spring:
+    server:
+        port : 8801
+    config:
+        activate:
+            on-profile: prod
+    name: prod-YAML
+    environment: production
     datasource:
         driver-class-name: com.mysql.cj.jdbc.Driver
         url: jdbc:mysql://localhost:3306/conimhahamim?useSSL=false&default_authentication_plugin=mysql_native_password&useUnicode=yes&characterEncoding=UTF-8&serverTimezone=UTC
@@ -19,3 +25,63 @@ logging:
     org.springframework.web: ERROR
     org.hibernate: ERROR
     org.hibernate.SQL: ERROR
+
+---
+spring:
+    server:
+        port : 8080
+    config:
+        activate:
+            on-profile: dev
+    name: dev-YAML
+    environment: development
+    datasource:
+        driver-class-name: com.mysql.cj.jdbc.Driver
+        url: jdbc:mysql://localhost:3306/conimhahamim?useSSL=false&default_authentication_plugin=mysql_native_password&useUnicode=yes&characterEncoding=UTF-8&serverTimezone=UTC
+        username: chserver
+        password: vfnthy0tckjdJ
+    jpa:
+        hibernate:
+            ddl-auto: update
+            show-sql: true
+jwt:
+  jwt.get.token.uri: /halt
+  secret: $2y$04$mygZYT6qZ72/FSXpcvZ6tuzkJ1rF5Sd4rNtxJ13QT965CC24o6jYO 
+  
+logging:
+  level:
+    root: INFO
+    org.springframework.web: ERROR
+    org.hibernate: ERROR
+    org.hibernate.SQL: DEBUG
+
+---
+spring:
+    server:
+        port : 8088
+    config:
+        activate:
+            on-profile: test
+    name: test-YAML
+    environment: testing
+    datasource:
+        driver-class-name: com.mysql.cj.jdbc.Driver
+        url: jdbc:mysql://localhost:3306/conimhahamim?useSSL=false&default_authentication_plugin=mysql_native_password&useUnicode=yes&characterEncoding=UTF-8&serverTimezone=UTC
+        username: chserver
+        password: vfnthy0tckjdJ
+    jpa:
+        hibernate:
+            ddl-auto: update
+            show-sql: true
+jwt:
+  jwt.get.token.uri: /halt
+  secret: $2y$04$mygZYT6qZ72/FSXpcvZ6tuzkJ1rF5Sd4rNtxJ13QT965CC24o6jYO 
+  
+logging:
+  level:
+    root: INFO
+    org.springframework.web: ERROR
+    org.hibernate: ERROR
+    org.hibernate.SQL: DEBUG
+
+---

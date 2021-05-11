@@ -1,6 +1,7 @@
 package application.controllers;
 
 import java.util.List;
+import java.util.SortedMap;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -99,10 +100,9 @@ public interface ActionsControl {
 	@GetMapping("/actions/cart/get/{memberId}")
 	public ResponseEntity<Object> fetchMembersCart(@PathVariable(name = "memberId") Long memberId);
 
-	@GetMapping({ "/actions/cart/put/{memberId}/{deliveryAddress}",
-			"/actions/cart/put/{memberId}/{deliveryAddress}/{supplierId}" })
-	public ResponseEntity<Object> createOrder(@PathVariable(name = "memberId") Long memberId,
+	@PutMapping("/actions/cart/put/{addressType}/{deliveryAddress}")
+	public ResponseEntity<Object> createOrder(@PathVariable("addressType") Integer addressType,
 			@PathVariable(name = "deliveryAddress") String deliveryAddress,
-			@PathVariable(name = "supplierId", required = false) Long supplier);
+			@RequestBody SortedMap<Long, List<Long>> data);
 
 }
