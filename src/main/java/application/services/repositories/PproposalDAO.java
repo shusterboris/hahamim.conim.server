@@ -33,7 +33,7 @@ public interface PproposalDAO extends CrudRepository<PriceProposal, Long> {
 
 	@Modifying
 	@Transactional
-	@Query("UPDATE PriceProposal p SET p.status=1, p.delivery=:deliveryAddress WHERE id in (:intentIds)")
+	@Query("UPDATE PriceProposal p SET p.status=1, p.delivery=:deliveryAddress, p.orderId=:iid WHERE id in (:intentIds)")
 	public void createOrdersFromCart(@Param("deliveryAddress") String deliveryAddress,
-			@Param("intentIds") List<Long> intentIds);
+			@Param("iid") String iid, @Param("intentIds") List<Long> intentIds);
 }

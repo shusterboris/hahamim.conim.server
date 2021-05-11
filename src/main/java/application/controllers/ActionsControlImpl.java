@@ -691,11 +691,13 @@ public class ActionsControlImpl implements ActionsControl {
 				for (List<Long> goods : data.values()) {
 					allGoods.addAll(goods);
 				}
-				ppDAO.createOrdersFromCart(deliveryAddress, allGoods);
+				String id = allGoods.get(0).toString();
+				ppDAO.createOrdersFromCart(deliveryAddress, id, allGoods);
 			} else {
 				//
 				result.put("result", 0);
-				ppDAO.createOrdersFromCart(deliveryAddress, data.get(data.firstKey()));
+				String id = data.get(data.firstKey()).get(0).toString();
+				ppDAO.createOrdersFromCart(deliveryAddress, id, data.get(data.firstKey()));
 			}
 			return new ResponseEntity<Object>(result, HttpStatus.OK);
 		} catch (Exception e) {
