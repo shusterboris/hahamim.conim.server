@@ -11,7 +11,6 @@ import org.springframework.security.authentication.LockedException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -20,9 +19,7 @@ import application.config.JwtTokenUtil;
 import application.entities.security.JwtRequest;
 import application.entities.security.JwtResponse;
 
-
 @RestController
-@CrossOrigin
 public class UserAuthController {
 	@Autowired
 	private AuthenticationManager authenticationManager;

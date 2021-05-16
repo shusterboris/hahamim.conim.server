@@ -55,17 +55,11 @@ public class ServerSecurityConfig extends WebSecurityConfigurerAdapter {
 	}
 
 	@Override
-	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-		auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
-	}
-
-	@Override
 	protected void configure(HttpSecurity httpSecurity) throws Exception {
-		// We don't need CSRF for this example
-		httpSecurity.csrf().disable()
-				// dont authenticate this particular request
-				.authorizeRequests().antMatchers("/halt", "/clients/add", "/actions/all/page/*/*",
-						"/catalogs/items/all", "/catalogs/items/all/*", "/image/file/*", "/partners/addActions/*")
+		// .csrf().disable()
+		httpSecurity.csrf().disable().cors().configurationSource(corsConfigurationSource()).and().authorizeRequests()
+				.antMatchers("/halt", "/clients/add", "/actions/all/page/*/*", "/catalogs/items/all",
+						"/catalogs/items/all/*", "/image/file/*", "/partners/addActions/*")
 				.permitAll().
 				// all other requests need to be authenticated
 				anyRequest().authenticated().and().
@@ -78,13 +72,21 @@ public class ServerSecurityConfig extends WebSecurityConfigurerAdapter {
 		httpSecurity.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
 	}
 
+	@Override
+	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+		auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
+	}
+
 	@Bean
 	CorsConfigurationSource corsConfigurationSource() {
 		CorsConfiguration configuration = new CorsConfiguration();
-		configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000", "http://127.0.0.1:3000"));
+		configuration.setAllowedOrigins(Arrays.asList("http://127.0.0.1:3000"));
 		configuration.setAllowedMethods(Arrays.asList("*"));
+		configuration.setAllowedHeaders(Arrays.asList("*"));
+		configuration.setAllowCredentials(true);
 		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
 		source.registerCorsConfiguration("/**", configuration);
 		return source;
 	}
+
 }
