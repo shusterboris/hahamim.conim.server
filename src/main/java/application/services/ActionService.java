@@ -56,6 +56,17 @@ public class ActionService {
 		return pe;
 	}
 
+	public PriceProposal updateIntentState(PriceProposal pe) {
+		Optional<PriceProposal> res = repoP.findById(pe.getId());
+		if (res.isPresent()) {
+			PriceProposal np = res.get();
+			np.setStatus(pe.getStatus());
+			np = repoP.save(np);
+			return np;
+		}
+		return null;
+	}
+
 	public PriceProposal updateP(PriceProposal pe) {
 		Optional<PriceProposal> res = repoP.findById(pe.getId());
 		if (res.isPresent()) {
@@ -69,7 +80,6 @@ public class ActionService {
 		pe = repoP.save(pe);
 		return pe;
 	}
-
 	public Optional<Proposal> findAction(Long id) {
 		return repo.findById(id);
 	}

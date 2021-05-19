@@ -707,4 +707,18 @@ public class ActionsControlImpl implements ActionsControl {
 
 	}
 
+	@Override
+	public ResponseEntity<Object> changeStatusIntents(String json) {
+		// contains id, state
+		Gson gson = new Gson();
+		try {
+			application.entities.PriceProposal pp = gson.fromJson(json, application.entities.PriceProposal.class);
+			actionService.updateIntentState(pp);
+			return new ResponseEntity<Object>("", HttpStatus.OK);
+		} catch (Exception e) {
+
+			return new ResponseEntity<Object>("", HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+
 }

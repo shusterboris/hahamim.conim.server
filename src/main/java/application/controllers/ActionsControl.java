@@ -48,6 +48,9 @@ public interface ActionsControl {
 	@PutMapping(value = "/actions/intents/put", consumes = "application/json", produces = "application/json")
 	public ResponseEntity<Object> saveMemberPriceIntents(@RequestBody List<PriceProposal> price);
 
+	@PutMapping(value = "/actions/intents/changeStatus", consumes = "application/json")
+	public ResponseEntity<Object> changeStatusIntents(@RequestBody String json);
+
 	@DeleteMapping("/actions/intents/delete/{intentId}")
 	public ResponseEntity<Object> removePriceIntent(@PathVariable("intentId") Long intentId);
 
