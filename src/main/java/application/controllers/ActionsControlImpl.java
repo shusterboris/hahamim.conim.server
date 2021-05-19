@@ -15,7 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.google.gson.Gson;
@@ -42,7 +41,6 @@ import proxies.Proposal;
 import proxies.Purchase;
 
 @RestController
-@CrossOrigin(origins = { "http://localhost:3000", "http://127.0.0.1:3000" })
 public class ActionsControlImpl implements ActionsControl {
 	// private MockService mService = new MockService();
 	@Autowired
