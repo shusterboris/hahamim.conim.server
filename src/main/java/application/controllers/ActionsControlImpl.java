@@ -29,6 +29,7 @@ import application.services.ActionService;
 import application.services.BPservice;
 import application.services.ClientService;
 import application.services.repositories.PproposalDAO;
+import enums.IntentStatus;
 import enums.PriceProposalType;
 import enums.ProposalStatus;
 import net.minidev.json.JSONObject;
@@ -107,10 +108,11 @@ public class ActionsControlImpl implements ActionsControl {
 	@Override
 	public ResponseEntity<Object> addOrder(String json) {
 		try {
-			boolean withDelivery = false;
 			application.entities.Member m;
 			Gson gson = new Gson();
 			OrdersFromTelegram order = gson.fromJson(json, OrdersFromTelegram.class);
+			String s = order.getMember().getPreferableAddress();
+			boolean withDelivery = !s.endsWith("не нужна доставка");
 			long memberid = order.getMember().getId();
 			// если member получен из базы то дописываем недостающее, иначе создаем нового
 			if (memberid != 0) {
@@ -125,9 +127,7 @@ public class ActionsControlImpl implements ActionsControl {
 					isChanged = true;
 				} else if (m.getDelivery().size() == 1) {
 					// добавить адрес если его нет
-					String s = order.getMember().getPreferableAddress();
-					if (!s.endsWith("не нужна доставка")) {
-						withDelivery = true;
+					if (withDelivery) {
 						Iterator<Delivery> ls = m.getDelivery().iterator();
 						if (!ls.next().getStreetAddress().equalsIgnoreCase(s)) {
 							m = cserv.addDelivery(s, m);
@@ -156,17 +156,25 @@ public class ActionsControlImpl implements ActionsControl {
 					pp.setDelivery(order.getMember().getPreferableAddress());
 				pp.setOrderId(order.getOrderId());
 				pp.setSent(true);
+				pp.setStatus(IntentStatus.ACCEPTED.ordinal());
+				Float amount = (float) 0.0;
+				if (pp.getProposalType() == 1 && pp.getPrice() != null && pp.getQuantity() != null) {
+					amount = pp.getPrice() * pp.getQuantity();
+				}
+				amount = Utils.RoundNumber.round(amount, 2);
+				pp.setAmount(amount);
 				actionService.saveProposal(pp);
 			}
 			return new ResponseEntity<Object>(HttpStatus.OK);
 		} catch (Exception e) {
+			e.printStackTrace();
 			return new ResponseEntity<Object>("action not saved", HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 
 	private application.entities.PriceProposal telegramToPproposal(OrderFromTelegram o) {
 		application.entities.PriceProposal pp = new application.entities.PriceProposal();
-		pp.setId(o.getId());
+		// pp.setId(o.getId());
 		pp.setPrice(o.getPrice());
 		pp.setPriceLevel(1);
 		pp.setQuantity(o.getQuantity());

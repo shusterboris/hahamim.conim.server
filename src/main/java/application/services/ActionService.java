@@ -73,13 +73,17 @@ public class ActionService {
 			PriceProposal np = res.get();
 			pe.setCreated(np.getCreated());
 			pe.setModified(np.getModified());
-			pe.setVersion(np.getVersion());
-			pe.setAmount(pe.getProposalType() == 0 || pe.getPrice() == null || pe.getQuantity() == null ? (float) 0
-					: pe.getPrice() * pe.getQuantity());
+			Float amount = (float) 0.0;
+			if (pe.getProposalType() == 1 && pe.getPrice() != null && pe.getQuantity() != null) {
+				amount = pe.getPrice() * pe.getQuantity();
+			}
+			amount = Utils.RoundNumber.round(amount, 2);
+			pe.setAmount(amount);
 		}
 		pe = repoP.save(pe);
 		return pe;
 	}
+
 	public Optional<Proposal> findAction(Long id) {
 		return repo.findById(id);
 	}

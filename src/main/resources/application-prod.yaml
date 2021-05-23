@@ -1,0 +1,27 @@
+spring:
+    config:
+        activate:
+            on-profile: prod
+    name: prod-YAML
+    environment: prod
+    datasource:
+        driver-class-name: com.mysql.cj.jdbc.Driver
+        url: jdbc:mysql://localhost:3306/conimhahamimprod?useSSL=false&default_authentication_plugin=mysql_native_password&useUnicode=yes&characterEncoding=UTF-8&serverTimezone=UTC
+        username: chserver
+        password: vfnthy0tckjdJ
+    jpa:
+        hibernate:
+            ddl-auto: update
+            show-sql: true
+jwt:
+  jwt.get.token.uri: /halt
+  secret: $2y$04$mygZYT6qZ72/FSXpcvZ6tuzkJ1rF5Sd4rNtxJ13QT965CC24o6jYO 
+  
+logging:
+  level:
+    root: INFO
+    org.springframework.web: ERROR
+    org.hibernate: ERROR
+    org.hibernate.SQL: DEBUG
+server:
+    port : 8801
