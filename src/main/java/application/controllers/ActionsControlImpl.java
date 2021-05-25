@@ -342,6 +342,7 @@ public class ActionsControlImpl implements ActionsControl {
 		pp.setQuantity(pe.getQuantity());
 		pp.setProposalId(pe.getProposal().getId());
 		pp.setDelivery(pe.getDelivery());
+		pp.setStatus(pe.getStatus());
 		return pp;
 	}
 
