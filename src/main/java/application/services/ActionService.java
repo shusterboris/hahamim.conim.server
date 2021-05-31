@@ -73,6 +73,7 @@ public class ActionService {
 			PriceProposal np = res.get();
 			pe.setCreated(np.getCreated());
 			pe.setModified(np.getModified());
+			pe.setVersion(np.getVersion());
 			Float amount = (float) 0.0;
 			if (pe.getProposalType() == 1 && pe.getPrice() != null && pe.getQuantity() != null) {
 				amount = pe.getPrice() * pe.getQuantity();
@@ -249,6 +250,17 @@ public class ActionService {
 			e.printStackTrace();
 			return false;
 		}
+	}
+
+	public List<ActionsSummaryInfo> fetchOrdersByPartner(Long partnerId, Integer status) {
+		List<Object[]> answer = repo.fetchOrdersByPartner(partnerId, status);
+		List<ActionsSummaryInfo> result = new ArrayList<>();
+		for (Object[] obj : answer) {
+			ActionsSummaryInfo ai = ActionsSummaryInfo.getInstanse(obj);
+			result.add(ai);
+		}
+		return result;
+
 	}
 
 	public ActionsDAO getRepo() {

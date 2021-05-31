@@ -103,9 +103,13 @@ public interface ActionsControl {
 	@GetMapping("/actions/cart/get/{memberId}")
 	public ResponseEntity<Object> fetchMembersCart(@PathVariable(name = "memberId") Long memberId);
 
-	@PutMapping("/actions/cart/put/{addressType}/{deliveryAddress}")
-	public ResponseEntity<Object> createOrder(@PathVariable("addressType") Integer addressType,
+	@PutMapping("/actions/cart/put/{memberId}/{addressType}/{deliveryAddress}")
+	public ResponseEntity<Object> createOrder(@PathVariable("memberId") Long memberId,
+			@PathVariable("addressType") Integer addressType,
 			@PathVariable(name = "deliveryAddress") String deliveryAddress,
 			@RequestBody SortedMap<Long, List<Long>> data);
 
+	@GetMapping("/actions/ordersByPartner/{partnerId}/{status}")
+	public ResponseEntity<Object> fetchOrdersByPartner(@PathVariable("partnerId") Long partnerId,
+			@PathVariable("status") Integer status);
 }

@@ -1,6 +1,8 @@
 package application.controllers;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -191,6 +193,7 @@ public class ActionsControlImpl implements ActionsControl {
 			Proposal res = entityToProposalProxy(e.get(), true);
 			return new ResponseEntity<Object>(res, HttpStatus.OK);
 		} catch (Exception e) {
+			e.printStackTrace();
 			return new ResponseEntity<Object>("Server error:".concat(e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
@@ -210,6 +213,7 @@ public class ActionsControlImpl implements ActionsControl {
 			PageResponse result = new PageResponse(res, le.getTotalPages(), le.getTotalElements());
 			return new ResponseEntity<Object>(result, HttpStatus.OK);
 		} catch (Exception e) {
+			e.printStackTrace();
 			return new ResponseEntity<Object>("Server error:".concat(e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
@@ -226,6 +230,7 @@ public class ActionsControlImpl implements ActionsControl {
 			}
 			return new ResponseEntity<Object>(res, HttpStatus.OK);
 		} catch (Exception e) {
+			e.printStackTrace();
 			return new ResponseEntity<Object>("Server error:".concat(e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
@@ -243,6 +248,7 @@ public class ActionsControlImpl implements ActionsControl {
 			}
 			return new ResponseEntity<Object>(res, HttpStatus.OK);
 		} catch (Exception e) {
+			e.printStackTrace();
 			return new ResponseEntity<Object>("Server error:".concat(e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
@@ -251,19 +257,20 @@ public class ActionsControlImpl implements ActionsControl {
 	public ResponseEntity<Object> saveMemberPriceIntents(List<PriceProposal> prices) {
 		application.entities.Proposal pr = null;
 		application.entities.PriceProposal res = null;
+		List<String> result = new ArrayList<>();
 		try {
 			for (PriceProposal p : prices) {
 				if (pr == null)
 					pr = actionService.findAction(p.getProposalId()).get();
 				res = proxyToPproposalEntity(p, pr);
 				res = actionService.saveProposal(res);
+				result.add(Long.toString(res.getId()));
 			}
-			// pr = actionService.calcSumOrders(pr);
-			// actionService.update(pr);
-			// сумму теперь считает триггер
-			return new ResponseEntity<Object>(res.getId(), HttpStatus.OK);
+			// сумму считает триггер
+			return new ResponseEntity<Object>(result, HttpStatus.OK);
 		} catch (Exception e) {
-			return new ResponseEntity<Object>("Server error:".concat(e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
+			e.printStackTrace();
+			return new ResponseEntity<Object>(result, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 
@@ -281,6 +288,7 @@ public class ActionsControlImpl implements ActionsControl {
 			ret.put("id", String.valueOf(pe.getId()));
 			return new ResponseEntity<>(ret, HttpStatus.OK);
 		} catch (Exception e) {
+			e.printStackTrace();
 			return new ResponseEntity<Object>("action not saved", HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 
@@ -300,6 +308,7 @@ public class ActionsControlImpl implements ActionsControl {
 			ret.put("id", String.valueOf(pe.getId()));
 			return new ResponseEntity<>(ret, HttpStatus.OK);
 		} catch (Exception e) {
+			e.printStackTrace();
 			return new ResponseEntity<Object>("action not saved", HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 
@@ -468,6 +477,7 @@ public class ActionsControlImpl implements ActionsControl {
 			ret.put("id", String.valueOf(pe.getId()));
 			return new ResponseEntity<>(ret, HttpStatus.OK);
 		} catch (Exception e) {
+			e.printStackTrace();
 			return new ResponseEntity<Object>("action not saved", HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 
@@ -494,6 +504,7 @@ public class ActionsControlImpl implements ActionsControl {
 			ret.put("id", String.valueOf(pe.getId()));
 			return new ResponseEntity<>(ret, HttpStatus.OK);
 		} catch (Exception e) {
+			e.printStackTrace();
 			return new ResponseEntity<Object>("action not saved", HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
@@ -512,6 +523,7 @@ public class ActionsControlImpl implements ActionsControl {
 			PageResponse result = new PageResponse(res, l.getTotalPages(), l.getTotalElements());
 			return new ResponseEntity<Object>(result, HttpStatus.OK);
 		} catch (Exception e) {
+			e.printStackTrace();
 			return new ResponseEntity<Object>(null, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
@@ -529,6 +541,7 @@ public class ActionsControlImpl implements ActionsControl {
 				res.add(pr);
 			}
 		} catch (Exception e) {
+			e.printStackTrace();
 			return new ResponseEntity<Object>(null, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 		return new ResponseEntity<Object>(res, HttpStatus.OK);
@@ -586,6 +599,7 @@ public class ActionsControlImpl implements ActionsControl {
 			ret.put("id", String.valueOf(pe.getId()));
 			return new ResponseEntity<>(ret, HttpStatus.OK);
 		} catch (Exception e) {
+			e.printStackTrace();
 			return new ResponseEntity<Object>("action not saved", HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 
@@ -682,7 +696,7 @@ public class ActionsControlImpl implements ActionsControl {
 	}
 
 	@Override
-	public ResponseEntity<Object> createOrder(Integer addressType, String deliveryAddress,
+	public ResponseEntity<Object> createOrder(Long memberId, Integer addressType, String deliveryAddress,
 			SortedMap<Long, List<Long>> data) {
 		// Размещает заказ из корзины путем изменения статуса заявки о покупке и
 		// записывая адрес доставки. addressType 1 - если домой, 0 - самовывоз
@@ -690,24 +704,28 @@ public class ActionsControlImpl implements ActionsControl {
 		// результат: 1 - выполнено полностью, 0 - выполнено частично (по первому из
 		// поставщиков), -1 - ошибка
 		Map<String, Integer> result = new HashMap<>();
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("ddMMHHmmyyss");
 		try {
+			String orderNo = LocalDateTime.now().format(formatter) + "-1-" + String.valueOf(memberId);
 			if (data.size() == 1 || addressType == 1) {
 				// доставка домой или весь заказ от одного поставщика
 				result.put("result", 1);
 				List<Long> allGoods = new ArrayList<>();
-				for (List<Long> goods : data.values()) {
-					allGoods.addAll(goods);
+				// если поставщиков несколько - иды всех товаров собираем в один список для
+				// запроса
+				for (List<Long> goodIds : data.values()) {
+					allGoods.addAll(goodIds);
 				}
-				String id = allGoods.get(0).toString();
-				ppDAO.createOrdersFromCart(deliveryAddress, id, allGoods);
+				allGoods = data.get(data.firstKey());
+				ppDAO.createOrdersFromCart(deliveryAddress, orderNo, allGoods);
 			} else {
-				//
+				// помещаем в заказ товары только от первого поставщика
 				result.put("result", 0);
-				String id = data.get(data.firstKey()).get(0).toString();
-				ppDAO.createOrdersFromCart(deliveryAddress, id, data.get(data.firstKey()));
+				ppDAO.createOrdersFromCart(deliveryAddress, orderNo, data.get(data.firstKey()));
 			}
 			return new ResponseEntity<Object>(result, HttpStatus.OK);
 		} catch (Exception e) {
+			e.printStackTrace();
 			result.put("result", -1);
 			return new ResponseEntity<Object>(result, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
@@ -723,9 +741,15 @@ public class ActionsControlImpl implements ActionsControl {
 			actionService.updateIntentState(pp);
 			return new ResponseEntity<Object>("", HttpStatus.OK);
 		} catch (Exception e) {
-
+			e.printStackTrace();
 			return new ResponseEntity<Object>("", HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 
+	@Override
+	public ResponseEntity<Object> fetchOrdersByPartner(Long partnerId, Integer status) {
+		List<ActionsSummaryInfo> result = new ArrayList<>();
+		result = actionService.fetchOrdersByPartner(partnerId, status);
+		return new ResponseEntity<Object>(result, HttpStatus.OK);
+	}
 }
