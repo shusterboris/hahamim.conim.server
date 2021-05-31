@@ -64,4 +64,26 @@ public class BPservice {
 			return null;
 		}
 	}
+
+	// связь кто заказывал у партнера
+	public boolean findMembersWhoOrder(Long p, Long m) {
+		try {
+			List<Object> res = pDAO.findMember(p, m);
+			if (res.size() > 0)
+				return true;
+		} catch (Exception e) {
+
+		}
+		return false;
+	}
+
+	public boolean saveMemberPartnerRelation(Long bp, Long m) {
+		try {
+			pDAO.saveMemberPartnerRelation(bp, m);
+			return true;
+		} catch (Exception e) {
+			return false;
+		}
+
+	}
 }

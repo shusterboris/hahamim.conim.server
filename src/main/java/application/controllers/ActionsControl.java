@@ -34,6 +34,7 @@ public interface ActionsControl {
 	@PostMapping("/action/save")
 	public ResponseEntity<Object> saveAction(@RequestBody String json);
 
+	// из телеграма
 	@PostMapping(value = "/actions/addOrder", consumes = "application/json;charset=UTF-8")
 	public ResponseEntity<Object> addOrder(@RequestBody String json);
 
