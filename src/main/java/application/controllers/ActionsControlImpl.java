@@ -266,12 +266,8 @@ public class ActionsControlImpl implements ActionsControl {
 				res = actionService.saveProposal(res);
 				memId = p.getMemberId();
 			}
-			// pr = actionService.calcSumOrders(pr);
-			// actionService.update(pr);
 			// сумму теперь считает триггер
-
 			if (bpserv.findMembersWhoOrder(pr.getInitiator(), memId) != true) {
-
 				bpserv.saveMemberPartnerRelation(pr.getInitiator(), memId);
 			}
 			return new ResponseEntity<Object>(res.getId(), HttpStatus.OK);

@@ -260,7 +260,16 @@ public class ActionService {
 			result.add(ai);
 		}
 		return result;
+	}
 
+	public List<ActionsSummaryInfo> fetchOrdersByCustomer(Long memberId, Integer status) {
+		List<Object[]> answer = repo.fetchOrdersByPartner(memberId, status);
+		List<ActionsSummaryInfo> result = new ArrayList<>();
+		for (Object[] obj : answer) {
+			ActionsSummaryInfo ai = ActionsSummaryInfo.getInstanse(obj);
+			result.add(ai);
+		}
+		return result;
 	}
 
 	public ActionsDAO getRepo() {
