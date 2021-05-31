@@ -277,7 +277,7 @@ public class ActionsControlImpl implements ActionsControl {
 			return new ResponseEntity<Object>(res.getId(), HttpStatus.OK);
 		} catch (Exception e) {
 			e.printStackTrace();
-			return new ResponseEntity<Object>(result, HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<Object>(res, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 
