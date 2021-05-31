@@ -34,6 +34,7 @@ public interface ActionsControl {
 	@PostMapping("/action/save")
 	public ResponseEntity<Object> saveAction(@RequestBody String json);
 
+	// из телеграма
 	@PostMapping(value = "/actions/addOrder", consumes = "application/json;charset=UTF-8")
 	public ResponseEntity<Object> addOrder(@RequestBody String json);
 
@@ -103,6 +104,7 @@ public interface ActionsControl {
 	@GetMapping("/actions/cart/get/{memberId}")
 	public ResponseEntity<Object> fetchMembersCart(@PathVariable(name = "memberId") Long memberId);
 
+	// сохранение корзины из клиента
 	@PutMapping("/actions/cart/put/{addressType}/{deliveryAddress}")
 	public ResponseEntity<Object> createOrder(@PathVariable("addressType") Integer addressType,
 			@PathVariable(name = "deliveryAddress") String deliveryAddress,

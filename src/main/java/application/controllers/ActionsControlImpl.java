@@ -251,16 +251,23 @@ public class ActionsControlImpl implements ActionsControl {
 	public ResponseEntity<Object> saveMemberPriceIntents(List<PriceProposal> prices) {
 		application.entities.Proposal pr = null;
 		application.entities.PriceProposal res = null;
+		Long memId = (long) 0;
 		try {
 			for (PriceProposal p : prices) {
 				if (pr == null)
 					pr = actionService.findAction(p.getProposalId()).get();
 				res = proxyToPproposalEntity(p, pr);
 				res = actionService.saveProposal(res);
+				memId = p.getMemberId();
 			}
 			// pr = actionService.calcSumOrders(pr);
 			// actionService.update(pr);
 			// сумму теперь считает триггер
+
+			if (bpserv.findMembersWhoOrder(pr.getInitiator(), memId) != true) {
+
+				bpserv.saveMemberPartnerRelation(pr.getInitiator(), memId);
+			}
 			return new ResponseEntity<Object>(res.getId(), HttpStatus.OK);
 		} catch (Exception e) {
 			return new ResponseEntity<Object>("Server error:".concat(e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
