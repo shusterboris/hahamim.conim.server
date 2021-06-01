@@ -263,13 +263,38 @@ public class ActionService {
 	}
 
 	public List<ActionsSummaryInfo> fetchOrdersByCustomer(Long memberId, Integer status) {
-		List<Object[]> answer = repo.fetchOrdersByPartner(memberId, status);
+		List<Object[]> answer = repo.fetchOrdersByCustomer(memberId, status);
 		List<ActionsSummaryInfo> result = new ArrayList<>();
 		for (Object[] obj : answer) {
 			ActionsSummaryInfo ai = ActionsSummaryInfo.getInstanse(obj);
 			result.add(ai);
 		}
 		return result;
+	}
+
+	public List<ActionsSummaryInfo> fetchOrdersByOrderNo(String orderId) {
+		List<Object[]> answer = repo.fetchOrdersByOrderNo(orderId);
+		List<ActionsSummaryInfo> result = new ArrayList<>();
+		for (Object[] obj : answer) {
+			ActionsSummaryInfo ai = ActionsSummaryInfo.getInstanse(obj);
+			result.add(ai);
+		}
+		return result;
+	}
+
+	public String changeActionStatus(Long id, int status) {
+		try {
+			Optional<Proposal> propRec = findAction(id);
+			if (!propRec.isPresent())
+				throw new Exception("Proposal with id " + Long.toString(id) + " does not exists");
+			Proposal p = propRec.get();
+			p.setStatus(status);
+			repo.save(p);
+			return "";
+		} catch (Exception e) {
+			e.printStackTrace();
+			return e.getMessage();
+		}
 	}
 
 	public ActionsDAO getRepo() {

@@ -35,7 +35,7 @@ public interface ActionsDAO extends PagingAndSortingRepository<Proposal, Long> {
 	@Query(nativeQuery = true, value = "SELECT * FROM actions_report WHERE supplier_id = :supplierId")
 	public List<Object[]> createSummaryActionsReportBySupplier(@Param("supplierId") Long supplierId);
 
-	@Query(nativeQuery = true, value = "SELECT * FROM actions_report WHERE proposal_id = :proposalId")
+	@Query(nativeQuery = true, value = "SELECT * FROM actions_report WHERE proposal_id = :proposalId and (status > 0 and status < 5)")
 	public List<Object[]> createSummaryActionsReportByGoods(@Param("proposalId") Long proposalId);
 
 	@Query(nativeQuery = true, value = "SELECT * FROM actions_report WHERE supplier_id = :supplierId and status = :status group by orderId order by id desc")
@@ -44,7 +44,10 @@ public interface ActionsDAO extends PagingAndSortingRepository<Proposal, Long> {
 	@Query(nativeQuery = true, value = "SELECT * FROM actions_report WHERE member = :member and status = :status group by orderId order by id desc")
 	public List<Object[]> fetchOrdersByCustomer(@Param("member") Long supplierId, @Param("status") Integer status);
 
-	@Query(nativeQuery = true, value = "SELECT *,sum(quantity),sum(quantity * price) FROM actions_report WHERE supplier_id = :supplierId GROUP BY region, settlement, name")
+	@Query(nativeQuery = true, value = "SELECT * FROM actions_report WHERE orderId = :orderId order by goodsName desc")
+	public List<Object[]> fetchOrdersByOrderNo(@Param("orderId") String orderId);
+
+	@Query(nativeQuery = true, value = "SELECT *,sum(quantity),sum(quantity * price) FROM actions_report WHERE supplier_id = :supplierId GROUP BY region, settlement, goodsName")
 	public List<Object[]> createSummaryDeliveryReport(@Param("supplierId") Long supplierId);
 
 	@Query(nativeQuery = true, value = "SELECT * FROM actions_report WHERE status = 0 AND member = :memberId")

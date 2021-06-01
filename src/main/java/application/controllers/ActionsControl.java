@@ -113,4 +113,16 @@ public interface ActionsControl {
 	@GetMapping("/actions/ordersByPartner/{partnerId}/{status}")
 	public ResponseEntity<Object> fetchOrdersByPartner(@PathVariable("partnerId") Long partnerId,
 			@PathVariable("status") Integer status);
+
+	@GetMapping("/actions/ordersByCustomer/{memberId}/{status}")
+	public ResponseEntity<Object> fetchOrdersByCustomer(@PathVariable("memberId") Long memberId,
+			@PathVariable("status") Integer status);
+
+	@GetMapping("/actions/ordersByNo/{orderId}")
+	public ResponseEntity<Object> fetchOrdersByNo(@PathVariable("orderId") String orderId);
+
+	@PutMapping("/actions/changeStatus/{id}/{status}")
+	public ResponseEntity<Object> changeActionStatus(@PathVariable("id") Long id,
+			@PathVariable("status") String status);
+
 }

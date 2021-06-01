@@ -752,7 +752,53 @@ public class ActionsControlImpl implements ActionsControl {
 	@Override
 	public ResponseEntity<Object> fetchOrdersByPartner(Long partnerId, Integer status) {
 		List<ActionsSummaryInfo> result = new ArrayList<>();
-		result = actionService.fetchOrdersByPartner(partnerId, status);
-		return new ResponseEntity<Object>(result, HttpStatus.OK);
+		try {
+			result = actionService.fetchOrdersByPartner(partnerId, status);
+			return new ResponseEntity<Object>(result, HttpStatus.OK);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new ResponseEntity<Object>(result, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+
+	@Override
+	public ResponseEntity<Object> fetchOrdersByCustomer(Long memberId, Integer status) {
+		List<ActionsSummaryInfo> result = new ArrayList<>();
+		try {
+			result = actionService.fetchOrdersByCustomer(memberId, status);
+			return new ResponseEntity<Object>(result, HttpStatus.OK);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new ResponseEntity<Object>(result, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+
+	@Override
+	public ResponseEntity<Object> fetchOrdersByNo(String orderId) {
+		List<ActionsSummaryInfo> result = new ArrayList<>();
+		try {
+			result = actionService.fetchOrdersByOrderNo(orderId);
+			return new ResponseEntity<Object>(result, HttpStatus.OK);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new ResponseEntity<Object>(result, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+
+	public ResponseEntity<Object> changeActionStatus(Long id, String status) {
+		Map<String, String> result = new HashMap<>();
+		int intStatus = ProposalStatus.getOrdinalByMessage(status);
+		if (intStatus == -1) {
+			result.put("result", "invalid new status");
+			return new ResponseEntity<Object>(result, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		String changeResult = actionService.changeActionStatus(id, intStatus);
+		if ("".equals(changeResult)) {
+			result.put("result", "Ok");
+			return new ResponseEntity<Object>(result, HttpStatus.OK);
+		} else {
+			result.put("result", changeResult);
+			return new ResponseEntity<Object>(result, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
 	}
 }
